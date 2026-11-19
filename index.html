@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ViralQuiz Studio Pro — 9:16 Mobile Quiz Video Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Sidebar: Controls -->
+    <aside class="sidebar">
+      <header class="brand">
+        <div class="brand-badge">9:16 PRO</div>
+        <div>
+          <h1>ViralQuiz Studio</h1>
+          <p>Mobile-First AI Quiz Video Engine</p>
+        </div>
+      </header>
+
+      <!-- Step 1: Data Upload -->
+      <section class="panel">
+        <div class="panel-title">
+          <span class="step-num">1</span>
+          <h2>Upload Quiz Data (CSV)</h2>
+        </div>
+        <p class="hint">Col A: <strong>Question</strong> • Col B: <strong>Answer</strong> • Col C: <strong>Category</strong></p>
+
+        <label class="dropzone" id="dropzone" for="csvInput">
+          <input type="file" id="csvInput" accept=".csv,text/csv" hidden />
+          <div class="dropzone-icon">📄</div>
+          <div class="dropzone-text" id="fileStatus">
+            <strong>Click to upload data.csv</strong> or drag & drop
+          </div>
+        </label>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" id="loadSampleBtn">
+            ⚡ Load 50 Sample Q&As
+          </button>
+          <button type="button" class="btn btn-ghost" id="downloadTemplateBtn">
+            ⬇ Sample CSV
+          </button>
+        </div>
+        <div class="stats-bar" id="dataStats">No dataset loaded yet.</div>
+      </section>
+
+      <!-- Step 2: Smooth Human Voice Engine -->
+      <section class="panel">
+        <div class="panel-title">
+          <span class="step-num">2</span>
+          <h2>Smooth Human Voice & Audio</h2>
+        </div>
+
+        <div class="field">
+          <label for="voiceProvider">Voice Engine</label>
+          <select id="voiceProvider">
+            <option value="streamelements">Free Cloud Human Voice (No Key Needed)</option>
+            <option value="elevenlabs">ElevenLabs AI (Studio Ultra-Smooth)</option>
+            <option value="browser">Browser Neural Voice (Preview Only)</option>
+          </select>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="voiceSelect">Narrator</label>
+            <select id="voiceSelect"></select>
+          </div>
+          <div class="field">
+            <label for="voiceSpeed">Smoothness / Pace</label>
+            <select id="voiceSpeed">
+              <option value="0.96">Smooth & Warm (0.96x)</option>
+              <option value="1.0" selected>Natural Flow (1.0x)</option>
+              <option value="1.06">Punchy Viral (1.06x)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field hidden" id="elevenLabsKeyRow">
+          <label for="elevenLabsKey">ElevenLabs API Key (Free Tier Works)</label>
+          <input type="password" id="elevenLabsKey" placeholder="sk_..." />
+        </div>
+
+        <button type="button" class="btn btn-secondary full-width" id="testVoiceBtn">
+          🎙️ Test Smooth Mastered Voice
+        </button>
+
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="readAnswersAloud" checked />
+            <span>Speak Answer on Reveal</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="enableSFX" checked />
+            <span>Satisfying Pop, Tick & Sparkle Chimes</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="enableMusicPad" checked />
+            <span>Soft Shimmering Ambient Beat</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Step 3: 10 Bright & Shining Color Schemes + Video Settings -->
+      <section class="panel">
+        <div class="panel-title">
+          <span class="step-num">3</span>
+          <h2>10 Shining Schemes & Layout</h2>
+        </div>
+
+        <div class="field">
+          <label for="colorSchemeMode">Color Scheme (10 Bright & Shining)</label>
+          <select id="colorSchemeMode">
+            <option value="auto">✨ Auto-Cycle All 10 Schemes (Unique / Video)</option>
+            <option value="gold">🥇 1. 24K Liquid Gold</option>
+            <option value="rosegold">🌸 2. Rose Gold Luxe</option>
+            <option value="diamond">💎 3. Diamond Prism</option>
+            <option value="emerald">💚 4. Emerald Aurora</option>
+            <option value="sunset">🌅 5. Cyber Sunset</option>
+            <option value="sapphire">💙 6. Electric Sapphire</option>
+            <option value="amethyst">🔮 7. Royal Amethyst</option>
+            <option value="ruby">❤️ 8. Ruby Starlight</option>
+            <option value="citrus">⚡ 9. Solar Citrus</option>
+            <option value="pearl">🌈 10. Holographic Pearl</option>
+          </select>
+        </div>
+
+        <div class="scheme-swatches" id="schemeSwatches" title="Click a scheme to preview"></div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="questionsPerVideo">Questions / Video</label>
+            <input type="number" id="questionsPerVideo" min="1" max="15" value="10" />
+          </div>
+
+          <div class="field">
+            <label for="countdownSeconds">Think Timer (sec)</label>
+            <input type="number" id="countdownSeconds" min="1" max="10" value="3" />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="batchMode">Batch Mode</label>
+            <select id="batchMode">
+              <option value="sequential">Sequential</option>
+              <option value="byCategory">Group by Category</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="remainderMode">Leftovers</label>
+            <select id="remainderMode">
+              <option value="include">Short final video</option>
+              <option value="discard">Full videos only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="hookTemplate">Hook Headline</label>
+          <input type="text" id="hookTemplate" value="CAN YOU SCORE {N}/{N}?" />
+        </div>
+
+        <button type="button" class="btn btn-primary full-width" id="generateBtn" disabled>
+          🎬 Build Video Queue
+        </button>
+      </section>
+
+      <!-- Step 4: Generated Videos Queue -->
+      <section class="panel queue-panel">
+        <div class="panel-title">
+          <span class="step-num">4</span>
+          <h2>Generated Videos (<span id="videoCount">0</span>)</h2>
+        </div>
+
+        <div class="video-list" id="videoList">
+          <div class="empty-state">Load a CSV to generate videos.</div>
+        </div>
+
+        <button type="button" class="btn btn-accent full-width" id="exportAllBtn" disabled>
+          📦 Batch Render & Download All (.webm)
+        </button>
+      </section>
+    </aside>
+
+    <!-- Right Stage: 9:16 Mobile Screen Preview -->
+    <main class="stage">
+      <div class="stage-topbar">
+        <div class="now-playing">
+          <span class="badge" id="activeCategoryBadge">NO VIDEO</span>
+          <strong id="activeVideoTitle">Select or generate a video to preview</strong>
+        </div>
+
+        <div class="stage-actions">
+          <button type="button" class="btn btn-secondary" id="playPauseBtn" disabled>▶ Play</button>
+          <button type="button" class="btn btn-secondary" id="restartBtn" disabled>↺ Restart</button>
+          <button type="button" class="btn btn-accent" id="exportSingleBtn" disabled>
+            ⬇ Export Mobile Video
+          </button>
+        </div>
+      </div>
+
+      <div class="canvas-wrapper">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <canvas id="quizCanvas" width="1080" height="1920"></canvas>
+          <div class="safe-zone-overlay" id="safeZoneOverlay">
+            <div class="sz-top">Status / Following Tabs</div>
+            <div class="sz-right">Likes / Comments / Share</div>
+            <div class="sz-bottom">Caption, Username & Audio Ticker</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-footer">
+        <div class="timeline-info">
+          <span id="timeDisplay">00:00 / 00:00</span>
+          <span id="renderStatus">Ready — 1080×1920 (9:16 Mobile)</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="timelineProgress"></div>
+        </div>
+        <label class="toggle compact">
+          <input type="checkbox" id="showSafeZones" />
+          <span>Overlay Mobile Social Safe Zones (TikTok / Reels / Shorts)</span>
+        </label>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
