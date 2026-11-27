@@ -1,275 +1,275 @@
 const PIPELINE_STEPS = [
   // =========================================================================
-  // STAGE 1: DEEP RESEARCH (Steps 1–10)
+  // STAGE 1: RESEARCH (Steps 1–10)
   // =========================================================================
   {
     num: 1, stage: 1, stageName: 'Research',
-    title: 'Domain & Problem Space Deconstruction',
-    directive: 'Deconstruct the problem domain from first principles: identify core user pain points, primary & secondary objectives, domain terminology, industry conventions, and the exact measurable value proposition this web app must deliver.'
+    title: 'The Core Problem or Desire',
+    directive: 'Confirm whether the underlying pain point (for a utility/tool) or itch (for a game/creative app) is real, frequent, and urgent enough that people actively seek a solution. Define the core value proposition, trigger moments, usage frequency, and the exact functional or emotional payoff deliverable purely client-side with zero backend.'
   },
   {
     num: 2, stage: 1, stageName: 'Research',
-    title: 'Target Personas, Mental Models & Jobs-to-be-Done',
-    directive: 'Profile primary, power, and first-time user archetypes: map their technical fluency, natural mental models, daily operating contexts, emotional friction points, and concrete Jobs-to-be-Done (JTBD) with success triggers.'
+    title: 'Target Audience and Context of Use',
+    directive: 'Define primary, secondary, and first-time user archetypes, their technical fluency, natural mental models, and real-world operating contexts (e.g., focused desktop workspace vs. one-handed two-minute mobile commute, offline/low-connectivity environments, ambient lighting, and distraction levels).'
   },
   {
     num: 3, stage: 1, stageName: 'Research',
-    title: 'Best-in-Class Interaction & Industry Benchmarks',
-    directive: 'Analyze elite modern web apps in this category: extract proven interaction patterns, command ergonomics, spatial layouts, visual feedback loops, and trust signals that make top-tier tools feel effortless and fast.'
+    title: 'Existing Alternatives and Workarounds',
+    directive: 'Map direct web and native competitors alongside the makeshift habits people already rely on—spreadsheets, notes apps, calculators, timers, or manual pen-and-paper routines—to uncover what this app truly competes against, where alternatives feel bloated, and which familiar conventions users expect.'
   },
   {
     num: 4, stage: 1, stageName: 'Research',
-    title: 'Feature Taxonomy: Core Essentials vs. Power Delighters',
-    directive: 'Catalog and stratify every potential capability into (A) Non-Negotiable Core Workflows, (B) High-Leverage Productivity Accelerators (search, filters, bulk actions, shortcuts), and (C) Subtle Power-User Delighters—explicitly flagging bloat to exclude.'
+    title: 'User Complaints, Reviews and Friction Audit',
+    directive: 'Analyze recurring 1-to-3-star complaints, forum/Reddit pain points, and abandonment triggers across existing tools or games—such as confusing navigation, forced logins, sluggish rendering, intrusive popups, unclear states, or broken mobile layouts—to catalog concrete failure modes to eliminate.'
   },
   {
     num: 5, stage: 1, stageName: 'Research',
-    title: 'Data Entities, Cardinality, Relations & State Lifecycle',
-    directive: 'Map every domain entity, field type, default value, validation constraint, parent-child or many-to-many relationship, CRUD lifecycle, sorting/grouping keys, and derived/computed aggregate metrics.'
+    title: 'Your Clear Differentiator & Zero-Bloat Edge',
+    directive: 'Pinpoint the unmistakable advantage this three-file (index.html, style.css, script.js) app delivers over alternatives—whether faster instant execution, calmer zero-bloat UI, a fresher game mechanic, or superior keyboard/touch ergonomics—so users have a compelling reason to choose and keep using it.'
   },
   {
     num: 6, stage: 1, stageName: 'Research',
-    title: 'Client-Side Web APIs & Zero-Dependency Browser Capabilities',
-    directive: 'Audit native, zero-dependency browser APIs applicable to this app (LocalStorage with quota guards, Blob/URL file export & FileReader import, Clipboard API, Web Audio API, Inline SVG/Canvas, Drag & Drop, Intersection/ResizeObserver, Intl formatting).'
+    title: 'Onboarding and Immediate Time-to-Value',
+    directive: 'Examine how top browser products deliver an "aha" moment within the first 5 seconds without forced sign-ups, account walls, or lengthy tutorials. Identify intuitive visual cues, interactive empty states, and realistic starter/sample data that let first-time users succeed on their very first tap or click.'
   },
   {
     num: 7, stage: 1, stageName: 'Research',
-    title: 'WCAG 2.2 AA Accessibility, Focus & Keyboard Ergonomics',
-    directive: 'Research exact WCAG 2.2 AA requirements: semantic landmarks, heading hierarchy, ARIA roles/states/live regions, modal focus trapping, roving tabindex, >=4.5:1 contrast, and full keyboard-only operability.'
+    title: 'Core UX Flow and Friction Points',
+    directive: 'Study the shortest possible path from opening index.html to completing the primary task or core game loop. Pinpoint every step where ambiguous labels, extra clicks, slow transitions, awkward scrolling, or unnecessary modal detours could break user momentum.'
   },
   {
     num: 8, stage: 1, stageName: 'Research',
-    title: 'Client-Side Performance Budgets & DOM Rendering Mechanics',
-    directive: 'Identify potential rendering bottlenecks (layout thrashing, forced synchronous reflows, O(n^2) list filtering, excessive event listeners) and establish Vanilla JS optimization patterns (DocumentFragment, event delegation, debouncing, CSS containment).'
+    title: 'Platform Expectations, Mobile Ergonomics and Accessibility',
+    directive: 'Research target platform conventions across desktop and mobile: WCAG 2.2 AA contrast (>=4.5:1), semantic landmarks, screen-reader ARIA live regions, colorblind-safe multi-sensory cues, desktop keyboard shortcuts, and thumb-friendly mobile layouts (>=44x44px tap targets, safe-area insets, zero horizontal overflow).'
   },
   {
     num: 9, stage: 1, stageName: 'Research',
-    title: 'Client-Side Security, XSS Defense & Storage Resilience',
-    directive: 'Audit client-side threat & corruption vectors: HTML/script injection via user-supplied strings, unsafe innerHTML templates, malformed JSON/CSV imports, prototype-pollution keys, NaN/Infinity math leaks, and corrupt localStorage recovery.'
+    title: 'Trust, Local-Only Privacy and Zero-Backend Value Fit',
+    directive: 'Because the app runs 100% client-side in three files with zero backend, servers, ads, or paywalls, research how to maximize user trust: transparent local-only localStorage persistence, zero tracking/telemetry, clear data ownership (easy export/reset), and reliable offline-ready execution.'
   },
   {
     num: 10, stage: 1, stageName: 'Research',
-    title: 'Edge Cases, Boundary Inputs & Stress-Scenario Discovery',
-    directive: 'Systematically uncover non-obvious edge cases: 0-item empty states, 1,000+ item stress loads, ultra-long unbroken strings, rapid double-clicks/submissions, 320px narrow mobile viewports, dark/light theme flips, and offline/sandboxed storage.'
+    title: 'Discovery, Shareability and Audience Search Language',
+    directive: 'Identify where the target audience discovers standalone web tools or games (search, niche communities, itch.io, GitHub, direct link sharing) and capture the exact plain-language terminology, page title/meta cues, and self-explanatory UI copy that make the app immediately clear when opened cold.'
   },
 
   // =========================================================================
-  // STAGE 2: DEEP REASONING (Steps 11–20)
+  // STAGE 2: REASONING (Steps 11–20)
   // =========================================================================
   {
     num: 11, stage: 2, stageName: 'Reasoning',
-    title: 'Synthesizing Hidden User Intent & 10x Leverage Opportunities',
-    directive: 'Reason deeply across Stage 1 research to uncover implicit user needs and high-leverage workflows (e.g., instant live summaries, smart defaults, quick-add flows, contextual filters) that multiply usefulness without adding UI clutter.'
+    title: 'Core Scope and Strict MVP Boundaries',
+    directive: 'Synthesize Stage 1 research to lock the single core workflow or game loop that delivers the primary user benefit. Explicitly separate non-negotiable essentials from "nice-to-have" bloat so every shipped feature is deeply polished within three standalone files.'
   },
   {
     num: 12, stage: 2, stageName: 'Reasoning',
-    title: 'Resolving Architectural Trade-offs & Strict Scope Borders',
-    directive: 'Evaluate competing design/engineering trade-offs from Stage 1, justify every architectural choice, and lock strict scope borders so every included feature is deeply polished rather than half-baked.'
+    title: 'Primary User Journey & Shortest Path to Value',
+    directive: 'Map the exact end-to-end path a user takes from opening index.html to getting value or completing a game loop, ruthlessly stripping unnecessary steps, redundant confirmations, multi-field forms, and decision fatigue along the way.'
   },
   {
     num: 13, stage: 2, stageName: 'Reasoning',
-    title: 'Inferring Deterministic Unidirectional State & Data Flow',
-    directive: 'Reason out a rock-solid single-source-of-truth state model (State -> Pure Selectors/Computations -> Render -> Delegated Events -> Action Dispatch) so all panels, counters, and views stay 100% synchronized.'
+    title: 'Intentional Architectural & UX Trade-offs',
+    directive: 'Weigh competing priorities—simplicity vs. power-user customization, instant load speed vs. heavy visual effects, compact desktop density vs. mobile breathing room, and smart defaults vs. manual configuration—justifying each choice based on target user needs.'
   },
   {
     num: 14, stage: 2, stageName: 'Reasoning',
-    title: 'Extracting Micro-Interaction & Immediate Feedback Loops',
-    directive: 'Reason through every user action to guarantee immediate, unmistakable feedback: optimistic UI updates, non-destructive delete/undo safety nets, inline field validation, and crisp status confirmations.'
+    title: 'Edge Cases, Boundary Inputs and Empty States',
+    directive: 'Reason through non-ideal conditions: 0-item first-time empty states, 1,000+ item stress loads, invalid or extreme user inputs, rapid double-taps, narrow 320px mobile viewports, mid-session page reloads, and blocked or full localStorage in private browsing.'
   },
   {
     num: 15, stage: 2, stageName: 'Reasoning',
-    title: 'Cross-Device Ergonomics & Viewport Adaptation Logic',
-    directive: 'Reason through how desktop power ergonomics (multi-column workspaces, hover actions, keyboard shortcuts) adapt seamlessly to touch-first tablet/mobile viewports without losing capability or causing horizontal scroll.'
+    title: 'Zero-Dependency Three-File Stack & Browser API Fit',
+    directive: 'Validate how pure semantic HTML5, modern CSS3, and Vanilla ES6+ JavaScript (index.html, style.css, script.js) satisfy every requirement with zero backend, zero build step, and zero external runtime dependencies—selecting native APIs (localStorage, Blob, Canvas, SVG, Web Audio, Pointer Events, Intl, requestAnimationFrame) only where they add genuine value.'
   },
   {
     num: 16, stage: 2, stageName: 'Reasoning',
-    title: 'Zero-Friction Onboarding, Starter Seed Data & Empty States',
-    directive: 'Design the first-5-seconds experience: realistic, domain-authentic starter seed data that showcases the app immediately, paired with a clean one-click "Clear / Start Fresh" and "Load Sample Data" recovery path.'
+    title: 'Information Architecture and Visual Hierarchy',
+    directive: 'Organize workspaces, toolbars, cards, secondary drawers/modals, and progressive disclosure tiers so the primary action is immediately obvious at a glance while secondary settings, export/import, and power options stay cleanly tucked out of sight.'
   },
   {
     num: 17, stage: 2, stageName: 'Reasoning',
-    title: 'Performance Pre-Mortem & Algorithmic Efficiency Strategy',
-    directive: 'Conduct a pre-mortem on the heaviest computational and DOM paths identified in Stage 1, locking down exact mitigation strategies (memoized/cached selectors, keyed/targeted DOM updates, throttled storage writes).'
+    title: 'Feedback Loops, Tactile Responsiveness and App/Game Feel',
+    directive: 'Reason through every user interaction to guarantee immediate, unmistakable feedback—optimistic UI updates, inline validation, non-destructive undo/reset safety nets, crisp status indicators, and satisfying micro-rewards—so nothing ever feels broken or unresponsive.'
   },
   {
     num: 18, stage: 2, stageName: 'Reasoning',
-    title: 'Strict Separation of Concerns (HTML / CSS / JS Contract)',
-    directive: 'Define clean architectural boundaries: semantic structure & accessibility hooks in index.html, visual tokens & state-driven styling ([data-state], .is-active) in style.css, and pure logic + DOM orchestration in script.js.'
+    title: 'Client-Side Privacy and Local Data Minimization',
+    directive: 'With zero backend or server storage, decide the bare minimum state needed in localStorage, avoiding unnecessary personal data while designing schema versioning, an in-memory fallback for restricted storage contexts, and one-click user control to export or wipe local data.'
   },
   {
     num: 19, stage: 2, stageName: 'Reasoning',
-    title: 'Inclusive Accessibility & Keyboard-First Synthesis',
-    directive: 'Translate Stage 1 WCAG research into concrete runtime behaviors: modal focus trapping & restoration, ESC dismissal, Enter/Space activation, "/" search focus, Ctrl/Cmd+Z undo, and aria-live status announcements.'
+    title: 'Measurable Success Criteria and Quality Benchmarks',
+    directive: 'Define what "working exceptionally well" looks like in concrete, testable terms—such as sub-second cold load, task completion in minimal steps, smooth 60Hz–120Hz frame-rate-independent responsiveness, zero console errors, full keyboard/touch parity, and reliable reload persistence.'
   },
   {
     num: 20, stage: 2, stageName: 'Reasoning',
-    title: 'Master Engineering Principles & Non-Negotiable Invariants',
-    directive: 'Distill all Stage 1–2 insights into 10 strict, verifiable engineering invariants (zero external runtime dependencies, zero XSS vectors, zero silent failures, deterministic state, full keyboard parity) that govern all code.'
+    title: 'Iterative Build Sequence and Verification Strategy',
+    directive: 'Structure the logical progression from semantic DOM skeleton and central state model to core engine logic, mobile-first styling, sensory polish, and integration checks—locking non-negotiable engineering invariants that keep index.html, style.css, and script.js synchronized.'
   },
 
   // =========================================================================
-  // STAGE 3: MASTER ENGINEERING PLANNING (Steps 21–30)
+  // STAGE 3: PLANNING (Steps 21–30)
   // =========================================================================
   {
     num: 21, stage: 3, stageName: 'Planning',
-    title: 'Master System Architecture & 3-File Interface Blueprint',
-    directive: 'Plan the complete modular architecture across index.html, style.css, and script.js: define script loading (defer), CSS link order, IIFE/module encapsulation, and zero-build-step standalone execution.'
+    title: 'Internal Sections and Modular Architecture for script.js',
+    directive: 'Plan a consistent top-to-bottom structure for script.js (strict-mode/IIFE encapsulation, constants & seed data, central state, DOM hooks, pure domain logic, persistence helpers, batched renderers, Web Audio/Canvas effects, event delegation, reset(), and init()) for fast debugging and zero global pollution.'
   },
   {
     num: 22, stage: 3, stageName: 'Planning',
-    title: 'Semantic DOM Hierarchy, Landmarks & Component Tree',
-    directive: 'Blueprint the full DOM tree for index.html: header/topbar, primary controls/filters, main workspace regions, analytics/summary bar, modals/drawers, toast region, and exact semantic elements + ARIA attributes.'
+    title: 'Single Central state Object and Unidirectional Render Flow',
+    directive: 'Store all app or game data in one central state object with pure derived selectors and a deterministic unidirectional flow (Action -> State Update -> Persist -> Targeted Render), eliminating out-of-sync UI panels and guaranteeing predictable behavior.'
   },
   {
     num: 23, stage: 3, stageName: 'Planning',
-    title: 'Complete State Schema, Versioning, Persistence & Undo Stack',
-    directive: 'Define the exact JSON state schema, schemaVersion field, safe localStorage get/set/migrate wrapper, in-memory fallback if storage is blocked, and an undo/redo history stack (or snapshot restore).'
+    title: 'Mobile-Ready index.html Skeleton and Semantic Hooks',
+    directive: 'Blueprint semantic index.html with <link rel="stylesheet" href="style.css">, <script src="script.js" defer></script>, <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">, landmarks, <template> blocks, ARIA attributes, and dedicated id/data-* hooks separate from styling classes.'
   },
   {
     num: 24, stage: 3, stageName: 'Planning',
-    title: 'Core Algorithms, Domain Engine & Pure Utility Functions',
-    directive: 'Specify every pure function in script.js: ID generation, date/currency/unit formatting (Intl), multi-criteria filtering & sorting, aggregation/analytics calculations, and input validation.'
+    title: 'Mobile-First style.css with :root Tokens and State Classes',
+    directive: 'Plan style.css starting with :root custom properties and mobile-first base rules, scaling cleanly with Flexbox/CSS Grid, fluid clamp() sizing, safe-area inset padding (env(safe-area-inset-*)), and toggleable state classes (.is-active, .is-hidden, .is-loading, .is-error) to prevent specificity battles.'
   },
   {
     num: 25, stage: 3, stageName: 'Planning',
-    title: 'Event Delegation, Keyboard Shortcuts & Pointer/Drag Handling',
-    directive: 'Map every user interaction to root-level event delegation, form submit handlers, debounced search inputs, global keyboard shortcut router (safely ignoring inputs/textareas), and drag/reorder or touch interactions.'
+    title: 'Touch-Friendly Controls and Cross-Device Input Parity',
+    directive: 'Plan minimum 44x44px tap targets, thumb-zone control placement, unified PointerEvent handlers (instead of mouse-only events), touch-action CSS rules to prevent accidental pinch-zoom or pull-to-refresh in games/canvases, and full desktop keyboard shortcuts (safely ignoring active text inputs).'
   },
   {
     num: 26, stage: 3, stageName: 'Planning',
-    title: 'CSS Token System, Cascade Layers & Layout Architecture',
-    directive: 'Plan the complete style.css architecture: :root semantic custom properties, light/dark theme overrides ([data-theme]), CSS Grid/Flexbox shell, component primitives, and state modifier classes.'
+    title: 'Root-Level Event Delegation Architecture',
+    directive: 'Attach listeners to stable parent containers in index.html using event.target.closest(...) instead of binding handlers to every dynamic button or list item—reducing memory overhead, surviving DOM re-renders, and keeping mobile processors responsive.'
   },
   {
     num: 27, stage: 3, stageName: 'Planning',
-    title: 'Safe Dynamic Rendering, SVG Charts & Focus Preservation',
-    directive: 'Plan exact DOM rendering pipelines: strict escapeHtml() / createElement helpers, DocumentFragment batching, dynamic inline SVG chart/meter generation, and preserving active input focus/cursor during re-renders.'
+    title: 'Safe, Fast DOM Updates and Mobile Battery Performance',
+    directive: 'Plan XSS-safe, high-speed DOM updates using <template> cloning, document.createDocumentFragment(), and textContent instead of heavy innerHTML rewrites—while avoiding layout-thrashing reads/writes and excessive full-screen blurs to preserve mobile smoothness and battery life.'
   },
   {
     num: 28, stage: 3, stageName: 'Planning',
-    title: 'Defensive Error Handling, Inline Validation & Toast System',
-    directive: 'Plan try/catch boundaries around parsing/storage/audio/file I/O, accessible inline validation feedback, confirmation dialogs for destructive actions, and an auto-dismissing aria-live toast queue.'
+    title: 'localStorage Safety, Versioning and Data Portability',
+    directive: 'Wrap all localStorage reads/writes in try/catch with a versioned JSON key, corrupt-data recovery, and an in-memory fallback for private browsing—paired with simple one-click clipboard copy or JSON/CSV export and validated import so user progress never vanishes.'
   },
   {
     num: 29, stage: 3, stageName: 'Planning',
-    title: 'Realistic Starter Seed Data, JSON/CSV Export & Safe Import',
-    directive: 'Plan rich, domain-accurate starter seed data, clean Blob-based export (JSON and/or CSV), strict schema-validated file import with user feedback, and one-click reset to sample data.'
+    title: 'Frame-Rate-Independent Loops and Clean reset() Logic',
+    directive: 'For games or animated tools, plan a single delta-time (clamped dt) requestAnimationFrame loop alongside a thorough reset() function that clears active timers/RAFs and restores clean initial/seed state—ensuring consistent speed across 60Hz desktops and 120Hz mobile screens.'
   },
   {
     num: 30, stage: 3, stageName: 'Planning',
-    title: 'End-to-End Integration & Verification Test Matrix',
-    directive: 'Construct a detailed verification matrix mapping every core workflow, keyboard shortcut, persistence reload, import/export round-trip, and edge case to exact expected DOM and state outcomes.'
+    title: 'Zero-Asset Sensory Feedback and Error Guardrails',
+    directive: 'Plan inline <svg> icons, <canvas> visuals, Web Audio API synthesized sound effects (safely unlocked on the user first tap/gesture for mobile browsers, with a mute toggle), and lightweight try/catch + aria-live toast guardrails—keeping everything self-contained in three files.'
   },
 
   // =========================================================================
-  // STAGE 4: VISUAL & UX DESIGNING — 10 Steps × 2 Paired Dimensions = 20 Specs
+  // STAGE 4: DESIGN (Steps 31–40)
   // =========================================================================
   {
     num: 31, stage: 4, stageName: 'Designing',
-    title: 'Visual Identity & Aesthetic Direction + Color Palette & WCAG Contrast',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Cohesive Visual Identity & Aesthetic Direction tailored to this domain, AND (2) Complete Hex/HSL Color Palette (canvas, elevated surfaces, borders, primary/secondary accents, semantic success/warn/danger) with verified WCAG AA contrast ratios.'
+    title: 'Visual Direction, Mood and 60-30-10 Color Tokens',
+    directive: 'Choose an intentional aesthetic (e.g., crisp editorial utility, tactile retro, frosted matte, or vibrant arcade) built on :root hex/HSL tokens following a 60-30-10 balance (neutral canvas, elevated surfaces, one sharp accent, plus semantic status hues) with verified contrast and optional light/dark parity.'
   },
   {
     num: 32, stage: 4, stageName: 'Designing',
-    title: 'Surface Textures & Materiality + Lighting, Shadows & Elevation Depth',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Surface Textures, Subtle Gradients, Hairline Borders & Glass/Matte Materiality, AND (2) Multi-layered Directional Shadows, Top-Edge Specular Highlights, Ambient Glow & Z-Index Elevation Tiers.'
+    title: 'Typography, Hierarchy, clamp() Scale and Optical Rhythm',
+    directive: 'Pair clean, legible system/modern fonts with a fluid clamp() type scale, tight tracking on large headings, wider uppercase tracking on micro-labels, comfortable line-heights, and font-variant-numeric: tabular-nums for live timers, counters, or scores so numbers never jitter.'
   },
   {
     num: 33, stage: 4, stageName: 'Designing',
-    title: 'Typography Hierarchy & Font System + Readability, Measure & Micro-Spacing',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) System/Modern Font Stack, Expressive Type Scale, Weights & font-variant-numeric: tabular-nums for metrics, AND (2) Line-Heights, Character Measure, Letter-Spacing & 4px/8px Spatial Rhythm Tokens.'
+    title: 'Spatial Grid, Breathing Room and Mobile Thumb Zones',
+    directive: 'Anchor all layout spacing to a strict 4px or 8px scale with generous padding, clear visual focal points, balanced density, and primary interactive controls positioned within comfortable thumb reach on mobile viewports.'
   },
   {
     num: 34, stage: 4, stageName: 'Designing',
-    title: 'App Style & Structural Grid + Information Density & Whitespace Balance',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Signature App Shell Style (header bar, toolbars, cards/panels, sidebars) & CSS Grid/Flexbox proportions, AND (2) Intentional Information Density & Breathing Whitespace Rules.'
+    title: 'Surface Textures, Subtle Grain and Tactile Depth',
+    directive: 'Layer subtle CSS film grain (via inline SVG feTurbulence filter), faint dot-matrix or grid backgrounds (radial-gradient), selective frosted glass (backdrop-filter: blur()), and soft multi-layered directional shadows instead of flat solid rectangles so surfaces feel custom-crafted.'
   },
   {
     num: 35, stage: 4, stageName: 'Designing',
-    title: 'UX Flow & Ergonomic Efficiency + Cognitive Load Reduction & Affordances',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Frictionless Primary & Secondary UX Flows (minimal clicks/keystrokes from intent to completion), AND (2) Progressive Disclosure, Clear Visual Affordances & Cognitive Load Reduction.'
+    title: 'Lighting, Borders, Nested Radii and Micro-Details',
+    directive: 'Add 1px top-edge inner specular highlights (inset 0 1px 0), subtle gradient or hairline borders, mathematically nested border-radius values (outer radius = inner radius + padding), and custom ::selection and scrollbar styling for cohesive light and native-app polish.'
   },
   {
     num: 36, stage: 4, stageName: 'Designing',
-    title: 'Interactive Controls & Form Craft + Hover, Focus, Active & Disabled States',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Precision Craft for Buttons, Inputs, Selects, Toggles, Badges & Sliders, AND (2) Distinct Tactile States for :hover, :focus-visible rings, :active press-down & :disabled.'
+    title: 'Accessible Contrast and Multi-Sensory State Cues',
+    directive: 'Maintain >=4.5:1 text contrast (>=3:1 UI graphics) for outdoor mobile readability while pairing color with distinct inline SVG icons, border patterns, or explicit labels for success, warning, error, and active states so clarity never depends on color alone.'
   },
   {
     num: 37, stage: 4, stageName: 'Designing',
-    title: 'Motion Choreography & Transitions + Tactile Physics & Reduced-Motion Rules',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Purposeful Cubic-Bezier Transitions, Drawer/Modal Reveals & List Entry Animations, AND (2) Snappy Tactile Physics paired with strict @media (prefers-reduced-motion: reduce) overrides.'
+    title: 'Motion Choreography, Custom Easing and Reduced-Motion Rules',
+    directive: 'Replace stiff linear transitions with custom cubic-bezier curves, staggered list entrances, and GPU-accelerated transform/opacity animations—always paired with a strict @media (prefers-reduced-motion: reduce) fallback to keep users spatially oriented and comfortable.'
   },
   {
     num: 38, stage: 4, stageName: 'Designing',
-    title: 'Inline SVG Iconography & Data Visuals + Empty, Loading & Zero-State Art',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Crisp Inline SVG Icon System (consistent stroke-width/viewBox), Progress Meters & SVG Charts, AND (2) Designed Empty/Zero States with Helpful Copy & Primary Call-to-Action.'
+    title: 'Micro-Interactions and Tactile Control States',
+    directive: 'Design responsive :hover lifts, crisp press-down feedback (transform: scale(0.97) on :active), high-contrast :focus-visible rings, and smooth toggle, chip, or slider transitions so every control feels physically responsive under a finger or cursor.'
   },
   {
     num: 39, stage: 4, stageName: 'Designing',
-    title: 'Responsive Breakpoints & Touch Targets + Adaptive Mobile Navigation',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Fluid Breakpoints (Desktop >=1024px, Tablet 768px, Mobile <=640px) with >=44px Touch Targets, AND (2) Adaptive Panel Stacking & Overflow-Free Mobile Toolbars.'
+    title: 'Custom Inline SVG Craft and Canvas Visual Effects',
+    directive: 'Design inline <svg> icons with uniform viewBox and stroke weights, animated SVG line-draws (stroke-dashoffset) or progress meters, and <canvas> particle trails, ripples, or ambient shaders where appropriate—keeping all visuals razor-sharp inside the three files.'
   },
   {
     num: 40, stage: 4, stageName: 'Designing',
-    title: 'Theme Polish (Dark/Light Toggle) + Signature Brand Details & Delight',
-    directive: 'Deliver 2 paired design specs in exact detail: (1) Complete Dual-Theme (Dark & Light) CSS Variable Parity with instant toggle persistence, AND (2) Signature Polish Details (custom scrollbars, kbd shortcut chips, subtle celebratory feedback).'
+    title: 'Living States, Ambient Motion and Rewarding Celebrations',
+    directive: 'Craft inviting empty/zero states with helpful copy and a primary call-to-action, smooth shimmer/loading states, subtle ambient life, and rewarding completion moments (micro-confetti, floating score pop-ups, and optional Web Audio chimes) that deliver genuine delight.'
   },
 
   // =========================================================================
-  // STAGE 5: ADVANCEMENTS, AUDIT, POLISH & CODE GENERATION (Steps 41–50)
+  // STAGE 5: BUILDING (Steps 41–50)
   // =========================================================================
   {
     num: 41, stage: 5, stageName: 'Build & Code',
-    title: 'Architectural Advancements & Power-Feature Elevation',
-    directive: 'Review all accumulated notes.txt decisions and inject high-impact engineering advancements (instant live KPIs, smart keyboard shortcuts, undo safety, theme toggle, export/import polish) that elevate the app to flagship quality.'
+    title: 'Complete Feature, State and Edge-Case Inventory',
+    directive: 'Audit every user flow, interactive control, game rule, data field, empty state, error state, and reset condition across notes.txt before writing a line of code—guaranteeing zero missing features or forgotten edge cases and one unified mental model across index.html, style.css, and script.js.'
   },
   {
     num: 42, stage: 5, stageName: 'Build & Code',
-    title: 'Cross-Stage Alignment Audit (Research → Reason → Plan → Design)',
-    directive: 'Audit notes.txt across Stages 1–4 to eliminate any contradictions, gaps, or orphaned features, verifying every planned feature has both visual styling and JS state/event backing.'
+    title: 'Exact DOM Contract and Component Blueprint',
+    directive: 'Map out the canonical manifest of every section, modal/drawer, <template>, id, data-* hook, ARIA attribute, and dynamic container alongside its exact CSS state classes (.is-active, .is-hidden, .is-loading, .is-error) so markup, styling, and logic synchronize with 0% selector mismatch.'
   },
   {
     num: 43, stage: 5, stageName: 'Build & Code',
-    title: 'Proactive Bug Hunting, Race-Condition & Edge-Case Hardening',
-    directive: 'Pre-emptively hunt and resolve subtle bugs before code generation: null DOM refs, duplicate event bindings, XSS in dynamic HTML, NaN/division-by-zero in stats, stale modal state, and localStorage quota/JSON errors.'
+    title: 'Design Token, Texture and Motion Specification',
+    directive: 'Finalize the exact :root color palette, clamp() typography scale, 4px/8px spacing tokens, multi-layered shadows, inline SVG noise/grain or pattern layers, 1px inner highlights, nested border radii, and cubic-bezier easing curves—plus prefers-reduced-motion fallbacks—ready for verbatim CSS implementation.'
   },
   {
     num: 44, stage: 5, stageName: 'Build & Code',
-    title: 'Performance, Accessibility & Semantic Polish Pass',
-    directive: 'Audit ARIA attributes, keyboard focus order, contrast pairs, CSS layout stability (preventing CLS), and batched DOM updates to guarantee 60fps responsiveness and full WCAG 2.2 AA compliance.'
+    title: 'Mobile-First Ergonomics and Cross-Device Input Mapping',
+    directive: 'Lock mobile viewport rules (viewport-fit=cover, safe-area insets), >=44x44px minimum tap targets, thumb-zone control placement, unified PointerEvent handlers, touch-action protections against accidental zooming or pull-to-refresh, and every desktop keyboard shortcut with input-focus guards.'
   },
   {
     num: 45, stage: 5, stageName: 'Build & Code',
-    title: 'UX Micro-Copy, Shortcut Hints & Empty-State Refinement',
-    directive: 'Refine every button label, placeholder, tooltip, confirmation message, and empty-state explanation so the UI reads like an expertly crafted flagship product.'
+    title: 'Self-Contained SVG, Canvas and Web Audio Engineering',
+    directive: 'Specify all zero-asset visual and audio modules in exact detail—crisp inline <svg> icons, <canvas> rendering or particle celebration routines, and Web Audio API synthesized feedback unlocked on first mobile tap with mute persistence—keeping the entire app strictly inside three files.'
   },
   {
     num: 46, stage: 5, stageName: 'Build & Code',
-    title: 'Pre-Code Contract Lock: Exact IDs, Classes, Data-Attrs & Events',
-    directive: 'Publish the canonical, locked manifest of EVERY HTML element ID, CSS class name, state hook ([data-state], .is-active), data-* attribute, and custom event so index.html, style.css, and script.js synchronize with 0% mismatch.'
+    title: 'Algorithm, Persistence and Performance Architecture',
+    directive: 'Finalize the core algorithms, delta-time requestAnimationFrame loop (if animated/game), parent-level event delegation map, DocumentFragment + <template> DOM batching, versioned try/catch localStorage persistence (plus export/import where useful), and clean reset() lifecycle.'
   },
   {
     num: 47, stage: 5, stageName: 'Build & Code',
-    title: 'Full 3-Script Engineering Specification in Fine Exact Detail',
-    directive: 'Produce the exhaustive, implementation-grade blueprint for all three scripts: (1) complete index.html section-by-section structure, (2) complete style.css token & selector inventory, and (3) complete script.js module/function/handler specifications.'
+    title: 'Final Pre-Build Harmony and Completeness Check',
+    directive: 'Cross-verify that every research insight, UX reasoning decision, visual texture, accessibility requirement, XSS guard, and mobile constraint is accounted for with zero TODOs, stubs, or half-wired features—setting up index.html, style.css, and script.js to lock together cleanly.'
   },
   {
     num: 48, stage: 5, stageName: 'Build & Code',
-    title: 'Generate Advanced index.html → index.html Notepad',
+    title: 'Develop and Build the Full index.html File',
     targetFile: 'html',
-    directive: 'Write the complete, production-ready, most advanced form of index.html. Include <link rel="stylesheet" href="style.css"> in <head> and <script src="script.js" defer></script> before </body>, full semantic landmarks, ARIA attributes, inline SVGs (zero external icon/CSS dependencies required to run), and every exact ID/class/data-attribute locked in Steps 46–47. Output ONLY valid HTML code.'
+    directive: 'Write the complete, production-ready index.html with mobile-optimized <meta> tags (viewport-fit=cover), semantic landmarks, accessible ARIA labels/live regions, inline <svg> assets, <template> blocks for dynamic elements, every locked id/data-* hook from Steps 42–47, <link rel="stylesheet" href="style.css">, and <script src="script.js" defer></script>. Zero placeholder comments or omitted markup. Output ONLY valid HTML code.'
   },
   {
     num: 49, stage: 5, stageName: 'Build & Code',
-    title: 'Generate Advanced style.css → style.css Notepad',
+    title: 'Develop and Build the Full style.css File',
     targetFile: 'css',
-    directive: 'Write the complete, production-ready, most advanced form of style.css implementing every token, dark/light theme variable, surface texture, lighting/shadow tier, typography rule, interactive state, responsive breakpoint, reduced-motion rule, and animation defined in notes.txt and matching every selector in index.html (Step 48). Zero placeholders or omitted rules. Output ONLY valid CSS code.'
+    directive: 'Write the complete, production-ready style.css implementing every :root design token, mobile-first responsive Grid/Flexbox layout, surface textures/grain, inner lighting, nested border radii, >=44px touch targets, touch-action rules, tactile control states, fluid cubic-bezier animations, @media (prefers-reduced-motion: reduce) rules, and state classes matching index.html (Step 48). Zero placeholders or omitted rules. Output ONLY valid CSS code.'
   },
   {
     num: 50, stage: 5, stageName: 'Build & Code',
-    title: 'Generate Advanced script.js → script.js Notepad',
+    title: 'Develop and Build the Full script.js File',
     targetFile: 'js',
-    directive: 'Write the complete, production-ready, most advanced form of script.js powering every feature, pure algorithm, state lifecycle, localStorage persistence, realistic seed data, undo/reset, keyboard shortcuts, accessibility focus/ARIA management, export/import, and defensive error handling defined in notes.txt, matching 100% of IDs/classes/data-attributes in index.html (Step 48) and style.css (Step 49). Zero TODOs or stubs. Output ONLY valid JavaScript code.'
+    directive: 'Write the complete, production-ready script.js organized into clear sections (constants & seed data, central state, DOM cache, pure core logic, safe localStorage persistence & export, batched <template>/DocumentFragment renderers, root event delegation, pointer/keyboard handlers, Web Audio/Canvas effects, reset(), and init()) matching 100% of index.html (Step 48) and style.css (Step 49) with full error handling and zero stubs or TODOs. Output ONLY valid JavaScript code.'
   }
 ];
 
@@ -2125,11 +2125,11 @@ function buildStepPrompts(stepObj) {
   }
 
   const stageGuidance = {
-    1: 'Stage 1 (Deep Research): Uncover concrete domain truths, user workflows, browser capabilities, security vectors, and edge cases. Avoid generic platitudes.',
-    2: 'Stage 2 (Deep Reasoning): Critically synthesize Stage 1 research in notes.txt to extract maximum architectural & UX leverage, resolve trade-offs, and lock engineering invariants.',
-    3: 'Stage 3 (Master Planning): Produce exact schemas, module contracts, DOM hierarchies, algorithms, CSS token plans, and test matrices ready for implementation.',
-    4: 'Stage 4 (Visual & UX Design): You MUST explicitly deliver BOTH paired design dimensions in rich, concrete, implementable detail (exact CSS values, visual mechanics, and UX rules).',
-    5: 'Stage 5 (Audit, Polish & Specification): Ruthlessly audit notes.txt for bugs, gaps, and ID/class mismatches, and lock the exact 3-script blueprint before code generation.'
+    1: 'Stage 1 (Research): Uncover concrete problem/desire truths, user contexts, competitor/workaround gaps, mobile & accessibility expectations, and local-only zero-backend trust factors. Avoid generic platitudes.',
+    2: 'Stage 2 (Reasoning): Critically synthesize Stage 1 research in notes.txt to lock MVP scope, shortest user journeys, intentional trade-offs, edge cases, and measurable success criteria for a 3-file zero-backend app.',
+    3: 'Stage 3 (Planning): Produce exact 3-file engineering blueprints—script.js module sections, central state schema, mobile-ready index.html skeleton, mobile-first style.css tokens, pointer/touch parity, event delegation, and localStorage/RAF safety.',
+    4: 'Stage 4 (Design): Deliver rich, concrete, implementable CSS/SVG/Canvas/UX specifications—60-30-10 color tokens, clamp() typography, 4px/8px mobile thumb-zone spacing, surface textures/grain, inner lighting, cubic-bezier motion, tactile states, and living celebrations.',
+    5: 'Stage 5 (Build & Code): Complete the pre-build audit, lock exact DOM/CSS/JS contracts, and generate the full, zero-backend, zero-dependency index.html, style.css, and script.js files.'
   };
 
   const systemPrompt =
@@ -2138,6 +2138,7 @@ function buildStepPrompts(stepObj) {
     `Execution Rules:\n` +
     `- Read and build directly upon ALL prior decisions in notes.txt without contradicting locked specs.\n` +
     `- Use dense, structured, high-signal technical bullet points and exact specifications (zero conversational filler).\n` +
+    `- Keep every decision strictly 100% client-side with NO backend, delivered across three standalone files (index.html, style.css, script.js) with zero external runtime dependencies.\n` +
     `- Do NOT write full HTML/CSS/JS files yet (code generation occurs exclusively in Steps 48–50).`;
 
   const userPrompt =
