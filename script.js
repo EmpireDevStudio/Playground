@@ -303,9 +303,13 @@ const state = {
   isRunning: false,
   isPaused: false,
   isFrozen: false,
+  isOfflineWaiting: false,
   freezeWakeResolver: null,
+  networkWakeResolver: null,
   sessionCalls: 0,
   sessionRetries: 0,
+  runStartedAt: null,
+  stepDurations: [],
   abortController: null,
   fileHandle: null,
   previewErrors: [],
@@ -315,7 +319,23 @@ const state = {
   bgAudioEl: null,
   bgAudioUrl: null,
   timerWorker: null,
-  lastOsNotifPush: 0
+  heartbeatTickCount: 0,
+  lastOsNotifPush: 0,
+  lastNotifSnapshot: {
+    mode: 'hidden',
+    title: '',
+    detail: '',
+    stepNum: 0
+  },
+  isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
+  battery: {
+    supported: false,
+    level: null,
+    charging: null,
+    dischargingTime: null,
+    warnedLow: false,
+    warnedCritical: false
+  }
 };
 
 const el = {
@@ -355,13 +375,22 @@ const el = {
   persistenceSummaryText: document.getElementById('persistenceSummaryText'),
   grantPersistenceBtn: document.getElementById('grantPersistenceBtn'),
   androidBatteryHelpBtn: document.getElementById('androidBatteryHelpBtn'),
+  mobileReadinessModal: document.getElementById('mobileReadinessModal'),
+  closeReadinessBtn: document.getElementById('closeReadinessBtn'),
+  readinessChecklist: document.getElementById('readinessChecklist'),
+  testLockNotifBtn: document.getElementById('testLockNotifBtn'),
+  enableAllReadinessBtn: document.getElementById('enableAllReadinessBtn'),
   liveNotificationBar: document.getElementById('liveNotificationBar'),
   notifStatusDot: document.getElementById('notifStatusDot'),
   notifTitle: document.getElementById('notifTitle'),
   notifDetail: document.getElementById('notifDetail'),
   notifKeyPill: document.getElementById('notifKeyPill'),
+  notifEtaPill: document.getElementById('notifEtaPill'),
+  notifCallsPill: document.getElementById('notifCallsPill'),
   notifProgressText: document.getElementById('notifProgressText'),
   notifProgressFill: document.getElementById('notifProgressFill'),
+  notifBatteryBadge: document.getElementById('notifBatteryBadge'),
+  notifNetBadge: document.getElementById('notifNetBadge'),
   notifWakeBadge: document.getElementById('notifWakeBadge'),
   notifAudioBadge: document.getElementById('notifAudioBadge'),
   notifOsBtn: document.getElementById('notifOsBtn'),
@@ -453,6 +482,9 @@ function saveWorkspaceSnapshot() {
   safeSet('wbs_js', state.jsCode);
   safeSet('wbs_next_idx', String(state.nextStepIndex));
   safeSet('wbs_was_running', state.isRunning ? '1' : '0');
+  safeSet('wbs_run_started_at', state.runStartedAt ? String(state.runStartedAt) : '');
+  safeSet('wbs_session_calls', String(state.sessionCalls));
+  safeSet('wbs_session_retries', String(state.sessionRetries));
   const compactCompleted = {};
   Object.keys(state.completedSteps).forEach((k) => {
     compactCompleted[k] = { timestamp: state.completedSteps[k].timestamp || '' };
@@ -571,6 +603,31 @@ function formatDurationCompact(ms) {
   if (hrs > 0) return `${hrs}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
   if (mins > 0) return `${mins}m ${String(secs).padStart(2, '0')}s`;
   return `${secs}s`;
+}
+
+function formatProgressBar(pct, width = 10) {
+  const clamped = Math.max(0, Math.min(100, Number(pct) || 0));
+  const filled = Math.round((clamped / 100) * width);
+  return `${'█'.repeat(filled)}${'░'.repeat(width - filled)} ${clamped}%`;
+}
+
+function getTimingMetrics() {
+  const doneCount = Object.keys(state.completedSteps).length;
+  const elapsedMs = state.runStartedAt ? Math.max(0, Date.now() - state.runStartedAt) : 0;
+  const remainingSteps = Math.max(0, 50 - doneCount);
+  let etaMs = null;
+  if (state.stepDurations.length > 0 && remainingSteps > 0) {
+    const recent = state.stepDurations.slice(-8);
+    const avgMs = recent.reduce((a, b) => a + b, 0) / recent.length;
+    etaMs = Math.round(avgMs * remainingSteps);
+  }
+  return {
+    doneCount,
+    elapsedMs,
+    etaMs,
+    elapsedStr: elapsedMs > 0 ? formatDurationCompact(elapsedMs) : '0s',
+    etaStr: etaMs !== null ? formatDurationCompact(etaMs) : '--'
+  };
 }
 
 // =========================================================================
@@ -748,6 +805,28 @@ function wakeFreezeIfReady() {
   }
 }
 
+function wakeNetworkIfOnline() {
+  if (state.isOfflineWaiting && navigator.onLine && typeof state.networkWakeResolver === 'function') {
+    const resolve = state.networkWakeResolver;
+    state.networkWakeResolver = null;
+    resolve();
+  }
+}
+
+function resetAllRateLimitedCooldowns() {
+  state.apiKeys.forEach((k) => {
+    if (k.status === 'rate_limited') {
+      k.status = 'ready';
+      k.resetAt = null;
+      k.cooldownReason = '';
+      k.consecutive429 = 0;
+    }
+  });
+  saveKeyPool();
+  updateKeyPoolUI();
+  wakeFreezeIfReady();
+}
+
 function updateKeyPoolUI() {
   const stats = getKeyPoolStats();
   el.keyPoolBadge.textContent = `Keys: ${stats.readyCount}/${stats.total}`;
@@ -766,9 +845,9 @@ function updateKeyPoolUI() {
   const activeKeyObj = state.apiKeys[state.activeKeyIndex];
   if (stats.readyCount === 0 && stats.limitedCount > 0 && stats.earliestResetAt) {
     const remStr = formatDurationCompact(stats.earliestResetAt - Date.now());
-    el.notifKeyPill.textContent = `All cooling • Next ${remStr}`;
+    el.notifKeyPill.textContent = `All cooling • ${remStr}`;
   } else if (activeKeyObj) {
-    el.notifKeyPill.textContent = `${activeKeyObj.label} (${stats.readyCount}/${stats.total} ready)`;
+    el.notifKeyPill.textContent = `${activeKeyObj.label} (${stats.readyCount}/${stats.total})`;
   } else {
     el.notifKeyPill.textContent = 'No Key';
   }
@@ -840,7 +919,6 @@ function parseDurationStringToMs(raw) {
   const str = String(raw).trim();
   if (!str) return null;
 
-  // Pure numeric string -> seconds
   if (/^\d+(?:\.\d+)?$/.test(str)) {
     const val = parseFloat(str);
     return Number.isFinite(val) && val > 0 ? Math.round(val * 1000) : null;
@@ -893,7 +971,6 @@ function extractRateLimitInfo(response, errJson, errDetail, keyObj) {
   let explicitMs = null;
   let reason = isDailyQuota ? 'Daily Quota (RPD)' : 'RPM/TPM Limit';
 
-  // 1. Check HTTP Retry-After header
   const retryAfter = response?.headers?.get?.('Retry-After');
   if (retryAfter) {
     const parsedDur = parseDurationStringToMs(retryAfter);
@@ -909,7 +986,6 @@ function extractRateLimitInfo(response, errJson, errDetail, keyObj) {
     }
   }
 
-  // 2. Check x-ratelimit-reset headers
   if (!explicitMs) {
     const rlReset = response?.headers?.get?.('x-ratelimit-reset') ||
       response?.headers?.get?.('x-ratelimit-reset-requests') ||
@@ -935,7 +1011,6 @@ function extractRateLimitInfo(response, errJson, errDetail, keyObj) {
     }
   }
 
-  // 3. Check Google RPC RetryInfo details
   if (!explicitMs) {
     for (const d of details) {
       if (d?.retryDelay) {
@@ -949,7 +1024,6 @@ function extractRateLimitInfo(response, errJson, errDetail, keyObj) {
     }
   }
 
-  // 4. Check natural language retry duration in error message
   if (!explicitMs) {
     const msgMatch = String(errDetail || '').match(/retry\s+(?:in|after)\s+([0-9.\s]*(?:ms|milliseconds?|h|hrs?|hours?|m|mins?|minutes?|s|secs?|seconds?)(?:\s*[0-9.]+\s*(?:m|mins?|minutes?|s|secs?|seconds?))*)/i);
     if (msgMatch) {
@@ -997,19 +1071,67 @@ function markKeyRateLimited(keyObj, keyIdx, response, errJson, errDetail) {
 }
 
 // =========================================================================
-// BACKGROUND PERSISTENCE, WORKER TIMERS, WAKE LOCK & NOTIFICATIONS
+// BACKGROUND PERSISTENCE, WORKER HEARTBEAT, BATTERY, NETWORK & LOCK SCREEN
 // =========================================================================
+function onHeartbeatTick() {
+  state.heartbeatTickCount += 1;
+  const changed = refreshExpiredCooldowns();
+  if (changed || (el.keysModal && !el.keysModal.classList.contains('hidden'))) {
+    updateKeyPoolUI();
+  }
+  if (changed) {
+    wakeFreezeIfReady();
+  }
+
+  if (state.isRunning) {
+    const timing = getTimingMetrics();
+    if (el.notifEtaPill) {
+      el.notifEtaPill.textContent = timing.etaMs !== null
+        ? `${timing.elapsedStr} • ETA ${timing.etaStr}`
+        : `${timing.elapsedStr} elapsed`;
+    }
+    if (el.notifCallsPill) {
+      el.notifCallsPill.textContent = `Calls: ${state.sessionCalls}${state.sessionRetries ? ` (${state.sessionRetries} retries)` : ''}`;
+    }
+
+    if (state.heartbeatTickCount % 10 === 0) {
+      if (state.swRegistration && state.swRegistration.active) {
+        state.swRegistration.active.postMessage({ type: 'KEEPALIVE_PING' });
+      }
+      const snap = state.lastNotifSnapshot;
+      if (snap && snap.mode !== 'hidden') {
+        const stats = getKeyPoolStats();
+        let detail = snap.detail;
+        if (state.isFrozen && stats.earliestResetAt) {
+          detail = `All keys cooling — resumes in ${formatDurationCompact(stats.earliestResetAt - Date.now())} (at ${formatResetClock(stats.earliestResetAt)})`;
+        } else if (state.isOfflineWaiting) {
+          detail = 'Offline — waiting for Wi-Fi or cellular data to resume automatically';
+        }
+        pushOsProgressNotification(snap.title, detail, {
+          force: true,
+          status: snap.mode,
+          step: snap.stepNum
+        });
+        updateMediaSessionMetadata(snap.title, detail);
+      }
+    }
+  }
+}
+
 function initTimerWorker() {
   if (state.timerWorker || typeof Worker === 'undefined') return;
   try {
     const workerCode = `
       const timers = new Map();
+      setInterval(() => {
+        self.postMessage({ type: 'heartbeat', ts: Date.now() });
+      }, 1000);
       self.onmessage = function(e) {
         const { cmd, id, ms } = e.data || {};
         if (cmd === 'start') {
           const tid = setTimeout(() => {
             timers.delete(id);
-            self.postMessage({ id, done: true });
+            self.postMessage({ type: 'timeout', id, done: true });
           }, ms);
           timers.set(id, tid);
         } else if (cmd === 'clear') {
@@ -1021,6 +1143,11 @@ function initTimerWorker() {
     `;
     const blob = new Blob([workerCode], { type: 'application/javascript' });
     state.timerWorker = new Worker(URL.createObjectURL(blob));
+    state.timerWorker.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'heartbeat') {
+        onHeartbeatTick();
+      }
+    });
   } catch (_) {
     state.timerWorker = null;
   }
@@ -1033,7 +1160,7 @@ function workerTimeout(ms) {
   return new Promise((resolve) => {
     const id = `${Date.now()}_${Math.random()}`;
     const onMsg = (e) => {
-      if (e.data && e.data.id === id) {
+      if (e.data && e.data.type === 'timeout' && e.data.id === id) {
         state.timerWorker.removeEventListener('message', onMsg);
         resolve();
       }
@@ -1045,7 +1172,7 @@ function workerTimeout(ms) {
 
 function createSilentWavBlobUrl() {
   const sampleRate = 8000;
-  const numSamples = sampleRate;
+  const numSamples = sampleRate * 2;
   const buffer = new ArrayBuffer(44 + numSamples);
   const view = new DataView(buffer);
   const writeStr = (offset, s) => {
@@ -1064,7 +1191,10 @@ function createSilentWavBlobUrl() {
   view.setUint16(34, 8, true);
   writeStr(36, 'data');
   view.setUint32(40, numSamples, true);
-  for (let i = 44; i < 44 + numSamples; i++) view.setUint8(i, 128);
+  // Ultra-low sub-audible dither (128/129) prevents mobile OSes from suspending pure zero-amplitude silence
+  for (let i = 44; i < 44 + numSamples; i++) {
+    view.setUint8(i, i % 2 === 0 ? 128 : 129);
+  }
   const blob = new Blob([buffer], { type: 'audio/wav' });
   return URL.createObjectURL(blob);
 }
@@ -1075,7 +1205,7 @@ async function acquireWakeLock() {
     return;
   }
   try {
-    if (!state.wakeLock) {
+    if (!state.wakeLock && document.visibilityState === 'visible') {
       state.wakeLock = await navigator.wakeLock.request('screen');
       state.wakeLock.addEventListener('release', () => {
         state.wakeLock = null;
@@ -1104,11 +1234,19 @@ function startBackgroundAudioKeepAlive() {
       const audio = document.createElement('audio');
       audio.src = state.bgAudioUrl;
       audio.loop = true;
-      audio.volume = 0.01;
+      audio.volume = 0.005;
       audio.setAttribute('playsinline', '');
+      audio.addEventListener('pause', () => {
+        updateKeepAliveBadges();
+      });
+      audio.addEventListener('play', () => {
+        updateKeepAliveBadges();
+      });
       state.bgAudioEl = audio;
     }
-    state.bgAudioEl.play().catch(() => {});
+    if (state.bgAudioEl.paused) {
+      state.bgAudioEl.play().catch(() => {});
+    }
     updateMediaSessionMetadata('50-Point Studio Active', 'Running build pipeline...');
   } catch (_) {}
   updateKeepAliveBadges();
@@ -1120,47 +1258,190 @@ function stopBackgroundAudioKeepAlive() {
       state.bgAudioEl.pause();
     } catch (_) {}
   }
+  if ('mediaSession' in navigator) {
+    try {
+      navigator.mediaSession.playbackState = 'paused';
+    } catch (_) {}
+  }
   updateKeepAliveBadges();
 }
 
 function updateMediaSessionMetadata(title, detail) {
   if (!('mediaSession' in navigator)) return;
   try {
+    const doneCount = Object.keys(state.completedSteps).length;
+    const pct = Math.round((doneCount / 50) * 100);
+    const stats = getKeyPoolStats();
+    const activeKeyObj = state.apiKeys[state.activeKeyIndex];
+    const keyLabel = stats.readyCount === 0 && stats.limitedCount > 0
+      ? 'Keys cooling'
+      : activeKeyObj
+      ? `${activeKeyObj.label} (${stats.readyCount}/${stats.total})`
+      : 'No key';
+    const batText = getBatteryShortString();
+
     navigator.mediaSession.metadata = new MediaMetadata({
       title: title || '50-Point Web App Studio',
-      artist: detail || 'Background Build Active',
-      album: state.model || 'Gemini',
+      artist: `${detail || 'Background Build Active'} • ${doneCount}/50 (${pct}%) • ${keyLabel}`,
+      album: `${state.model}${batText ? ` • ${batText}` : ''}`,
       artwork: [
         { src: './icon-192.png', sizes: '192x192', type: 'image/png' },
         { src: './icon-512.png', sizes: '512x512', type: 'image/png' }
       ]
     });
     navigator.mediaSession.playbackState = state.isRunning ? 'playing' : 'paused';
+
+    if (typeof navigator.mediaSession.setPositionState === 'function') {
+      try {
+        navigator.mediaSession.setPositionState({
+          duration: 50,
+          playbackRate: 1.0,
+          position: Math.max(0, Math.min(50, doneCount))
+        });
+      } catch (_) {}
+    }
+
     navigator.mediaSession.setActionHandler('pause', () => {
       if (state.abortController) state.abortController.abort();
     });
     navigator.mediaSession.setActionHandler('play', () => {
       if (!state.isRunning && state.nextStepIndex < 50) runPipeline(false);
     });
+    navigator.mediaSession.setActionHandler('stop', () => {
+      if (state.abortController) state.abortController.abort();
+    });
   } catch (_) {}
+}
+
+function getBatteryShortString() {
+  if (!state.battery.supported || !Number.isFinite(state.battery.level)) return '';
+  const pct = Math.round(state.battery.level * 100);
+  const icon = state.battery.charging ? '⚡' : '🔋';
+  return `${icon}${pct}%`;
+}
+
+function updateBatteryUI() {
+  if (!el.notifBatteryBadge) return;
+  if (!state.battery.supported || !Number.isFinite(state.battery.level)) {
+    el.notifBatteryBadge.textContent = 'Bat: N/A';
+    el.notifBatteryBadge.className = 'hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400';
+    return;
+  }
+
+  const pct = Math.round(state.battery.level * 100);
+  const charging = Boolean(state.battery.charging);
+  el.notifBatteryBadge.textContent = charging ? `⚡ ${pct}%` : `🔋 ${pct}%`;
+
+  if (!charging && pct <= 10) {
+    el.notifBatteryBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-rose-500/20 border border-rose-500/50 text-rose-200 animate-pulse-soft';
+  } else if (!charging && pct <= 20) {
+    el.notifBatteryBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-amber-500/20 border border-amber-500/45 text-amber-200';
+  } else if (charging) {
+    el.notifBatteryBadge.className = 'hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300';
+  } else {
+    el.notifBatteryBadge.className = 'hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-300';
+  }
+}
+
+function checkBatteryWarnings() {
+  if (!state.battery.supported || !Number.isFinite(state.battery.level)) return;
+  const pct = Math.round(state.battery.level * 100);
+
+  if (state.battery.charging || pct > 25) {
+    state.battery.warnedLow = false;
+    state.battery.warnedCritical = false;
+    return;
+  }
+
+  if (!state.isRunning) return;
+
+  if (pct <= 10 && !state.battery.warnedCritical) {
+    state.battery.warnedCritical = true;
+    state.battery.warnedLow = true;
+    saveWorkspaceSnapshot();
+    const msg = `Critical Battery (${pct}%): Plug in charger! Progress is auto-saved at Step ${state.nextStepIndex + 1}/50.`;
+    showToast(msg, 'error');
+    sendOsAlertNotification('⚠️ Critical Battery — Plug In Charger', msg);
+  } else if (pct <= 20 && !state.battery.warnedLow) {
+    state.battery.warnedLow = true;
+    saveWorkspaceSnapshot();
+    const msg = `Low Battery (${pct}%): Connect power to keep device awake until Step 50 completes. Progress is saved.`;
+    showToast(msg, 'warn');
+    sendOsAlertNotification('🔋 Low Battery Warning', msg);
+  }
+}
+
+async function initBatteryMonitor() {
+  if (typeof navigator === 'undefined' || typeof navigator.getBattery !== 'function') {
+    updateBatteryUI();
+    return;
+  }
+  try {
+    const bat = await navigator.getBattery();
+    const sync = () => {
+      state.battery.supported = true;
+      state.battery.level = bat.level;
+      state.battery.charging = bat.charging;
+      state.battery.dischargingTime = bat.dischargingTime;
+      updateBatteryUI();
+      checkBatteryWarnings();
+      if (el.mobileReadinessModal && !el.mobileReadinessModal.classList.contains('hidden')) {
+        renderReadinessChecklist();
+      }
+    };
+    sync();
+    bat.addEventListener('levelchange', sync);
+    bat.addEventListener('chargingchange', sync);
+  } catch (_) {
+    updateBatteryUI();
+  }
+}
+
+function updateNetworkUI() {
+  state.isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
+  if (!el.notifNetBadge) return;
+  if (state.isOnline) {
+    el.notifNetBadge.textContent = 'Online';
+    el.notifNetBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300';
+  } else {
+    el.notifNetBadge.textContent = 'Offline';
+    el.notifNetBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-rose-500/20 border border-rose-500/45 text-rose-200 animate-pulse-soft';
+  }
+}
+
+function initNetworkMonitor() {
+  updateNetworkUI();
+  window.addEventListener('online', () => {
+    updateNetworkUI();
+    wakeNetworkIfOnline();
+    if (state.isRunning) {
+      showToast('Network reconnected — resuming pipeline.', 'success');
+    }
+  });
+  window.addEventListener('offline', () => {
+    updateNetworkUI();
+    if (state.isRunning) {
+      showToast('Device went offline — pipeline will wait and auto-resume when back online.', 'warn');
+    }
+  });
 }
 
 function updateKeepAliveBadges() {
   if (state.wakeLock) {
     el.notifWakeBadge.textContent = 'Wake: ON';
-    el.notifWakeBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300';
+    el.notifWakeBadge.className = 'hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300';
   } else {
     el.notifWakeBadge.textContent = 'Wake: Off';
-    el.notifWakeBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400';
+    el.notifWakeBadge.className = 'hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400';
   }
 
   const audioActive = state.bgAudioEl && !state.bgAudioEl.paused;
   if (audioActive) {
     el.notifAudioBadge.textContent = 'BG: ON';
-    el.notifAudioBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300';
+    el.notifAudioBadge.className = 'hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300';
   } else {
     el.notifAudioBadge.textContent = 'BG: Off';
-    el.notifAudioBadge.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400';
+    el.notifAudioBadge.className = 'hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400';
   }
 
   const perm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
@@ -1180,13 +1461,14 @@ function updateKeepAliveBadges() {
 function updatePersistenceBannerUI() {
   if (!el.mobilePersistenceBanner) return;
   const notifGranted = typeof Notification !== 'undefined' && Notification.permission === 'granted';
+  const batText = getBatteryShortString();
   if (notifGranted && state.osNotifEnabled && state.bgKeepAliveEnabled) {
     el.mobilePersistenceBanner.className = 'shrink-0 border-b border-emerald-500/30 bg-emerald-950/20 px-3 sm:px-5 py-1.5';
-    el.persistenceSummaryText.textContent = `Android Shade Banner ON • Wake Lock & Auto-Resume Armed${state.storagePersisted ? ' • Storage Locked' : ''}`;
+    el.persistenceSummaryText.textContent = `Lock-Screen Shade ON • Background Audio & Auto-Resume Armed${state.storagePersisted ? ' • Storage Locked' : ''}${batText ? ` • ${batText}` : ''}`;
     el.grantPersistenceBtn.textContent = 'Re-Sync Permissions';
   } else {
     el.mobilePersistenceBanner.className = 'shrink-0 border-b border-cyan-500/35 bg-cyan-950/30 px-3 sm:px-5 py-1.5';
-    el.persistenceSummaryText.textContent = 'Request OS notification shade & background keep-alive permissions for long cooldowns.';
+    el.persistenceSummaryText.textContent = 'Enable OS notification shade & background keep-alive for lock-screen and walk-away runs.';
     el.grantPersistenceBtn.textContent = 'Enable Always-Active Mode';
   }
 }
@@ -1226,43 +1508,97 @@ async function requestFullMobilePersistence() {
 
   updatePersistenceBannerUI();
   updateKeepAliveBadges();
+  if (el.mobileReadinessModal && !el.mobileReadinessModal.classList.contains('hidden')) {
+    renderReadinessChecklist();
+  }
 
   if (notifGranted) {
     const done = Object.keys(state.completedSteps).length;
     pushOsProgressNotification(
-      '50-Point Studio • Background Lock Active',
+      '50-Point Studio • Lock-Screen Ready',
       state.isRunning
-        ? `Building Step ${state.nextStepIndex + 1}/50 (${done}/50 done) — monitoring API cooldowns.`
-        : 'Android shade banner & persistence armed. Ready for long-horizon builds.',
+        ? `Building Step ${state.nextStepIndex + 1}/50 (${done}/50 done) — safe to lock screen and walk away.`
+        : 'Notification shade, lock-screen media keep-alive & storage persistence armed.',
       { force: true, status: state.isRunning ? 'running' : 'paused', step: state.nextStepIndex }
     );
-    showToast('Android Notification Shade, Wake Lock & Storage Persistence enabled!', 'success');
+    showToast('Lock-Screen Notification, Wake Lock & Storage Persistence enabled!', 'success');
   } else {
-    showToast('Please allow Notifications in your browser site settings for the Android shade banner.', 'warn');
+    showToast('Please allow Notifications in your browser site settings for the lock-screen banner.', 'warn');
   }
 }
 
-function pushOsProgressNotification(title, body, { force = false, status = 'running', step = 0 } = {}) {
+function sendOsAlertNotification(title, body) {
+  if (!state.osNotifEnabled || typeof Notification === 'undefined' || Notification.permission !== 'granted') {
+    return;
+  }
+  if (state.swRegistration && state.swRegistration.active) {
+    state.swRegistration.active.postMessage({
+      type: 'SHOW_ALERT_NOTIFICATION',
+      payload: { title, body, requireInteraction: true }
+    });
+  } else if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'SHOW_ALERT_NOTIFICATION',
+      payload: { title, body, requireInteraction: true }
+    });
+  } else {
+    try {
+      new Notification(title, {
+        body,
+        icon: './icon-192.png',
+        badge: './notif-badge.png',
+        requireInteraction: true
+      });
+    } catch (_) {}
+  }
+}
+
+function pushOsProgressNotification(title, detailText, { force = false, status = 'running', step = 0 } = {}) {
   if (!state.osNotifEnabled || typeof Notification === 'undefined' || Notification.permission !== 'granted') {
     return;
   }
   const now = Date.now();
-  if (!force && now - state.lastOsNotifPush < 3500) return;
+  if (!force && now - state.lastOsNotifPush < 3000) return;
   state.lastOsNotifPush = now;
 
-  const actions = status === 'running' || status === 'frozen'
-    ? [{ action: 'pause', title: 'Pause Build' }]
-    : status === 'paused'
-    ? [{ action: 'resume', title: 'Resume Build' }]
-    : [];
+  const timing = getTimingMetrics();
+  const pct = Math.round((timing.doneCount / 50) * 100);
+  const bar = formatProgressBar(pct, 10);
+  const stats = getKeyPoolStats();
+  const activeKeyObj = state.apiKeys[state.activeKeyIndex];
+  const keyText = stats.readyCount === 0 && stats.limitedCount > 0 && stats.earliestResetAt
+    ? `Keys cooling (next ${formatDurationCompact(stats.earliestResetAt - now)})`
+    : activeKeyObj
+    ? `${activeKeyObj.label} (${stats.readyCount}/${stats.total} ready)`
+    : 'No Key';
+  const batText = getBatteryShortString();
+  const etaText = timing.etaMs !== null ? ` • ETA ${timing.etaStr}` : '';
+
+  const richBody =
+    `${bar} (${timing.doneCount}/50)\n` +
+    `${detailText}\n` +
+    `${keyText} • Calls: ${state.sessionCalls} • ${timing.elapsedStr}${etaText}${batText ? ` • ${batText}` : ''}`;
+
+  let actions = [];
+  if (status === 'frozen') {
+    actions = [
+      { action: 'pause', title: 'Pause' },
+      { action: 'reset_cooldowns', title: 'Retry Now' }
+    ];
+  } else if (status === 'running') {
+    actions = [{ action: 'pause', title: 'Pause Build' }];
+  } else if (status === 'paused') {
+    actions = [{ action: 'resume', title: 'Resume Build' }];
+  }
 
   const payload = {
     title,
-    body,
+    body: richBody,
     tag: 'wbs-pipeline-progress',
     renotify: false,
     silent: true,
     requireInteraction: status === 'running' || status === 'frozen',
+    timestamp: now,
     status,
     step,
     actions
@@ -1281,7 +1617,7 @@ function pushOsProgressNotification(title, body, { force = false, status = 'runn
   } else {
     try {
       new Notification(title, {
-        body,
+        body: richBody,
         tag: 'wbs-pipeline-progress',
         silent: true,
         icon: './icon-192.png',
@@ -1291,20 +1627,39 @@ function pushOsProgressNotification(title, body, { force = false, status = 'runn
   }
 }
 
+function clearOsProgressNotification() {
+  if (state.swRegistration && state.swRegistration.active) {
+    state.swRegistration.active.postMessage({ type: 'CLEAR_PROGRESS_NOTIFICATION' });
+  } else if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_PROGRESS_NOTIFICATION' });
+  }
+}
+
 function updateLiveNotificationBar({ mode = 'hidden', title = '', detail = '', stepNum = 0, forceOs = false } = {}) {
+  state.lastNotifSnapshot = { mode, title, detail, stepNum };
+
   if (mode === 'hidden') {
     el.liveNotificationBar.classList.add('hidden');
     return;
   }
 
   el.liveNotificationBar.classList.remove('hidden');
-  const doneCount = Object.keys(state.completedSteps).length;
-  const pct = Math.round((doneCount / 50) * 100);
-  el.notifProgressText.textContent = `${doneCount}/50 (${pct}%)`;
+  const timing = getTimingMetrics();
+  const pct = Math.round((timing.doneCount / 50) * 100);
+  el.notifProgressText.textContent = `${timing.doneCount}/50 (${pct}%)`;
   el.notifProgressFill.style.width = `${pct}%`;
 
-  el.liveNotificationBar.className = 'shrink-0 border-b px-3 sm:px-5 py-2';
-  el.notifStatusDot.className = 'w-2.5 h-2.5 rounded-full shrink-0';
+  if (el.notifEtaPill) {
+    el.notifEtaPill.textContent = timing.etaMs !== null
+      ? `${timing.elapsedStr} • ETA ${timing.etaStr}`
+      : `${timing.elapsedStr} elapsed`;
+  }
+  if (el.notifCallsPill) {
+    el.notifCallsPill.textContent = `Calls: ${state.sessionCalls}${state.sessionRetries ? ` (${state.sessionRetries} retries)` : ''}`;
+  }
+
+  el.liveNotificationBar.className = 'shrink-0 border-b px-3 sm:px-5 py-1.5';
+  el.notifStatusDot.className = 'w-2 h-2 rounded-full shrink-0';
 
   if (mode === 'frozen') {
     el.liveNotificationBar.classList.add('border-amber-500/45', 'bg-amber-950/35');
@@ -1339,15 +1694,66 @@ function updateLiveNotificationBar({ mode = 'hidden', title = '', detail = '', s
 
   updateKeyPoolUI();
   updateKeepAliveBadges();
+  updateBatteryUI();
+  updateNetworkUI();
   updateMediaSessionMetadata(title, detail);
 
   if (mode === 'running' || mode === 'frozen' || mode === 'complete' || mode === 'error' || mode === 'paused') {
-    pushOsProgressNotification(title, `${detail} (${doneCount}/50 • ${pct}%)`, {
+    pushOsProgressNotification(title, detail, {
       force: forceOs,
       status: mode,
       step: stepNum
     });
   }
+}
+
+function renderReadinessChecklist() {
+  if (!el.readinessChecklist) return;
+  const notifPerm = typeof Notification !== 'undefined' ? Notification.permission : 'unsupported';
+  const audioActive = Boolean(state.bgAudioEl && !state.bgAudioEl.paused);
+  const batPct = state.battery.supported && Number.isFinite(state.battery.level)
+    ? `${Math.round(state.battery.level * 100)}%${state.battery.charging ? ' (Charging)' : ' (On Battery)'}`
+    : 'Not exposed by browser';
+
+  const items = [
+    {
+      label: 'OS & Lock-Screen Notifications',
+      ok: notifPerm === 'granted' && state.osNotifEnabled,
+      status: notifPerm === 'granted' ? (state.osNotifEnabled ? 'Granted & Active' : 'Muted in Settings') : notifPerm === 'denied' ? 'Blocked in Browser' : 'Permission Needed'
+    },
+    {
+      label: 'Lock-Screen MediaSession & Audio Keep-Alive',
+      ok: state.bgKeepAliveEnabled,
+      status: audioActive ? 'Playing (Active)' : state.bgKeepAliveEnabled ? 'Armed (Starts with Build)' : 'Disabled'
+    },
+    {
+      label: 'Screen Wake Lock API',
+      ok: 'wakeLock' in navigator,
+      status: state.wakeLock ? 'Active' : ('wakeLock' in navigator ? 'Supported (Auto-arms while visible)' : 'Unsupported (Uses Audio Keep-Alive)')
+    },
+    {
+      label: 'Persistent Storage Protection',
+      ok: state.storagePersisted,
+      status: state.storagePersisted ? 'Locked (Protected from eviction)' : 'Standard (Tap Enable to request lock)'
+    },
+    {
+      label: 'Battery & Power Monitor',
+      ok: !state.battery.supported || state.battery.charging || (state.battery.level > 0.2),
+      status: batPct
+    },
+    {
+      label: 'Network & Auto-Reconnect',
+      ok: state.isOnline,
+      status: state.isOnline ? 'Online (Auto-waits on drops)' : 'Offline (Waiting for connection)'
+    }
+  ];
+
+  el.readinessChecklist.innerHTML = items.map((item) => `
+    <div class="rounded-lg border border-slate-800 bg-[#090d14] px-3 py-2 flex items-center justify-between gap-2">
+      <span class="text-slate-200 font-medium">${escapeHtml(item.label)}</span>
+      <span class="font-mono-code text-[10px] px-2 py-0.5 rounded ${item.ok ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'}">${escapeHtml(item.status)}</span>
+    </div>
+  `).join('');
 }
 
 async function registerServiceWorkerAndPwa() {
@@ -1363,6 +1769,9 @@ async function registerServiceWorkerAndPwa() {
             state.abortController.abort();
           } else if (msg.action === 'resume' && !state.isRunning && state.nextStepIndex < 50) {
             runPipeline(false);
+          } else if (msg.action === 'reset_cooldowns') {
+            resetAllRateLimitedCooldowns();
+            showToast('Cooldowns reset from notification — retrying now.', 'info');
           }
         }
       });
@@ -1390,19 +1799,62 @@ async function registerServiceWorkerAndPwa() {
     el.installAppBtn.classList.add('inline-flex');
   }
 
+  const handleResumeLifecycle = () => {
+    const changed = refreshExpiredCooldowns();
+    updateKeyPoolUI();
+    if (changed) wakeFreezeIfReady();
+    if (state.isRunning) {
+      acquireWakeLock();
+      startBackgroundAudioKeepAlive();
+    }
+  };
+
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-      const changed = refreshExpiredCooldowns();
-      updateKeyPoolUI();
-      if (changed) wakeFreezeIfReady();
-      if (state.isRunning) {
-        acquireWakeLock();
-        startBackgroundAudioKeepAlive();
-      }
+      handleResumeLifecycle();
+    } else {
+      saveWorkspaceSnapshot();
+      saveKeyPool();
     }
     if (state.isRunning && state.swRegistration && state.swRegistration.active) {
       state.swRegistration.active.postMessage({ type: 'KEEPALIVE_PING' });
     }
+  });
+
+  document.addEventListener('resume', handleResumeLifecycle);
+  document.addEventListener('freeze', () => {
+    saveWorkspaceSnapshot();
+    saveKeyPool();
+    saveSettingsSnapshot();
+  });
+  window.addEventListener('pagehide', () => {
+    saveWorkspaceSnapshot();
+    saveKeyPool();
+    saveSettingsSnapshot();
+  });
+  window.addEventListener('beforeunload', (e) => {
+    saveWorkspaceSnapshot();
+    saveKeyPool();
+    saveSettingsSnapshot();
+    if (state.isRunning) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+  // Unlock background audio & wake lock on any user touch if auto-resumed without initial gesture
+  const unlockOnGesture = () => {
+    if (state.isRunning && state.bgKeepAliveEnabled) {
+      if (!state.bgAudioEl || state.bgAudioEl.paused) {
+        startBackgroundAudioKeepAlive();
+      }
+      if (!state.wakeLock) {
+        acquireWakeLock();
+      }
+    }
+  };
+  ['pointerdown', 'touchstart', 'keydown'].forEach((evt) => {
+    document.addEventListener(evt, unlockOnGesture, { passive: true });
   });
 }
 
@@ -1835,6 +2287,46 @@ function sleepWithAbort(ms, signal, onTick, wakePromise = null) {
   });
 }
 
+async function waitForOnlineIfOffline(stepObj) {
+  if (typeof navigator === 'undefined' || navigator.onLine) return;
+
+  state.isOfflineWaiting = true;
+  updateNetworkUI();
+  updateProgressUI(stepObj.num, true);
+  renderChecklist(stepObj.num, true);
+
+  const wakePromise = new Promise((res) => {
+    state.networkWakeResolver = res;
+  });
+
+  const msg = `Device offline on Step ${stepObj.num}/50 — waiting for Wi-Fi / cellular data to reconnect...`;
+  el.pipelineStatusText.textContent = msg;
+  updateLiveNotificationBar({
+    mode: 'frozen',
+    title: `Offline • Waiting on Step ${stepObj.num}/50`,
+    detail: msg,
+    stepNum: stepObj.num,
+    forceOs: true
+  });
+
+  try {
+    await sleepWithAbort(
+      24 * 3600 * 1000,
+      state.abortController?.signal,
+      () => {
+        if (navigator.onLine) wakeNetworkIfOnline();
+      },
+      wakePromise
+    );
+  } finally {
+    state.isOfflineWaiting = false;
+    state.networkWakeResolver = null;
+    updateNetworkUI();
+    updateProgressUI(stepObj.num, false);
+    renderChecklist(stepObj.num, false);
+  }
+}
+
 function isTransientStatus(status) {
   return status === 500 || status === 502 || status === 503 || status === 504;
 }
@@ -1863,6 +2355,8 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
     if (state.abortController?.signal.aborted) {
       throw new DOMException('Aborted', 'AbortError');
     }
+
+    await waitForOnlineIfOffline(stepObj);
 
     const picked = getNextAvailableKey();
 
@@ -2069,6 +2563,11 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
         throw err;
       }
 
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        await waitForOnlineIfOffline(stepObj);
+        continue;
+      }
+
       transientAttempt += 1;
       state.sessionRetries += 1;
       if (state.apiKeys.length > 1) {
@@ -2079,16 +2578,31 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
       updateProgressUI(stepObj.num, true);
       renderChecklist(stepObj.num, true);
 
-      await sleepWithAbort(backoffSec * 1000, state.abortController?.signal, (rem) => {
-        const msg = `Network issue on Step ${stepObj.num}/50 — retry #${transientAttempt} in ${formatDurationCompact(rem)}...`;
-        el.pipelineStatusText.textContent = msg;
-        updateLiveNotificationBar({
-          mode: 'running',
-          title: `Step ${stepObj.num}/50 • Network Retry`,
-          detail: msg,
-          stepNum: stepObj.num
-        });
+      const networkWake = new Promise((res) => {
+        state.networkWakeResolver = res;
       });
+      state.isOfflineWaiting = true;
+
+      try {
+        await sleepWithAbort(
+          backoffSec * 1000,
+          state.abortController?.signal,
+          (rem) => {
+            const msg = `Network issue on Step ${stepObj.num}/50 — retry #${transientAttempt} in ${formatDurationCompact(rem)}...`;
+            el.pipelineStatusText.textContent = msg;
+            updateLiveNotificationBar({
+              mode: 'running',
+              title: `Step ${stepObj.num}/50 • Network Retry`,
+              detail: msg,
+              stepNum: stepObj.num
+            });
+          },
+          networkWake
+        );
+      } finally {
+        state.isOfflineWaiting = false;
+        state.networkWakeResolver = null;
+      }
 
       updateProgressUI(stepObj.num, false);
       renderChecklist(stepObj.num, false);
@@ -2203,6 +2717,10 @@ async function runPipeline(startFresh = true) {
     state.expandedSteps.clear();
     state.lastScrolledStep = 0;
     state.nextStepIndex = 0;
+    state.sessionCalls = 0;
+    state.sessionRetries = 0;
+    state.stepDurations = [];
+    state.runStartedAt = Date.now();
 
     const ts = new Date().toISOString();
     await appendToNotes(
@@ -2216,6 +2734,7 @@ async function runPipeline(startFresh = true) {
     updateEditorsAndBadges();
   } else {
     state.userPrompt = promptText;
+    if (!state.runStartedAt) state.runStartedAt = Date.now();
   }
 
   state.isRunning = true;
@@ -2237,6 +2756,7 @@ async function runPipeline(startFresh = true) {
     try {
       for (let idx = state.nextStepIndex; idx < PIPELINE_STEPS.length; idx++) {
         const step = PIPELINE_STEPS[idx];
+        const stepStartTs = Date.now();
 
         el.pipelineStatusText.textContent = `Step ${step.num}/50 (${step.stageName}): ${step.title}...`;
         updateProgressUI(step.num, false);
@@ -2277,6 +2797,7 @@ async function runPipeline(startFresh = true) {
           output: processedOutput,
           timestamp: new Date().toISOString()
         };
+        state.stepDurations.push(Date.now() - stepStartTs);
         state.nextStepIndex = idx + 1;
         saveWorkspaceSnapshot();
         updateEditorsAndBadges();
@@ -2339,7 +2860,9 @@ async function runPipeline(startFresh = true) {
     } finally {
       state.isRunning = false;
       state.isFrozen = false;
+      state.isOfflineWaiting = false;
       state.freezeWakeResolver = null;
+      state.networkWakeResolver = null;
       state.abortController = null;
       releaseWakeLock();
       stopBackgroundAudioKeepAlive();
@@ -2469,18 +2992,8 @@ el.csvKeysFileInput.addEventListener('change', async (e) => {
 });
 
 el.resetAllCooldownsBtn.addEventListener('click', () => {
-  state.apiKeys.forEach((k) => {
-    if (k.status === 'rate_limited') {
-      k.status = 'ready';
-      k.resetAt = null;
-      k.cooldownReason = '';
-      k.consecutive429 = 0;
-    }
-  });
-  saveKeyPool();
-  updateKeyPoolUI();
+  resetAllRateLimitedCooldowns();
   renderKeysModalList();
-  wakeFreezeIfReady();
   showToast('All rate-limit cooldowns reset.', 'info');
 });
 
@@ -2539,7 +3052,37 @@ if (el.grantPersistenceBtn) {
 
 if (el.androidBatteryHelpBtn) {
   el.androidBatteryHelpBtn.addEventListener('click', () => {
-    showToast('Android Tip: Settings → Apps → Chrome (or 50-Pt Studio) → Battery → set to "Unrestricted".', 'info');
+    renderReadinessChecklist();
+    if (el.mobileReadinessModal) {
+      el.mobileReadinessModal.classList.remove('hidden');
+      refreshIcons();
+    }
+  });
+}
+
+if (el.closeReadinessBtn) {
+  el.closeReadinessBtn.addEventListener('click', () => {
+    el.mobileReadinessModal.classList.add('hidden');
+  });
+}
+
+if (el.enableAllReadinessBtn) {
+  el.enableAllReadinessBtn.addEventListener('click', requestFullMobilePersistence);
+}
+
+if (el.testLockNotifBtn) {
+  el.testLockNotifBtn.addEventListener('click', async () => {
+    const granted = await ensureNotificationPermission();
+    if (!granted) {
+      showToast('Notification permission not granted yet.', 'warn');
+      return;
+    }
+    pushOsProgressNotification(
+      '50-Point Studio • Lock-Screen Test',
+      'If you see this on your lock screen, background progress updates are working!',
+      { force: true, status: state.isRunning ? 'running' : 'paused', step: state.nextStepIndex }
+    );
+    showToast('Test notification sent to OS shade!', 'success');
   });
 }
 
@@ -2635,6 +3178,10 @@ el.resetRunBtn.addEventListener('click', () => {
   state.lastScrolledStep = 0;
   state.nextStepIndex = 0;
   state.userPrompt = '';
+  state.runStartedAt = null;
+  state.stepDurations = [];
+  state.sessionCalls = 0;
+  state.sessionRetries = 0;
   el.promptInput.value = '';
   saveWorkspaceSnapshot();
   safeSet('wbs_was_running', '0');
@@ -2643,6 +3190,7 @@ el.resetRunBtn.addEventListener('click', () => {
   renderChecklist(0, false);
   updateControlButtons();
   updateLiveNotificationBar({ mode: 'hidden' });
+  clearOsProgressNotification();
   el.pipelineStatusText.textContent = 'Idle — Ready for Web App Prompt';
   showToast('Workspace reset.', 'info');
 });
@@ -2852,6 +3400,8 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
 (function init() {
   initTimerWorker();
   registerServiceWorkerAndPwa();
+  initBatteryMonitor();
+  initNetworkMonitor();
 
   try {
     const savedSettings = JSON.parse(safeGet('wbs_settings', 'null'));
@@ -2895,6 +3445,10 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
   state.cssCode = safeGet('wbs_css', '');
   state.jsCode = safeGet('wbs_js', '');
   state.nextStepIndex = Number(safeGet('wbs_next_idx', '0')) || 0;
+  state.sessionCalls = Number(safeGet('wbs_session_calls', '0')) || 0;
+  state.sessionRetries = Number(safeGet('wbs_session_retries', '0')) || 0;
+  const savedStartedAt = Number(safeGet('wbs_run_started_at', '0'));
+  state.runStartedAt = Number.isFinite(savedStartedAt) && savedStartedAt > 0 ? savedStartedAt : null;
   const wasRunning = safeGet('wbs_was_running', '0') === '1';
 
   try {
@@ -2915,6 +3469,8 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
   updateEditorsAndBadges();
   updateKeyPoolUI();
   updateKeepAliveBadges();
+  updateBatteryUI();
+  updateNetworkUI();
   updateProgressUI(0, false);
   renderChecklist(0, false);
   updateControlButtons();
@@ -2950,29 +3506,10 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
     });
   }
 
-  let heartbeatSec = 0;
-  setInterval(() => {
-    heartbeatSec += 1;
-    const changed = refreshExpiredCooldowns();
-    if (changed || !el.keysModal.classList.contains('hidden')) {
-      updateKeyPoolUI();
-    }
-    if (changed) {
-      wakeFreezeIfReady();
-    }
-    if (state.isRunning && heartbeatSec % 15 === 0) {
-      const stats = getKeyPoolStats();
-      const done = Object.keys(state.completedSteps).length;
-      const detail = state.isFrozen && stats.earliestResetAt
-        ? `All keys cooling — resumes in ${formatDurationCompact(stats.earliestResetAt - Date.now())} (${formatResetClock(stats.earliestResetAt)})`
-        : `Active on Step ${state.nextStepIndex + 1}/50 • ${stats.readyCount}/${stats.total} keys ready`;
-      pushOsProgressNotification(
-        state.isFrozen ? '50-Pt Studio • Waiting for API Reset' : `50-Pt Studio • Step ${state.nextStepIndex + 1}/50`,
-        `${detail} (${done}/50)`,
-        { force: true, status: state.isFrozen ? 'frozen' : 'running', step: state.nextStepIndex + 1 }
-      );
-    }
-  }, 1000);
+  // Fallback interval in case Web Worker is unavailable
+  if (!state.timerWorker) {
+    setInterval(onHeartbeatTick, 1000);
+  }
 
   refreshIcons();
 })();

@@ -1,5 +1,6 @@
-const CACHE_NAME = 'wbs-studio-v3';
+const CACHE_NAME = 'wbs-studio-v4';
 const PROGRESS_NOTIF_TAG = 'wbs-pipeline-progress';
+const BATTERY_NOTIF_TAG = 'wbs-battery-warning';
 
 const APP_SHELL_ASSETS = [
   './',
@@ -73,22 +74,26 @@ async function getMonochromeBadgeUrl() {
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_SHELL_ASSETS).catch(() => Promise.resolve());
-    })
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(
+        APP_SHELL_ASSETS.map((asset) => cache.add(asset).catch(() => {}))
+      )
+    )
   );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
+    caches.keys()
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter((key) => key !== CACHE_NAME)
+            .map((key) => caches.delete(key))
+        )
       )
-    ).then(() => self.clients.claim())
+      .then(() => self.clients.claim())
   );
 });
 
@@ -147,6 +152,7 @@ self.addEventListener('message', (event) => {
           renotify: Boolean(p.renotify),
           silent: p.silent !== undefined ? Boolean(p.silent) : true,
           requireInteraction: p.requireInteraction !== undefined ? Boolean(p.requireInteraction) : true,
+          timestamp: Number.isFinite(p.timestamp) ? p.timestamp : Date.now(),
           icon: './icon-192.png',
           badge: badgeUrl,
           data: {
@@ -154,9 +160,30 @@ self.addEventListener('message', (event) => {
             step: p.step || 0,
             status: p.status || 'running'
           },
-          actions: Array.isArray(p.actions) ? p.actions : []
+          actions: Array.isArray(p.actions) ? p.actions.slice(0, 2) : []
         };
         await self.registration.showNotification(title, options).catch(() => {});
+      })()
+    );
+    return;
+  }
+
+  if (data.type === 'SHOW_ALERT_NOTIFICATION') {
+    const p = data.payload || {};
+    event.waitUntil(
+      (async () => {
+        const badgeUrl = await getMonochromeBadgeUrl();
+        await self.registration.showNotification(p.title || '50-Point Studio Alert', {
+          body: p.body || '',
+          tag: p.tag || BATTERY_NOTIF_TAG,
+          renotify: true,
+          silent: false,
+          requireInteraction: Boolean(p.requireInteraction),
+          timestamp: Date.now(),
+          icon: './icon-192.png',
+          badge: badgeUrl,
+          data: { url: './index.html' }
+        }).catch(() => {});
       })()
     );
     return;
@@ -180,16 +207,22 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   const action = event.action;
+
+  if (action === 'pause' || action === 'resume' || action === 'reset_cooldowns') {
+    event.waitUntil(
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        clientList.forEach((client) => {
+          client.postMessage({ type: 'SW_ACTION', action });
+        });
+      })
+    );
+    return;
+  }
+
   event.notification.close();
 
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      if (action === 'pause' || action === 'resume') {
-        clientList.forEach((client) => {
-          client.postMessage({ type: 'SW_ACTION', action });
-        });
-      }
-
       for (const client of clientList) {
         if ('focus' in client) {
           return client.focus();
