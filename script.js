@@ -284,9 +284,11 @@ const state = {
   delayMs: 4000,
   defaultCooldownSec: 60,
   retryBaseSec: 20,
-  retryCapSec: 90,
+  retryCapSec: 3600,
   bgKeepAliveEnabled: true,
   osNotifEnabled: true,
+  autoResumeOnReload: true,
+  storagePersisted: false,
   userPrompt: '',
   notesText: '',
   htmlCode: '',
@@ -348,6 +350,11 @@ const el = {
   retryCapInput: document.getElementById('retryCapInput'),
   bgKeepAliveToggle: document.getElementById('bgKeepAliveToggle'),
   osNotifToggle: document.getElementById('osNotifToggle'),
+  autoResumeOnReloadToggle: document.getElementById('autoResumeOnReloadToggle'),
+  mobilePersistenceBanner: document.getElementById('mobilePersistenceBanner'),
+  persistenceSummaryText: document.getElementById('persistenceSummaryText'),
+  grantPersistenceBtn: document.getElementById('grantPersistenceBtn'),
+  androidBatteryHelpBtn: document.getElementById('androidBatteryHelpBtn'),
   liveNotificationBar: document.getElementById('liveNotificationBar'),
   notifStatusDot: document.getElementById('notifStatusDot'),
   notifTitle: document.getElementById('notifTitle'),
@@ -445,6 +452,7 @@ function saveWorkspaceSnapshot() {
   safeSet('wbs_css', state.cssCode);
   safeSet('wbs_js', state.jsCode);
   safeSet('wbs_next_idx', String(state.nextStepIndex));
+  safeSet('wbs_was_running', state.isRunning ? '1' : '0');
   const compactCompleted = {};
   Object.keys(state.completedSteps).forEach((k) => {
     compactCompleted[k] = { timestamp: state.completedSteps[k].timestamp || '' };
@@ -458,10 +466,14 @@ function saveKeyPool() {
     key: k.key,
     label: k.label,
     status: k.status,
-    resetAt: k.resetAt,
+    resetAt: Number.isFinite(k.resetAt) ? k.resetAt : null,
+    cooldownReason: k.cooldownReason || '',
     lastError: k.lastError || '',
     calls: k.calls || 0,
-    hits429: k.hits429 || 0
+    hits429: k.hits429 || 0,
+    consecutive429: k.consecutive429 || 0,
+    last429At: k.last429At || null,
+    lastSuccessAt: k.lastSuccessAt || null
   }));
   safeSet('gemini_api_keys_pool', JSON.stringify(serializable));
   safeSet('gemini_active_key_idx', String(state.activeKeyIndex));
@@ -477,7 +489,8 @@ function saveSettingsSnapshot() {
     retryBaseSec: state.retryBaseSec,
     retryCapSec: state.retryCapSec,
     bgKeepAliveEnabled: state.bgKeepAliveEnabled,
-    osNotifEnabled: state.osNotifEnabled
+    osNotifEnabled: state.osNotifEnabled,
+    autoResumeOnReload: state.autoResumeOnReload
   }));
 }
 
@@ -509,7 +522,7 @@ function showToast(message, type = 'info') {
   setTimeout(() => {
     toast.style.opacity = '0';
     setTimeout(() => toast.remove(), 300);
-  }, 3600);
+  }, 3800);
 }
 
 function showErrorBanner(msg) {
@@ -537,25 +550,47 @@ function maskApiKey(key) {
 }
 
 function formatResetClock(ts) {
-  if (!ts) return '';
+  if (!Number.isFinite(ts)) return '';
   try {
-    return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const d = new Date(ts);
+    const sameDay = d.toDateString() === new Date().toDateString();
+    if (sameDay) {
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+    return d.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   } catch (_) {
     return '';
   }
 }
 
+function formatDurationCompact(ms) {
+  const totalSec = Math.max(0, Math.ceil(ms / 1000));
+  const hrs = Math.floor(totalSec / 3600);
+  const mins = Math.floor((totalSec % 3600) / 60);
+  const secs = totalSec % 60;
+  if (hrs > 0) return `${hrs}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
+  if (mins > 0) return `${mins}m ${String(secs).padStart(2, '0')}s`;
+  return `${secs}s`;
+}
+
 // =========================================================================
-// MULTI-KEY POOL & RATE-LIMIT MANAGEMENT
+// MULTI-KEY POOL & LONG-HORIZON RATE-LIMIT MANAGEMENT
 // =========================================================================
 function refreshExpiredCooldowns() {
   const now = Date.now();
   let changed = false;
   state.apiKeys.forEach((k) => {
-    if (k.status === 'rate_limited' && k.resetAt && now >= k.resetAt) {
-      k.status = 'ready';
-      k.resetAt = null;
-      changed = true;
+    if (k.status === 'rate_limited') {
+      if (!Number.isFinite(k.resetAt)) {
+        k.resetAt = now + Math.max(10000, (state.defaultCooldownSec || 60) * 1000);
+        if (!k.cooldownReason) k.cooldownReason = 'Rate limit cooldown';
+        changed = true;
+      } else if (now >= k.resetAt) {
+        k.status = 'ready';
+        k.resetAt = null;
+        k.cooldownReason = '';
+        changed = true;
+      }
     }
   });
   if (changed) {
@@ -575,7 +610,7 @@ function getKeyPoolStats() {
   state.apiKeys.forEach((k) => {
     if (k.status === 'invalid') {
       invalidCount += 1;
-    } else if (k.status === 'rate_limited' && k.resetAt && k.resetAt > now) {
+    } else if (k.status === 'rate_limited' && Number.isFinite(k.resetAt) && k.resetAt > now) {
       limitedCount += 1;
       if (k.resetAt < earliestResetAt) earliestResetAt = k.resetAt;
     } else {
@@ -594,13 +629,19 @@ function getKeyPoolStats() {
 
 function getNextAvailableKey() {
   refreshExpiredCooldowns();
+  const now = Date.now();
   const len = state.apiKeys.length;
   if (len === 0) return null;
+
+  if (state.activeKeyIndex < 0 || state.activeKeyIndex >= len) {
+    state.activeKeyIndex = 0;
+  }
 
   for (let offset = 0; offset < len; offset++) {
     const idx = (state.activeKeyIndex + offset) % len;
     const candidate = state.apiKeys[idx];
-    if (candidate.status === 'ready') {
+    const notCooling = !Number.isFinite(candidate.resetAt) || now >= candidate.resetAt;
+    if (candidate.status === 'ready' && notCooling) {
       state.activeKeyIndex = idx;
       return { keyObj: candidate, index: idx };
     }
@@ -636,9 +677,13 @@ function parseAndAddKeys(rawText, entries = null) {
       label: label || `Key #${state.apiKeys.length + 1}`,
       status: 'ready',
       resetAt: null,
+      cooldownReason: '',
       lastError: '',
       calls: 0,
-      hits429: 0
+      hits429: 0,
+      consecutive429: 0,
+      last429At: null,
+      lastSuccessAt: null
     });
     added += 1;
   });
@@ -660,7 +705,6 @@ function parseCsvApiKeys(csvText) {
     const trimmed = line.trim();
     if (!trimmed) return;
 
-    // Split CSV row respecting double quotes
     const cells = [];
     let current = '';
     let inQuotes = false;
@@ -677,7 +721,6 @@ function parseCsvApiKeys(csvText) {
     }
     cells.push(current.trim().replace(/^["']|["']$/g, ''));
 
-    // Find API key cell (prefer AIza... or >=16 char non-space token, fallback >=12)
     let keyCell = cells.find((c) => /^AIza[0-9A-Za-z_-]{10,}$/.test(c));
     if (!keyCell) {
       keyCell = cells.find((c) => c.length >= 16 && !/\s/.test(c) && !headerWords.test(c));
@@ -721,7 +764,10 @@ function updateKeyPoolUI() {
   }
 
   const activeKeyObj = state.apiKeys[state.activeKeyIndex];
-  if (activeKeyObj) {
+  if (stats.readyCount === 0 && stats.limitedCount > 0 && stats.earliestResetAt) {
+    const remStr = formatDurationCompact(stats.earliestResetAt - Date.now());
+    el.notifKeyPill.textContent = `All cooling • Next ${remStr}`;
+  } else if (activeKeyObj) {
     el.notifKeyPill.textContent = `${activeKeyObj.label} (${stats.readyCount}/${stats.total} ready)`;
   } else {
     el.notifKeyPill.textContent = 'No Key';
@@ -737,8 +783,8 @@ function renderKeysModalList() {
   const now = Date.now();
 
   if (stats.readyCount === 0 && stats.limitedCount > 0 && stats.earliestResetAt) {
-    const remSec = Math.max(0, Math.ceil((stats.earliestResetAt - now) / 1000));
-    el.modalPoolSummary.textContent = `0 Ready • Next reset in ${remSec}s`;
+    const remStr = formatDurationCompact(stats.earliestResetAt - now);
+    el.modalPoolSummary.textContent = `0 Ready • Next reset in ${remStr} (${formatResetClock(stats.earliestResetAt)})`;
     el.modalPoolSummary.className = 'font-mono-code text-amber-300';
   } else {
     el.modalPoolSummary.textContent = `${stats.readyCount} Ready / ${stats.total} Total`;
@@ -756,13 +802,13 @@ function renderKeysModalList() {
   state.apiKeys.forEach((k, idx) => {
     const isActive = idx === state.activeKeyIndex && k.status === 'ready';
     const remMs = k.resetAt ? Math.max(0, k.resetAt - now) : 0;
-    const remSec = Math.ceil(remMs / 1000);
 
     let statusPill = '<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Ready</span>';
     if (isActive && state.isRunning) {
       statusPill = '<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-indigo-500/20 text-indigo-200 border border-indigo-500/40">Active</span>';
     } else if (k.status === 'rate_limited' && remMs > 0) {
-      statusPill = `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-amber-500/15 text-amber-300 border border-amber-500/30">Cooldown ${remSec}s (${formatResetClock(k.resetAt)})</span>`;
+      const reasonTag = k.cooldownReason ? ` • ${escapeHtml(k.cooldownReason)}` : '';
+      statusPill = `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-amber-500/15 text-amber-300 border border-amber-500/30">Back in ${formatDurationCompact(remMs)} (${formatResetClock(k.resetAt)})${reasonTag}</span>`;
     } else if (k.status === 'invalid') {
       statusPill = '<span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-rose-500/15 text-rose-300 border border-rose-500/30">Invalid</span>';
     }
@@ -777,7 +823,7 @@ function renderKeysModalList() {
           ${statusPill}
         </div>
         <div class="text-[10px] text-slate-500 font-mono-code mt-1">
-          Calls: ${k.calls || 0} • 429s: ${k.hits429 || 0}${k.lastError ? ` • ${escapeHtml(k.lastError.slice(0, 60))}` : ''}
+          Calls: ${k.calls || 0} • 429s: ${k.hits429 || 0}${k.consecutive429 ? ` (${k.consecutive429} streak)` : ''}${k.lastError ? ` • ${escapeHtml(k.lastError.slice(0, 60))}` : ''}
         </div>
       </div>
       <div class="flex items-center gap-1 shrink-0">
@@ -789,53 +835,165 @@ function renderKeysModalList() {
   });
 }
 
-function extractRateLimitWaitMs(response, errJson, errDetail, keyObj) {
-  // 1. Retry-After header
-  const retryAfter = response.headers.get('Retry-After');
+function parseDurationStringToMs(raw) {
+  if (!raw) return null;
+  const str = String(raw).trim();
+  if (!str) return null;
+
+  // Pure numeric string -> seconds
+  if (/^\d+(?:\.\d+)?$/.test(str)) {
+    const val = parseFloat(str);
+    return Number.isFinite(val) && val > 0 ? Math.round(val * 1000) : null;
+  }
+
+  let totalMs = 0;
+  let matched = false;
+  const tokenRegex = /(\d+(?:\.\d+)?)\s*(ms|milliseconds?|h|hrs?|hours?|m|mins?|minutes?|s|secs?|seconds?)/gi;
+  let m;
+  while ((m = tokenRegex.exec(str)) !== null) {
+    const num = parseFloat(m[1]);
+    if (!Number.isFinite(num)) continue;
+    const unit = m[2].toLowerCase();
+    matched = true;
+    if (unit.startsWith('ms') || unit.startsWith('milli')) totalMs += num;
+    else if (unit.startsWith('h')) totalMs += num * 3600 * 1000;
+    else if (unit.startsWith('m')) totalMs += num * 60 * 1000;
+    else if (unit.startsWith('s')) totalMs += num * 1000;
+  }
+
+  return matched && Number.isFinite(totalMs) && totalMs > 0 ? Math.round(totalMs) : null;
+}
+
+function isQuotaOrRateLimitError(status, errJson, errDetail) {
+  if (status === 429) return true;
+  const rpcStatus = String(errJson?.error?.status || '');
+  const combined = `${rpcStatus} ${errDetail || ''}`;
+  if (status === 403 && /resource_exhausted|rate[_\s-]?limit|quota|too many requests/i.test(combined)) {
+    return true;
+  }
+  return false;
+}
+
+function extractRateLimitInfo(response, errJson, errDetail, keyObj) {
+  const details = Array.isArray(errJson?.error?.details) ? errJson.error.details : [];
+  let quotaText = String(errDetail || '');
+
+  for (const d of details) {
+    if (Array.isArray(d?.violations)) {
+      quotaText += ' ' + d.violations.map((v) => `${v.quotaMetric || ''} ${v.quotaId || ''} ${v.description || ''}`).join(' ');
+    }
+  }
+
+  const isDailyQuota = /per\s*day|daily|rpd|tpd|requestsperday|tokensperday/i.test(quotaText);
+  const consecutive = Math.max(0, keyObj?.consecutive429 || 0);
+  const minFloorMs = consecutive > 0
+    ? Math.min(state.retryCapSec * 1000, Math.round(15000 * Math.pow(1.6, Math.min(consecutive, 6))))
+    : 10000;
+
+  let explicitMs = null;
+  let reason = isDailyQuota ? 'Daily Quota (RPD)' : 'RPM/TPM Limit';
+
+  // 1. Check HTTP Retry-After header
+  const retryAfter = response?.headers?.get?.('Retry-After');
   if (retryAfter) {
-    const asNum = Number(retryAfter);
-    if (!Number.isNaN(asNum) && asNum > 0) {
-      return Math.round((asNum + 1.5) * 1000);
-    }
-    const asDate = Date.parse(retryAfter);
-    if (!Number.isNaN(asDate) && asDate > Date.now()) {
-      return Math.max(2000, asDate - Date.now() + 1500);
-    }
-  }
-
-  // 2. x-ratelimit-reset header (epoch seconds or relative seconds)
-  const rlReset = response.headers.get('x-ratelimit-reset') || response.headers.get('x-ratelimit-reset-requests');
-  if (rlReset) {
-    const num = Number(rlReset);
-    if (!Number.isNaN(num) && num > 0) {
-      if (num > 1e9) {
-        return Math.max(2000, num * 1000 - Date.now() + 1500);
+    const parsedDur = parseDurationStringToMs(retryAfter);
+    if (parsedDur) {
+      explicitMs = parsedDur + 2000;
+      reason = 'Retry-After';
+    } else {
+      const asDate = Date.parse(retryAfter);
+      if (Number.isFinite(asDate) && asDate > Date.now()) {
+        explicitMs = (asDate - Date.now()) + 2000;
+        reason = 'Retry-After';
       }
-      return Math.round((num + 1.5) * 1000);
     }
   }
 
-  // 3. Google API error.details RetryInfo.retryDelay (e.g. "42s" or "42.5s")
-  const details = errJson?.error?.details;
-  if (Array.isArray(details)) {
+  // 2. Check x-ratelimit-reset headers
+  if (!explicitMs) {
+    const rlReset = response?.headers?.get?.('x-ratelimit-reset') ||
+      response?.headers?.get?.('x-ratelimit-reset-requests') ||
+      response?.headers?.get?.('x-ratelimit-reset-tokens');
+    if (rlReset) {
+      const num = Number(rlReset);
+      if (Number.isFinite(num) && num > 0) {
+        if (num > 1e12) {
+          explicitMs = Math.max(5000, num - Date.now() + 2000);
+        } else if (num > 1e9) {
+          explicitMs = Math.max(5000, num * 1000 - Date.now() + 2000);
+        } else {
+          explicitMs = Math.round((num + 2) * 1000);
+        }
+        reason = 'Rate-Limit Reset Header';
+      } else {
+        const parsedDur = parseDurationStringToMs(rlReset);
+        if (parsedDur) {
+          explicitMs = parsedDur + 2000;
+          reason = 'Rate-Limit Reset Header';
+        }
+      }
+    }
+  }
+
+  // 3. Check Google RPC RetryInfo details
+  if (!explicitMs) {
     for (const d of details) {
       if (d?.retryDelay) {
-        const m = String(d.retryDelay).match(/([\d.]+)\s*s/i);
-        if (m) return Math.round((parseFloat(m[1]) + 1.5) * 1000);
+        const parsedDur = parseDurationStringToMs(d.retryDelay);
+        if (parsedDur) {
+          explicitMs = parsedDur + 2000;
+          reason = isDailyQuota ? 'Daily Quota + RetryInfo' : 'Server RetryInfo';
+          break;
+        }
       }
     }
   }
 
-  // 4. Parse "Please retry in 42.3s" from error message
-  const msgMatch = String(errDetail || '').match(/retry\s+(?:in|after)\s+([\d.]+)\s*s/i);
-  if (msgMatch) {
-    return Math.round((parseFloat(msgMatch[1]) + 1.5) * 1000);
+  // 4. Check natural language retry duration in error message
+  if (!explicitMs) {
+    const msgMatch = String(errDetail || '').match(/retry\s+(?:in|after)\s+([0-9.\s]*(?:ms|milliseconds?|h|hrs?|hours?|m|mins?|minutes?|s|secs?|seconds?)(?:\s*[0-9.]+\s*(?:m|mins?|minutes?|s|secs?|seconds?))*)/i);
+    if (msgMatch) {
+      const parsedDur = parseDurationStringToMs(msgMatch[1]);
+      if (parsedDur) {
+        explicitMs = parsedDur + 2000;
+        reason = isDailyQuota ? 'Daily Quota' : 'Server Retry Delay';
+      }
+    }
   }
 
-  // 5. Fallback configured cooldown with gentle escalation per consecutive 429
-  const hits = Math.min(4, (keyObj?.hits429 || 0));
-  const sec = Math.min(state.retryCapSec * 4, Math.round(state.defaultCooldownSec * Math.pow(1.25, hits)));
-  return sec * 1000;
+  let waitMs;
+  if (Number.isFinite(explicitMs) && explicitMs > 0) {
+    waitMs = Math.max(explicitMs, minFloorMs);
+  } else {
+    const baseSec = isDailyQuota ? Math.max(state.defaultCooldownSec, 900) : Math.max(15, state.defaultCooldownSec);
+    const capSec = Math.max(state.retryCapSec, isDailyQuota ? 3600 : 300);
+    const backoffSec = Math.min(capSec, Math.round(baseSec * Math.pow(1.45, Math.min(consecutive, 8))));
+    waitMs = Math.max(backoffSec * 1000, minFloorMs);
+  }
+
+  if (!Number.isFinite(waitMs) || waitMs < 5000) {
+    waitMs = Math.max(10000, (state.defaultCooldownSec || 60) * 1000);
+  }
+
+  return { waitMs, reason, isDailyQuota };
+}
+
+function markKeyRateLimited(keyObj, keyIdx, response, errJson, errDetail) {
+  const { waitMs, reason } = extractRateLimitInfo(response, errJson, errDetail, keyObj);
+  keyObj.status = 'rate_limited';
+  keyObj.resetAt = Date.now() + waitMs;
+  keyObj.cooldownReason = reason;
+  keyObj.hits429 = (keyObj.hits429 || 0) + 1;
+  keyObj.consecutive429 = (keyObj.consecutive429 || 0) + 1;
+  keyObj.last429At = Date.now();
+  keyObj.lastError = errDetail;
+  state.sessionRetries += 1;
+  if (state.apiKeys.length > 0) {
+    state.activeKeyIndex = (keyIdx + 1) % state.apiKeys.length;
+  }
+  saveKeyPool();
+  updateKeyPoolUI();
+  return { waitMs, reason };
 }
 
 // =========================================================================
@@ -886,7 +1044,6 @@ function workerTimeout(ms) {
 }
 
 function createSilentWavBlobUrl() {
-  // 1-second 8kHz mono 8-bit PCM silent WAV
   const sampleRate = 8000;
   const numSamples = sampleRate;
   const buffer = new ArrayBuffer(44 + numSamples);
@@ -1017,6 +1174,21 @@ function updateKeepAliveBadges() {
     el.notifOsBtn.textContent = 'Enable OS Notif';
     el.notifOsBtn.className = 'px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-indigo-500/20 hover:bg-indigo-500/35 border border-indigo-500/40 text-indigo-200 transition';
   }
+  updatePersistenceBannerUI();
+}
+
+function updatePersistenceBannerUI() {
+  if (!el.mobilePersistenceBanner) return;
+  const notifGranted = typeof Notification !== 'undefined' && Notification.permission === 'granted';
+  if (notifGranted && state.osNotifEnabled && state.bgKeepAliveEnabled) {
+    el.mobilePersistenceBanner.className = 'shrink-0 border-b border-emerald-500/30 bg-emerald-950/20 px-3 sm:px-5 py-1.5';
+    el.persistenceSummaryText.textContent = `Android Shade Banner ON • Wake Lock & Auto-Resume Armed${state.storagePersisted ? ' • Storage Locked' : ''}`;
+    el.grantPersistenceBtn.textContent = 'Re-Sync Permissions';
+  } else {
+    el.mobilePersistenceBanner.className = 'shrink-0 border-b border-cyan-500/35 bg-cyan-950/30 px-3 sm:px-5 py-1.5';
+    el.persistenceSummaryText.textContent = 'Request OS notification shade & background keep-alive permissions for long cooldowns.';
+    el.grantPersistenceBtn.textContent = 'Enable Always-Active Mode';
+  }
 }
 
 async function ensureNotificationPermission() {
@@ -1032,6 +1204,42 @@ async function ensureNotificationPermission() {
     }
   }
   return false;
+}
+
+async function requestFullMobilePersistence() {
+  state.bgKeepAliveEnabled = true;
+  state.osNotifEnabled = true;
+  saveSettingsSnapshot();
+
+  const notifGranted = await ensureNotificationPermission();
+
+  if (navigator.storage && typeof navigator.storage.persist === 'function') {
+    try {
+      state.storagePersisted = await navigator.storage.persist();
+    } catch (_) {}
+  }
+
+  await acquireWakeLock();
+  if (state.isRunning) {
+    startBackgroundAudioKeepAlive();
+  }
+
+  updatePersistenceBannerUI();
+  updateKeepAliveBadges();
+
+  if (notifGranted) {
+    const done = Object.keys(state.completedSteps).length;
+    pushOsProgressNotification(
+      '50-Point Studio • Background Lock Active',
+      state.isRunning
+        ? `Building Step ${state.nextStepIndex + 1}/50 (${done}/50 done) — monitoring API cooldowns.`
+        : 'Android shade banner & persistence armed. Ready for long-horizon builds.',
+      { force: true, status: state.isRunning ? 'running' : 'paused', step: state.nextStepIndex }
+    );
+    showToast('Android Notification Shade, Wake Lock & Storage Persistence enabled!', 'success');
+  } else {
+    showToast('Please allow Notifications in your browser site settings for the Android shade banner.', 'warn');
+  }
 }
 
 function pushOsProgressNotification(title, body, { force = false, status = 'running', step = 0 } = {}) {
@@ -1072,7 +1280,13 @@ function pushOsProgressNotification(title, body, { force = false, status = 'runn
     });
   } else {
     try {
-      new Notification(title, { body, tag: 'wbs-pipeline-progress', silent: true, icon: './icon-192.png' });
+      new Notification(title, {
+        body,
+        tag: 'wbs-pipeline-progress',
+        silent: true,
+        icon: './icon-192.png',
+        badge: './notif-badge.png'
+      });
     } catch (_) {}
   }
 }
@@ -1169,7 +1383,6 @@ async function registerServiceWorkerAndPwa() {
     showToast('App installed on device!', 'success');
   });
 
-  // Show install button on iOS Safari when not already standalone
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   if (isIos && !isStandalone) {
@@ -1178,9 +1391,14 @@ async function registerServiceWorkerAndPwa() {
   }
 
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && state.isRunning) {
-      acquireWakeLock();
+    if (document.visibilityState === 'visible') {
+      const changed = refreshExpiredCooldowns();
       updateKeyPoolUI();
+      if (changed) wakeFreezeIfReady();
+      if (state.isRunning) {
+        acquireWakeLock();
+        startBackgroundAudioKeepAlive();
+      }
     }
     if (state.isRunning && state.swRegistration && state.swRegistration.active) {
       state.swRegistration.active.postMessage({ type: 'KEEPALIVE_PING' });
@@ -1646,19 +1864,17 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
       throw new DOMException('Aborted', 'AbortError');
     }
 
-    // 1. Acquire next ready API key from pool
-    let picked = getNextAvailableKey();
+    const picked = getNextAvailableKey();
 
     if (!picked) {
       const stats = getKeyPoolStats();
       if (stats.total === 0) {
         throw new Error('No API keys configured. Add at least one Google AI Studio API key.');
       }
-      if (stats.limitedCount === 0 || !stats.earliestResetAt) {
+      if (stats.limitedCount === 0 || !Number.isFinite(stats.earliestResetAt)) {
         throw new Error('All configured API keys are marked invalid. Please add a valid API key.');
       }
 
-      // 2. ALL keys rate-limited -> Enter Pause/Freeze state until earliest key resets
       state.isFrozen = true;
       const waitMs = Math.max(1500, stats.earliestResetAt - Date.now());
       const resetClock = formatResetClock(stats.earliestResetAt);
@@ -1668,18 +1884,18 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
 
       updateProgressUI(stepObj.num, true);
       renderChecklist(stepObj.num, true);
-      showToast(`All ${stats.limitedCount} API keys hit rate limits. Frozen until ${resetClock}.`, 'warn');
+      showToast(`All ${stats.limitedCount} API keys hit limits. Waiting until ${resetClock} — no work will be lost.`, 'warn');
 
       await sleepWithAbort(
         waitMs,
         state.abortController?.signal,
         (rem) => {
-          const sec = Math.ceil(rem / 1000);
-          const msg = `Rate-Limit Freeze (${stats.limitedCount}/${stats.total} keys cooling) — auto-resuming in ${sec}s (at ${resetClock})`;
+          const remFormatted = formatDurationCompact(rem);
+          const msg = `All ${stats.limitedCount}/${stats.total} keys cooling — auto-resuming Step ${stepObj.num}/50 in ${remFormatted} (at ${resetClock})`;
           el.pipelineStatusText.textContent = msg;
           updateLiveNotificationBar({
             mode: 'frozen',
-            title: `Frozen on Step ${stepObj.num}/50 — Waiting for API Reset`,
+            title: `Waiting on Step ${stepObj.num}/50 — All APIs Cooling`,
             detail: msg,
             stepNum: stepObj.num
           });
@@ -1744,11 +1960,15 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
 
       if (response.ok) {
         keyObj.lastError = '';
-        saveKeyPool();
-        // Rotate starting index for next call so load distributes cleanly across ready keys
+        keyObj.consecutive429 = 0;
+        keyObj.cooldownReason = '';
+        keyObj.lastSuccessAt = Date.now();
         if (state.apiKeys.length > 1) {
           state.activeKeyIndex = (keyIdx + 1) % state.apiKeys.length;
         }
+        saveKeyPool();
+        updateKeyPoolUI();
+
         const data = await response.json();
 
         if (data?.promptFeedback?.blockReason) {
@@ -1789,33 +2009,27 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
         continue;
       }
 
-      // Rate-limit (429): Record reset time on THIS key and cycle immediately to next key!
-      if (response.status === 429) {
-        const waitMs = extractRateLimitWaitMs(response, errJson, errDetail, keyObj);
-        keyObj.status = 'rate_limited';
-        keyObj.resetAt = Date.now() + waitMs;
-        keyObj.hits429 = (keyObj.hits429 || 0) + 1;
-        keyObj.lastError = errDetail;
-        state.sessionRetries += 1;
-        state.activeKeyIndex = (keyIdx + 1) % state.apiKeys.length;
-        saveKeyPool();
-        updateKeyPoolUI();
-
+      if (isQuotaOrRateLimitError(response.status, errJson, errDetail)) {
+        const { waitMs, reason } = markKeyRateLimited(keyObj, keyIdx, response, errJson, errDetail);
         const nextReady = getNextAvailableKey();
         if (nextReady) {
-          showToast(`${keyObj.label} rate-limited (${Math.ceil(waitMs / 1000)}s). Switched to ${nextReady.keyObj.label}.`, 'warn');
+          showToast(
+            `${keyObj.label} hit limit (${reason}, back in ${formatDurationCompact(waitMs)}). Rotated to ${nextReady.keyObj.label}.`,
+            'warn'
+          );
         }
         continue;
       }
 
-      // Invalid/Unauthorized key (401/403): mark invalid & move to next key
       if (response.status === 401 || response.status === 403) {
         keyObj.status = 'invalid';
         keyObj.lastError = errDetail;
-        state.activeKeyIndex = (keyIdx + 1) % state.apiKeys.length;
+        if (state.apiKeys.length > 0) {
+          state.activeKeyIndex = (keyIdx + 1) % state.apiKeys.length;
+        }
         saveKeyPool();
         updateKeyPoolUI();
-        showToast(`${keyObj.label} rejected (${response.status}). Switching to next key.`, 'error');
+        showToast(`${keyObj.label} rejected (${response.status}). Rotating to next key.`, 'error');
         continue;
       }
 
@@ -1825,12 +2039,16 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
 
       transientAttempt += 1;
       state.sessionRetries += 1;
-      const backoffSec = Math.min(state.retryCapSec, Math.round(state.retryBaseSec * Math.pow(1.35, Math.min(transientAttempt - 1, 6))));
+      if (state.apiKeys.length > 1) {
+        state.activeKeyIndex = (keyIdx + 1) % state.apiKeys.length;
+        saveKeyPool();
+      }
+      const backoffSec = Math.min(state.retryCapSec, Math.round(state.retryBaseSec * Math.pow(1.35, Math.min(transientAttempt - 1, 8))));
       updateProgressUI(stepObj.num, true);
       renderChecklist(stepObj.num, true);
 
       await sleepWithAbort(backoffSec * 1000, state.abortController?.signal, (rem) => {
-        const msg = `HTTP ${response.status} on Step ${stepObj.num}/50 — retry #${transientAttempt} in ${(rem / 1000).toFixed(0)}s...`;
+        const msg = `HTTP ${response.status} on Step ${stepObj.num}/50 — retry #${transientAttempt} in ${formatDurationCompact(rem)}...`;
         el.pipelineStatusText.textContent = msg;
         updateLiveNotificationBar({
           mode: 'running',
@@ -1853,12 +2071,16 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
 
       transientAttempt += 1;
       state.sessionRetries += 1;
-      const backoffSec = Math.min(state.retryCapSec, Math.round(state.retryBaseSec * Math.pow(1.35, Math.min(transientAttempt - 1, 6))));
+      if (state.apiKeys.length > 1) {
+        state.activeKeyIndex = (keyIdx + 1) % state.apiKeys.length;
+        saveKeyPool();
+      }
+      const backoffSec = Math.min(state.retryCapSec, Math.round(state.retryBaseSec * Math.pow(1.35, Math.min(transientAttempt - 1, 8))));
       updateProgressUI(stepObj.num, true);
       renderChecklist(stepObj.num, true);
 
       await sleepWithAbort(backoffSec * 1000, state.abortController?.signal, (rem) => {
-        const msg = `Network issue on Step ${stepObj.num}/50 — retry #${transientAttempt} in ${(rem / 1000).toFixed(0)}s...`;
+        const msg = `Network issue on Step ${stepObj.num}/50 — retry #${transientAttempt} in ${formatDurationCompact(rem)}...`;
         el.pipelineStatusText.textContent = msg;
         updateLiveNotificationBar({
           mode: 'running',
@@ -1999,6 +2221,7 @@ async function runPipeline(startFresh = true) {
   state.isPaused = false;
   state.isFrozen = false;
   state.abortController = new AbortController();
+  saveWorkspaceSnapshot();
   updateControlButtons();
   if (window.innerWidth < 1024) {
     setPromptCollapsed(true);
@@ -2006,6 +2229,8 @@ async function runPipeline(startFresh = true) {
 
   await acquireWakeLock();
   startBackgroundAudioKeepAlive();
+
+  let deliberatelyPaused = false;
 
   const executeLoop = async () => {
     try {
@@ -2086,6 +2311,7 @@ async function runPipeline(startFresh = true) {
 
     } catch (err) {
       if (err.name === 'AbortError') {
+        deliberatelyPaused = true;
         state.isPaused = true;
         el.pipelineStatusText.textContent = `Paused at Step ${state.nextStepIndex + 1}/50 — click Resume to continue`;
         updateLiveNotificationBar({
@@ -2120,6 +2346,9 @@ async function runPipeline(startFresh = true) {
       renderChecklist(0, false);
       updateControlButtons();
       saveWorkspaceSnapshot();
+      if (deliberatelyPaused || state.nextStepIndex >= 50) {
+        safeSet('wbs_was_running', '0');
+      }
     }
   };
 
@@ -2243,6 +2472,8 @@ el.resetAllCooldownsBtn.addEventListener('click', () => {
     if (k.status === 'rate_limited') {
       k.status = 'ready';
       k.resetAt = null;
+      k.cooldownReason = '';
+      k.consecutive429 = 0;
     }
   });
   saveKeyPool();
@@ -2273,6 +2504,8 @@ el.keysListContainer.addEventListener('click', (e) => {
   if (action === 'reset-key') {
     state.apiKeys[idx].status = 'ready';
     state.apiKeys[idx].resetAt = null;
+    state.apiKeys[idx].cooldownReason = '';
+    state.apiKeys[idx].consecutive429 = 0;
     state.apiKeys[idx].lastError = '';
     saveKeyPool();
     updateKeyPoolUI();
@@ -2298,6 +2531,16 @@ el.installAppBtn.addEventListener('click', async () => {
     showToast('On iOS Safari: tap Share → "Add to Home Screen" to install.', 'info');
   }
 });
+
+if (el.grantPersistenceBtn) {
+  el.grantPersistenceBtn.addEventListener('click', requestFullMobilePersistence);
+}
+
+if (el.androidBatteryHelpBtn) {
+  el.androidBatteryHelpBtn.addEventListener('click', () => {
+    showToast('Android Tip: Settings → Apps → Chrome (or 50-Pt Studio) → Battery → set to "Unrestricted".', 'info');
+  });
+}
 
 el.notifOsBtn.addEventListener('click', async () => {
   if (typeof Notification === 'undefined') {
@@ -2333,6 +2576,7 @@ el.settingsBtn.addEventListener('click', () => {
   el.retryCapInput.value = state.retryCapSec;
   el.bgKeepAliveToggle.checked = state.bgKeepAliveEnabled;
   el.osNotifToggle.checked = state.osNotifEnabled;
+  if (el.autoResumeOnReloadToggle) el.autoResumeOnReloadToggle.checked = state.autoResumeOnReload;
   el.settingsModal.classList.remove('hidden');
 });
 
@@ -2347,9 +2591,10 @@ el.saveSettingsBtn.addEventListener('click', () => {
   state.delayMs = Math.max(1000, Number(el.delayInput.value) || 4000);
   state.defaultCooldownSec = Math.max(10, Number(el.defaultCooldownInput.value) || 60);
   state.retryBaseSec = Math.max(5, Number(el.retryBaseInput.value) || 20);
-  state.retryCapSec = Math.max(state.retryBaseSec, Number(el.retryCapInput.value) || 90);
+  state.retryCapSec = Math.max(state.retryBaseSec, Number(el.retryCapInput.value) || 3600);
   state.bgKeepAliveEnabled = Boolean(el.bgKeepAliveToggle.checked);
   state.osNotifEnabled = Boolean(el.osNotifToggle.checked);
+  if (el.autoResumeOnReloadToggle) state.autoResumeOnReload = Boolean(el.autoResumeOnReloadToggle.checked);
   el.modelBadge.textContent = `${state.model} • ${state.thinkingLevel}`;
   saveSettingsSnapshot();
   updateKeepAliveBadges();
@@ -2391,6 +2636,7 @@ el.resetRunBtn.addEventListener('click', () => {
   state.userPrompt = '';
   el.promptInput.value = '';
   saveWorkspaceSnapshot();
+  safeSet('wbs_was_running', '0');
   updateEditorsAndBadges();
   updateProgressUI(0, false);
   renderChecklist(0, false);
@@ -2606,7 +2852,6 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
   initTimerWorker();
   registerServiceWorkerAndPwa();
 
-  // Load settings
   try {
     const savedSettings = JSON.parse(safeGet('wbs_settings', 'null'));
     if (savedSettings) {
@@ -2619,11 +2864,11 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
       state.retryCapSec = savedSettings.retryCapSec || state.retryCapSec;
       if (typeof savedSettings.bgKeepAliveEnabled === 'boolean') state.bgKeepAliveEnabled = savedSettings.bgKeepAliveEnabled;
       if (typeof savedSettings.osNotifEnabled === 'boolean') state.osNotifEnabled = savedSettings.osNotifEnabled;
+      if (typeof savedSettings.autoResumeOnReload === 'boolean') state.autoResumeOnReload = savedSettings.autoResumeOnReload;
       el.modelBadge.textContent = `${state.model} • ${state.thinkingLevel}`;
     }
   } catch (_) {}
 
-  // Load multi-key pool (and migrate legacy single key if present)
   try {
     const poolRaw = safeGet('gemini_api_keys_pool', '');
     if (poolRaw) {
@@ -2649,12 +2894,20 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
   state.cssCode = safeGet('wbs_css', '');
   state.jsCode = safeGet('wbs_js', '');
   state.nextStepIndex = Number(safeGet('wbs_next_idx', '0')) || 0;
+  const wasRunning = safeGet('wbs_was_running', '0') === '1';
 
   try {
     const metaRaw = safeGet('wbs_completed_meta', '') || safeGet('wbs_completed', '{}');
     state.completedSteps = JSON.parse(metaRaw) || {};
   } catch (_) {
     state.completedSteps = {};
+  }
+
+  if (navigator.storage && typeof navigator.storage.persisted === 'function') {
+    navigator.storage.persisted().then((persisted) => {
+      state.storagePersisted = Boolean(persisted);
+      updatePersistenceBannerUI();
+    }).catch(() => {});
   }
 
   hydrateStepOutputsFromNotes();
@@ -2666,13 +2919,26 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
   updateControlButtons();
 
   if (state.nextStepIndex > 0 && state.nextStepIndex < 50) {
-    el.pipelineStatusText.textContent = `Saved session at Step ${state.nextStepIndex}/50 — ready to Resume`;
-    updateLiveNotificationBar({
-      mode: 'paused',
-      title: `Saved Session at Step ${state.nextStepIndex}/50`,
-      detail: 'Tap Resume to continue building.',
-      stepNum: state.nextStepIndex
-    });
+    if (wasRunning && state.autoResumeOnReload && state.apiKeys.length > 0 && state.userPrompt) {
+      el.pipelineStatusText.textContent = `Auto-resuming Step ${state.nextStepIndex + 1}/50...`;
+      updateLiveNotificationBar({
+        mode: 'running',
+        title: `Auto-Resuming Step ${state.nextStepIndex + 1}/50`,
+        detail: 'Picking up right where the build left off...',
+        stepNum: state.nextStepIndex + 1
+      });
+      setTimeout(() => {
+        if (!state.isRunning) runPipeline(false);
+      }, 800);
+    } else {
+      el.pipelineStatusText.textContent = `Saved session at Step ${state.nextStepIndex}/50 — ready to Resume`;
+      updateLiveNotificationBar({
+        mode: 'paused',
+        title: `Saved Session at Step ${state.nextStepIndex}/50`,
+        detail: 'Tap Resume to continue building.',
+        stepNum: state.nextStepIndex
+      });
+    }
   } else if (state.nextStepIndex >= 50) {
     el.pipelineStatusText.textContent = 'Previous 50-Step Build Loaded';
     updateLiveNotificationBar({
@@ -2683,14 +2949,27 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
     });
   }
 
-  // Tick every 1s to keep key cooldown timers live in UI & wake frozen runs automatically
+  let heartbeatSec = 0;
   setInterval(() => {
+    heartbeatSec += 1;
     const changed = refreshExpiredCooldowns();
     if (changed || !el.keysModal.classList.contains('hidden')) {
       updateKeyPoolUI();
     }
     if (changed) {
       wakeFreezeIfReady();
+    }
+    if (state.isRunning && heartbeatSec % 15 === 0) {
+      const stats = getKeyPoolStats();
+      const done = Object.keys(state.completedSteps).length;
+      const detail = state.isFrozen && stats.earliestResetAt
+        ? `All keys cooling — resumes in ${formatDurationCompact(stats.earliestResetAt - Date.now())} (${formatResetClock(stats.earliestResetAt)})`
+        : `Active on Step ${state.nextStepIndex + 1}/50 • ${stats.readyCount}/${stats.total} keys ready`;
+      pushOsProgressNotification(
+        state.isFrozen ? '50-Pt Studio • Waiting for API Reset' : `50-Pt Studio • Step ${state.nextStepIndex + 1}/50`,
+        `${detail} (${done}/50)`,
+        { force: true, status: state.isFrozen ? 'frozen' : 'running', step: state.nextStepIndex + 1 }
+      );
     }
   }, 1000);
 

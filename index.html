@@ -42,13 +42,12 @@
               gemini-4-hydrogen • xhigh
             </span>
           </div>
-          <p class="hidden md:block text-[11px] text-slate-400 truncate">5 Stages × 10 Points • Auto-Cycling Keys • PWA Mobile &amp; Background Ready</p>
+          <p class="hidden md:block text-[11px] text-slate-400 truncate">5 Stages × 10 Points • Long-Horizon Cooldown Recovery • Mobile Background Lock</p>
         </div>
       </div>
 
       <!-- API Key Pool & Header Controls -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <!-- Quick input visible on lg+ desktop; on mobile, tapping Keys pill opens Key Pool modal -->
         <div class="hidden lg:flex relative w-60 items-center">
           <input
             id="apiKeyInput"
@@ -89,6 +88,7 @@
   <div id="liveNotificationBar" class="hidden shrink-0 border-b border-indigo-500/40 bg-indigo-950/40 px-3 sm:px-5 py-1.5">
     <div class="max-w-[1800px] mx-auto flex items-center justify-between gap-2">
       <div class="flex items-center gap-2 min-w-0 flex-1">
+        <img src="./notif-badge.png" alt="" class="w-4 h-4 object-contain opacity-90 shrink-0" />
         <span id="notifStatusDot" class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse-soft shrink-0"></span>
         <div class="min-w-0 flex-1">
           <div class="flex items-center gap-1.5 flex-nowrap overflow-hidden">
@@ -124,7 +124,6 @@
   <div class="shrink-0 border-b border-slate-800/70 bg-[#0b101b] px-3 sm:px-5 py-1.5">
     <div class="max-w-[1800px] mx-auto space-y-1.5">
       <div class="flex items-center justify-between gap-2">
-        <!-- 5 Stage Pills (hidden on mobile to save vertical space; use filter pills below) -->
         <div class="hidden md:flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="stageStepper">
           <button type="button" data-stage-filter="1" class="stage-pill flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition">
             <span class="stage-dot w-2 h-2 rounded-full bg-slate-600"></span>
@@ -152,7 +151,6 @@
           </button>
         </div>
 
-        <!-- Status Telemetry -->
         <div class="flex items-center justify-between md:justify-end gap-2 text-[11px] text-slate-400 w-full md:w-auto min-w-0">
           <span id="pipelineStatusText" class="text-slate-200 font-medium truncate">Idle — Ready for Web App Prompt</span>
           <div class="flex items-center gap-2 shrink-0">
@@ -164,9 +162,29 @@
         </div>
       </div>
 
-      <!-- Thin Progress Bar -->
       <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden border border-slate-800/70">
         <div id="overallProgressBar" class="h-full w-0 bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 transition-all duration-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Android Background Persistence & Permission Banner -->
+  <div id="mobilePersistenceBanner" class="shrink-0 border-b border-cyan-500/35 bg-cyan-950/30 px-3 sm:px-5 py-1.5">
+    <div class="max-w-[1800px] mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2 min-w-0">
+        <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400 shrink-0"></i>
+        <div class="min-w-0 text-[11px] sm:text-xs">
+          <span class="font-semibold text-slate-100">Mobile Persistence:</span>
+          <span id="persistenceSummaryText" class="text-slate-300">Request OS notification shade &amp; background keep-alive permissions for long cooldowns.</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="grantPersistenceBtn" type="button" class="px-2.5 py-1 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/45 border border-cyan-400/50 text-cyan-100 text-[11px] font-medium transition">
+          Enable Always-Active Mode
+        </button>
+        <button id="androidBatteryHelpBtn" type="button" class="px-2 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px] transition">
+          Android Battery
+        </button>
       </div>
     </div>
   </div>
@@ -177,9 +195,8 @@
     <!-- Left Pane: Collapsible Prompt Composer + 50-Point Matrix -->
     <section id="leftPane" class="w-full lg:w-[48%] xl:w-[46%] flex flex-col h-full border-r border-slate-800/80 min-w-0">
 
-      <!-- Prompt Input Box (Collapsible for max mobile screen space) -->
+      <!-- Prompt Input Box -->
       <div class="shrink-0 p-2.5 sm:p-4 border-b border-slate-800/80 bg-[#0d131f]/70">
-        <!-- Collapsed Prompt Bar -->
         <div id="promptCollapsedBar" class="hidden items-center justify-between gap-2">
           <button id="expandPromptBtn" type="button" class="flex-1 min-w-0 text-left flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#090d14] border border-slate-800 hover:border-slate-700 transition">
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
@@ -191,7 +208,6 @@
           </div>
         </div>
 
-        <!-- Expanded Prompt Form -->
         <form id="buildForm" class="space-y-2">
           <div class="flex items-center justify-between gap-2">
             <label for="promptInput" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5 shrink-0">
@@ -283,7 +299,6 @@
     <!-- Right Pane: Tabbed Notepads (notes.txt, index.html, style.css, script.js) + Live Preview -->
     <aside id="rightPane" class="hidden lg:flex flex-col flex-1 min-w-0 bg-[#0b101b] h-full">
 
-      <!-- Tabs & Action Toolbar -->
       <div class="shrink-0 flex items-center justify-between gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 border-b border-slate-800/80 bg-[#0f1624]">
         <div class="flex items-center gap-1 overflow-x-auto no-scrollbar" id="workspaceTabs">
           <button type="button" data-tab="notes" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-indigo-600/20 text-indigo-200 border border-indigo-500/40 transition">
@@ -328,7 +343,6 @@
         </div>
       </div>
 
-      <!-- Sub-toolbar for notes.txt -->
       <div id="notesSubBar" class="shrink-0 flex items-center justify-between px-3 sm:px-4 py-1 border-b border-slate-800/70 bg-[#090d14] text-[11px] text-slate-400">
         <div class="flex items-center gap-2 min-w-0">
           <span class="truncate hidden sm:inline">Updated &amp; processed by every single one of the 50 steps.</span>
@@ -344,7 +358,6 @@
         </div>
       </div>
 
-      <!-- Sub-toolbar for Live Preview -->
       <div id="previewSubBar" class="hidden shrink-0 items-center justify-between gap-2 px-3 sm:px-4 py-1 border-b border-slate-800/70 bg-[#090d14] text-[11px] text-slate-400">
         <div class="flex items-center gap-1">
           <button type="button" data-vp="100%" class="vp-btn px-2 py-0.5 rounded bg-indigo-600/25 text-indigo-200 border border-indigo-500/40">Full</button>
@@ -364,7 +377,6 @@
         </div>
       </div>
 
-      <!-- Tab Panels -->
       <div class="flex-1 min-h-0 relative flex flex-col">
         <textarea id="notesEditor" spellcheck="false" placeholder="# notes.txt&#10;All 50 stages (Research, Reasoning, Planning, Designing, Build & Code) accumulate here and feed every subsequent step..." class="tab-panel w-full flex-1 bg-[#070a10] text-slate-300 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
 
@@ -380,7 +392,6 @@
               <iframe id="previewIframe" title="Generated Web App Live Preview" sandbox="allow-scripts allow-forms allow-modals allow-downloads allow-popups" class="w-full h-full border-0 bg-white"></iframe>
             </div>
           </div>
-          <!-- Preview Runtime Error Drawer -->
           <div id="previewConsoleBar" class="hidden shrink-0 max-h-36 overflow-y-auto border-t border-rose-500/40 bg-rose-950/90 px-3 py-2 text-[11px] font-mono-code text-rose-200">
             <div class="flex items-center justify-between mb-1">
               <span class="font-semibold text-rose-100">Preview Runtime Errors</span>
@@ -421,7 +432,7 @@
       <div class="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-slate-800 shrink-0">
         <div>
           <h3 class="text-sm font-semibold text-slate-100">Multi-API Key Pool &amp; Rate-Limit Monitor</h3>
-          <p class="text-[11px] text-slate-400">Keys cycle seamlessly on 429; pipeline freezes &amp; auto-resumes when all keys hit limits.</p>
+          <p class="text-[11px] text-slate-400">Keys cycle seamlessly on 429; pipeline freezes &amp; auto-resumes across long cooldowns.</p>
         </div>
         <button id="closeKeysModalBtn" type="button" class="text-slate-400 hover:text-slate-200 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -478,7 +489,7 @@
       </div>
       <div class="p-5 space-y-4 text-xs overflow-y-auto">
         <div class="rounded-lg bg-indigo-950/40 border border-indigo-500/30 p-3 text-indigo-200 leading-relaxed">
-          <strong>Strict Primary Model Mode:</strong> Never falls back to a lesser model. Cycles across all ready API keys on HTTP 429, records each key's reset time, and freezes cleanly until the next key is ready.
+          <strong>Strict Primary Model Mode:</strong> Never falls back to a lesser model. Cycles across all ready API keys on HTTP 429, records each key's reset time across hours if needed, and resumes automatically when keys reset.
         </div>
         <div>
           <label for="modelInput" class="block font-medium text-slate-300 mb-1">Primary Model ID</label>
@@ -506,15 +517,15 @@
           </div>
           <div>
             <label for="defaultCooldownInput" class="block font-medium text-slate-300 mb-1">429 Cool (s)</label>
-            <input id="defaultCooldownInput" type="number" min="10" max="600" step="5" value="60" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-2 py-2 text-slate-200 font-mono-code outline-none focus:border-indigo-500" />
+            <input id="defaultCooldownInput" type="number" min="10" max="86400" step="10" value="60" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-2 py-2 text-slate-200 font-mono-code outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label for="retryBaseInput" class="block font-medium text-slate-300 mb-1">Retry Base (s)</label>
-            <input id="retryBaseInput" type="number" min="5" max="120" step="5" value="20" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-2 py-2 text-slate-200 font-mono-code outline-none focus:border-indigo-500" />
+            <input id="retryBaseInput" type="number" min="5" max="3600" step="5" value="20" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-2 py-2 text-slate-200 font-mono-code outline-none focus:border-indigo-500" />
           </div>
           <div>
             <label for="retryCapInput" class="block font-medium text-slate-300 mb-1">Retry Cap (s)</label>
-            <input id="retryCapInput" type="number" min="15" max="300" step="15" value="90" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-2 py-2 text-slate-200 font-mono-code outline-none focus:border-indigo-500" />
+            <input id="retryCapInput" type="number" min="15" max="86400" step="15" value="3600" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-2 py-2 text-slate-200 font-mono-code outline-none focus:border-indigo-500" />
           </div>
         </div>
 
@@ -529,8 +540,15 @@
           <label class="flex items-start gap-2.5 cursor-pointer">
             <input id="osNotifToggle" type="checkbox" checked class="mt-0.5 rounded border-slate-600 bg-slate-900 text-indigo-500 focus:ring-indigo-500" />
             <div>
-              <div class="font-medium text-slate-200">Persistent OS Notification Progress</div>
-              <div class="text-[11px] text-slate-400">Shows live step progress, key rotation, and freeze countdowns in your device's notification shade.</div>
+              <div class="font-medium text-slate-200">Persistent OS Notification Banner</div>
+              <div class="text-[11px] text-slate-400">Shows live step progress, key rotation, and freeze countdowns in your Android notification shade with a monochrome status bar badge.</div>
+            </div>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input id="autoResumeOnReloadToggle" type="checkbox" checked class="mt-0.5 rounded border-slate-600 bg-slate-900 text-indigo-500 focus:ring-indigo-500" />
+            <div>
+              <div class="font-medium text-slate-200">Auto-Resume Interrupted Runs on Reopen</div>
+              <div class="text-[11px] text-slate-400">Automatically resumes from the exact step if Android suspends or reloads the app during a long API cooldown.</div>
             </div>
           </label>
         </div>

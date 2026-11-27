@@ -96,6 +96,7 @@ textarea.tab-panel {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-#liveNotificationBar {
+#liveNotificationBar,
+#mobilePersistenceBanner {
   transition: background-color 0.25s ease, border-color 0.25s ease;
 }

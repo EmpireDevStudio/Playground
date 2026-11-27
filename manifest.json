@@ -1,7 +1,7 @@
 {
   "name": "50-Point Web App Studio",
   "short_name": "50-Pt Studio",
-  "description": "50-Point AI Web App Engineering Studio with multi-API-key rotation, rate-limit freeze recovery, and background mobile execution.",
+  "description": "50-Point AI Web App Engineering Studio with multi-API-key rotation, long-horizon rate-limit freeze recovery, and background mobile execution.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -21,6 +21,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "./notif-badge.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "monochrome"
     }
   ]
 }
