@@ -22,33 +22,34 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
 </head>
-<body class="h-[100dvh] flex flex-col overflow-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+<body class="fixed inset-0 w-full h-full flex flex-col overflow-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
 
-  <!-- Top Header -->
-  <header class="shrink-0 border-b border-slate-800/80 bg-[#0d131f]/95 backdrop-blur px-3 sm:px-5 py-2.5">
-    <div class="max-w-[1800px] mx-auto flex flex-wrap items-center justify-between gap-2.5">
+  <!-- Compact Single-Row Top Header -->
+  <header class="shrink-0 safe-top-pad border-b border-slate-800/80 bg-[#0d131f]/95 backdrop-blur px-3 sm:px-5 py-2">
+    <div class="max-w-[1800px] mx-auto flex items-center justify-between gap-2">
       <!-- Brand -->
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-cyan-500 to-emerald-500 flex items-center justify-center shrink-0 shadow-sm shadow-indigo-500/20">
+      <div class="flex items-center gap-2 min-w-0">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-cyan-500 to-emerald-500 flex items-center justify-center shrink-0 shadow-sm shadow-indigo-500/20">
           <i data-lucide="boxes" class="w-4 h-4 text-white"></i>
         </div>
         <div class="min-w-0">
-          <div class="flex items-center gap-2 flex-wrap">
-            <h1 class="text-sm sm:text-base font-semibold text-slate-100 truncate">50-Point Web App Studio</h1>
-            <span id="modelBadge" class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/25">
+          <div class="flex items-center gap-2">
+            <h1 class="text-xs sm:text-base font-semibold text-slate-100 truncate">
+              <span class="sm:hidden">50-Pt Studio</span>
+              <span class="hidden sm:inline">50-Point Web App Studio</span>
+            </h1>
+            <span id="modelBadge" class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/25">
               gemini-4-hydrogen • xhigh
             </span>
-            <span class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/25" title="Rotates across multiple API keys and freezes cleanly until the next key resets">
-              Multi-Key Pool • BG Persistent
-            </span>
           </div>
-          <p class="text-[11px] text-slate-400 truncate">5 Stages × 10 Points • Auto-Cycling Keys • PWA Mobile &amp; Background Ready</p>
+          <p class="hidden md:block text-[11px] text-slate-400 truncate">5 Stages × 10 Points • Auto-Cycling Keys • PWA Mobile &amp; Background Ready</p>
         </div>
       </div>
 
       <!-- API Key Pool & Header Controls -->
-      <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto justify-end">
-        <div class="relative flex-1 sm:w-56 md:w-64 flex items-center">
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- Quick input visible on lg+ desktop; on mobile, tapping Keys pill opens Key Pool modal -->
+        <div class="hidden lg:flex relative w-60 items-center">
           <input
             id="apiKeyInput"
             type="password"
@@ -71,45 +72,40 @@
           <span id="keyPoolBadge" class="font-mono-code text-[11px]">Keys: 0/0</span>
         </button>
 
-        <button id="installAppBtn" type="button" title="Install App on Device" class="hidden touch-target items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-xs font-medium text-emerald-200 transition shrink-0">
+        <button id="installAppBtn" type="button" title="Install App on Device" class="hidden touch-target items-center gap-1 px-2 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-xs font-medium text-emerald-200 transition shrink-0">
           <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Install App</span>
+          <span class="hidden sm:inline">Install</span>
         </button>
 
         <button id="settingsBtn" type="button" title="Model, pacing & background settings" class="touch-target inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/70 text-xs font-medium text-slate-200 transition shrink-0">
           <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-slate-400"></i>
           <span class="hidden md:inline">Settings</span>
         </button>
-
-        <button id="mobileWorkspaceToggleBtn" type="button" class="lg:hidden touch-target inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-xs font-medium text-indigo-300 transition shrink-0">
-          <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
-          <span>Files</span>
-        </button>
       </div>
     </div>
   </header>
 
-  <!-- Persistent Live Notification Bar (Always visible when active, frozen, paused, or completed) -->
-  <div id="liveNotificationBar" class="hidden shrink-0 border-b border-indigo-500/40 bg-indigo-950/40 px-3 sm:px-5 py-2">
-    <div class="max-w-[1800px] mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5 min-w-0 flex-1">
-        <span id="notifStatusDot" class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse-soft shrink-0"></span>
+  <!-- Compact Persistent Live Notification Bar -->
+  <div id="liveNotificationBar" class="hidden shrink-0 border-b border-indigo-500/40 bg-indigo-950/40 px-3 sm:px-5 py-1.5">
+    <div class="max-w-[1800px] mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0 flex-1">
+        <span id="notifStatusDot" class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse-soft shrink-0"></span>
         <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span id="notifTitle" class="text-xs font-semibold text-slate-100 truncate">Pipeline Active</span>
-            <span id="notifKeyPill" class="px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-cyan-300">Key #1</span>
-            <span id="notifProgressText" class="font-mono-code text-[11px] text-indigo-200">0/50 (0%)</span>
+          <div class="flex items-center gap-1.5 flex-nowrap overflow-hidden">
+            <span id="notifTitle" class="text-[11px] sm:text-xs font-semibold text-slate-100 truncate">Pipeline Active</span>
+            <span id="notifKeyPill" class="hidden sm:inline-block px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-cyan-300 shrink-0">Key #1</span>
+            <span id="notifProgressText" class="font-mono-code text-[10px] sm:text-[11px] text-indigo-200 shrink-0">0/50</span>
           </div>
-          <p id="notifDetail" class="text-[11px] text-slate-300 truncate mt-0.5">Initializing...</p>
+          <p id="notifDetail" class="text-[10px] sm:text-[11px] text-slate-300 truncate">Initializing...</p>
         </div>
       </div>
 
-      <!-- Background Keep-Alive & OS Notification Badges + Quick Controls -->
-      <div class="flex items-center gap-1.5 flex-wrap shrink-0">
-        <span id="notifWakeBadge" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400" title="Screen Wake Lock status">Wake: Off</span>
-        <span id="notifAudioBadge" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400" title="Background Keep-Alive Media Session">BG: Off</span>
-        <button id="notifOsBtn" type="button" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 hover:bg-slate-800 border border-slate-700/70 text-slate-300 transition" title="Enable/check OS Notification Bar updates">
-          OS Notif: Check
+      <!-- Keep-Alive & Quick Controls -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span id="notifWakeBadge" class="hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400">Wake: Off</span>
+        <span id="notifAudioBadge" class="hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400">BG: Off</span>
+        <button id="notifOsBtn" type="button" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 hover:bg-slate-800 border border-slate-700/70 text-slate-300 transition" title="OS Notification Bar status">
+          Notif
         </button>
         <button id="notifPauseBtn" type="button" class="hidden px-2 py-1 rounded bg-amber-600/25 hover:bg-amber-600/40 border border-amber-500/40 text-amber-200 text-[11px] font-medium transition">
           Pause
@@ -119,17 +115,17 @@
         </button>
       </div>
     </div>
-    <div class="max-w-[1800px] mx-auto mt-1.5 w-full h-1 bg-slate-900/90 rounded-full overflow-hidden">
+    <div class="max-w-[1800px] mx-auto mt-1 w-full h-1 bg-slate-900/90 rounded-full overflow-hidden">
       <div id="notifProgressFill" class="h-full w-0 bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 transition-all duration-300"></div>
     </div>
   </div>
 
-  <!-- 5-Stage & 50-Step Progress Bar -->
-  <div class="shrink-0 border-b border-slate-800/70 bg-[#0b101b] px-3 sm:px-5 py-2">
-    <div class="max-w-[1800px] mx-auto space-y-2">
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <!-- 5 Stage Pills -->
-        <div class="flex items-center gap-1.5 overflow-x-auto py-0.5" id="stageStepper">
+  <!-- 5-Stage (Desktop) & Thin Progress Bar -->
+  <div class="shrink-0 border-b border-slate-800/70 bg-[#0b101b] px-3 sm:px-5 py-1.5">
+    <div class="max-w-[1800px] mx-auto space-y-1.5">
+      <div class="flex items-center justify-between gap-2">
+        <!-- 5 Stage Pills (hidden on mobile to save vertical space; use filter pills below) -->
+        <div class="hidden md:flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="stageStepper">
           <button type="button" data-stage-filter="1" class="stage-pill flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition">
             <span class="stage-dot w-2 h-2 rounded-full bg-slate-600"></span>
             <span>1. Research (1–10)</span>
@@ -157,17 +153,19 @@
         </div>
 
         <!-- Status Telemetry -->
-        <div class="flex items-center gap-3 text-[11px] text-slate-400">
-          <span id="pipelineStatusText" class="text-slate-200 font-medium">Idle — Ready for Web App Prompt</span>
-          <span class="text-slate-700">|</span>
-          <span id="stepProgressText" class="font-mono-code text-cyan-300">0 / 50</span>
-          <span class="hidden sm:inline text-slate-700">|</span>
-          <span id="requestCounterText" class="hidden sm:inline font-mono-code text-slate-400">Calls: 0 (Retries: 0)</span>
+        <div class="flex items-center justify-between md:justify-end gap-2 text-[11px] text-slate-400 w-full md:w-auto min-w-0">
+          <span id="pipelineStatusText" class="text-slate-200 font-medium truncate">Idle — Ready for Web App Prompt</span>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-slate-700">|</span>
+            <span id="stepProgressText" class="font-mono-code text-cyan-300">0 / 50</span>
+            <span class="hidden sm:inline text-slate-700">|</span>
+            <span id="requestCounterText" class="hidden sm:inline font-mono-code text-slate-400">Calls: 0 (Retries: 0)</span>
+          </div>
         </div>
       </div>
 
       <!-- Thin Progress Bar -->
-      <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800/70">
+      <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden border border-slate-800/70">
         <div id="overallProgressBar" class="h-full w-0 bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 transition-all duration-300"></div>
       </div>
     </div>
@@ -176,26 +174,42 @@
   <!-- Main Workspace -->
   <main class="flex-1 min-h-0 flex max-w-[1800px] w-full mx-auto relative">
 
-    <!-- Left Pane: Prompt Composer + 50-Point Matrix & Execution Feed -->
+    <!-- Left Pane: Collapsible Prompt Composer + 50-Point Matrix -->
     <section id="leftPane" class="w-full lg:w-[48%] xl:w-[46%] flex flex-col h-full border-r border-slate-800/80 min-w-0">
 
-      <!-- Prompt Input Box -->
-      <div class="shrink-0 p-3 sm:p-4 border-b border-slate-800/80 bg-[#0d131f]/70">
-        <form id="buildForm" class="space-y-2.5">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <label for="promptInput" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+      <!-- Prompt Input Box (Collapsible for max mobile screen space) -->
+      <div class="shrink-0 p-2.5 sm:p-4 border-b border-slate-800/80 bg-[#0d131f]/70">
+        <!-- Collapsed Prompt Bar -->
+        <div id="promptCollapsedBar" class="hidden items-center justify-between gap-2">
+          <button id="expandPromptBtn" type="button" class="flex-1 min-w-0 text-left flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#090d14] border border-slate-800 hover:border-slate-700 transition">
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
+            <span id="collapsedPromptPreview" class="text-xs text-slate-300 truncate">Edit Web App Prompt...</span>
+          </button>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button id="collapsedResumeBtn" type="button" class="hidden px-2.5 py-1.5 rounded-lg bg-cyan-600/20 border border-cyan-500/40 text-cyan-200 text-xs font-medium">Resume</button>
+            <button id="collapsedPauseBtn" type="button" class="hidden px-2.5 py-1.5 rounded-lg bg-amber-600/20 border border-amber-500/40 text-amber-200 text-xs font-medium">Pause</button>
+          </div>
+        </div>
+
+        <!-- Expanded Prompt Form -->
+        <form id="buildForm" class="space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <label for="promptInput" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5 shrink-0">
               <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i>
-              <span>Web App Concept &amp; Requirements</span>
+              <span>App Prompt</span>
             </label>
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <button type="button" class="sample-prompt-btn text-[11px] px-2 py-1 rounded bg-slate-800/90 hover:bg-slate-700 border border-slate-700/70 text-slate-300 transition" data-prompt="Build an advanced interactive Kanban & Sprint Planner web app with drag-and-drop columns, priority tags, WIP limits, search/filter, keyboard shortcuts, localStorage persistence, and JSON import/export.">
-                Kanban Studio
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              <button type="button" class="sample-prompt-btn shrink-0 text-[11px] px-2 py-1 rounded bg-slate-800/90 hover:bg-slate-700 border border-slate-700/70 text-slate-300 transition" data-prompt="Build an advanced interactive Kanban & Sprint Planner web app with drag-and-drop columns, priority tags, WIP limits, search/filter, keyboard shortcuts, localStorage persistence, and JSON import/export.">
+                Kanban
               </button>
-              <button type="button" class="sample-prompt-btn text-[11px] px-2 py-1 rounded bg-slate-800/90 hover:bg-slate-700 border border-slate-700/70 text-slate-300 transition" data-prompt="Build a sleek Financial Expense & Cashflow Analyzer web app with multi-category budgets, recurring entries, interactive SVG charts, CSV export, and real-time balance projections.">
-                Cashflow App
+              <button type="button" class="sample-prompt-btn shrink-0 text-[11px] px-2 py-1 rounded bg-slate-800/90 hover:bg-slate-700 border border-slate-700/70 text-slate-300 transition" data-prompt="Build a sleek Financial Expense & Cashflow Analyzer web app with multi-category budgets, recurring entries, interactive SVG charts, CSV export, and real-time balance projections.">
+                Cashflow
               </button>
-              <button type="button" class="sample-prompt-btn text-[11px] px-2 py-1 rounded bg-slate-800/90 hover:bg-slate-700 border border-slate-700/70 text-slate-300 transition" data-prompt="Build a precision Pomodoro & Deep Focus Workspace web app featuring customizable timer intervals, ambient sound synthesizer via Web Audio API, task queue, daily focus analytics, and themes.">
+              <button type="button" class="sample-prompt-btn shrink-0 text-[11px] px-2 py-1 rounded bg-slate-800/90 hover:bg-slate-700 border border-slate-700/70 text-slate-300 transition" data-prompt="Build a precision Pomodoro & Deep Focus Workspace web app featuring customizable timer intervals, ambient sound synthesizer via Web Audio API, task queue, daily focus analytics, and themes.">
                 Focus Synth
+              </button>
+              <button id="collapsePromptBtn" type="button" title="Collapse prompt box" class="p-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 shrink-0 transition">
+                <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
               </button>
             </div>
           </div>
@@ -203,15 +217,15 @@
           <div class="bg-[#090d14] border border-slate-700/80 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 rounded-xl p-2 transition">
             <textarea
               id="promptInput"
-              rows="3"
-              placeholder="Describe the web app you want engineered across all 50 stages (produces index.html, style.css, script.js + live preview)..."
-              class="w-full bg-transparent resize-none text-xs sm:text-sm text-slate-100 placeholder-slate-500 px-1.5 py-1 outline-none"
+              rows="2"
+              placeholder="Describe the web app to engineer across all 50 stages..."
+              class="w-full bg-transparent resize-none text-xs sm:text-sm text-slate-100 placeholder-slate-500 px-1 py-0.5 outline-none"
             ></textarea>
-            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 mt-1">
-              <div class="text-[11px] text-slate-500">
-                Outputs: <code class="text-slate-300">notes.txt</code> → <code class="text-indigo-300">index.html</code> + <code class="text-cyan-300">style.css</code> + <code class="text-emerald-300">script.js</code>
+            <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-800/80 mt-1">
+              <div class="hidden sm:block text-[11px] text-slate-500">
+                <code class="text-slate-300">notes.txt</code> → <code class="text-indigo-300">index.html</code> + <code class="text-cyan-300">style.css</code> + <code class="text-emerald-300">script.js</code>
               </div>
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1.5 ml-auto">
                 <button id="resetRunBtn" type="button" title="Reset 50-step progress & clear outputs" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition">
                   Reset
                 </button>
@@ -223,9 +237,9 @@
                   <i data-lucide="pause" class="w-3.5 h-3.5"></i>
                   <span>Pause</span>
                 </button>
-                <button id="startBuildBtn" type="submit" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-45 disabled:cursor-not-allowed text-white text-xs font-medium transition shadow-sm shadow-indigo-600/25">
+                <button id="startBuildBtn" type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-45 disabled:cursor-not-allowed text-white text-xs font-medium transition shadow-sm shadow-indigo-600/25">
                   <i data-lucide="rocket" class="w-3.5 h-3.5"></i>
-                  <span>Run 50-Point Build</span>
+                  <span>Run 50-Point</span>
                 </button>
               </div>
             </div>
@@ -233,7 +247,7 @@
         </form>
 
         <!-- Persistent Error Banner -->
-        <div id="errorBanner" class="hidden mt-2.5 rounded-xl border border-rose-500/45 bg-rose-950/60 p-3 text-xs text-rose-200">
+        <div id="errorBanner" class="hidden mt-2 rounded-xl border border-rose-500/45 bg-rose-950/60 p-2.5 text-xs text-rose-200">
           <div class="flex items-start justify-between gap-2">
             <div class="flex items-start gap-2 min-w-0">
               <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
@@ -250,122 +264,119 @@
       </div>
 
       <!-- Stage Filter Pills for 50-Point Checklist -->
-      <div class="shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 py-2 border-b border-slate-800/70 bg-[#0b101b]">
-        <div class="flex items-center gap-1 overflow-x-auto" id="checklistFilterBar">
-          <button type="button" data-filter="all" class="filter-btn px-2.5 py-1 rounded text-[11px] font-medium bg-indigo-600/25 text-indigo-200 border border-indigo-500/40">All 50</button>
-          <button type="button" data-filter="1" class="filter-btn px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S1: Research</button>
-          <button type="button" data-filter="2" class="filter-btn px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S2: Reason</button>
-          <button type="button" data-filter="3" class="filter-btn px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S3: Plan</button>
-          <button type="button" data-filter="4" class="filter-btn px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S4: Design (20)</button>
-          <button type="button" data-filter="5" class="filter-btn px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S5: Build</button>
+      <div class="shrink-0 flex items-center justify-between gap-2 px-2.5 sm:px-4 py-1.5 border-b border-slate-800/70 bg-[#0b101b]">
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar" id="checklistFilterBar">
+          <button type="button" data-filter="all" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-indigo-600/25 text-indigo-200 border border-indigo-500/40">All 50</button>
+          <button type="button" data-filter="1" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S1: Research</button>
+          <button type="button" data-filter="2" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S2: Reason</button>
+          <button type="button" data-filter="3" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S3: Plan</button>
+          <button type="button" data-filter="4" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S4: Design</button>
+          <button type="button" data-filter="5" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S5: Build</button>
         </div>
         <span class="text-[11px] text-slate-500 shrink-0 hidden sm:inline">Click step to inspect</span>
       </div>
 
       <!-- 50-Point Interactive Task List -->
-      <div id="checklistContainer" class="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2"></div>
+      <div id="checklistContainer" class="flex-1 overflow-y-auto p-2.5 sm:p-4 space-y-2"></div>
     </section>
 
     <!-- Right Pane: Tabbed Notepads (notes.txt, index.html, style.css, script.js) + Live Preview -->
-    <aside id="rightPane" class="hidden lg:flex flex-col flex-1 min-w-0 bg-[#0b101b] h-full absolute lg:static inset-0 z-30">
+    <aside id="rightPane" class="hidden lg:flex flex-col flex-1 min-w-0 bg-[#0b101b] h-full">
 
       <!-- Tabs & Action Toolbar -->
-      <div class="shrink-0 flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-2 border-b border-slate-800/80 bg-[#0f1624]">
-        <div class="flex items-center gap-1 overflow-x-auto" id="workspaceTabs">
-          <button type="button" data-tab="notes" class="ws-tab inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-indigo-600/20 text-indigo-200 border border-indigo-500/40 transition">
+      <div class="shrink-0 flex items-center justify-between gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 border-b border-slate-800/80 bg-[#0f1624]">
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar" id="workspaceTabs">
+          <button type="button" data-tab="notes" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-indigo-600/20 text-indigo-200 border border-indigo-500/40 transition">
             <i data-lucide="file-text" class="w-3.5 h-3.5 text-cyan-400"></i>
             <span class="font-mono-code">notes.txt</span>
             <span id="badgeNotes" class="text-[10px] text-slate-400 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="html" class="ws-tab inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="html" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="file-code" class="w-3.5 h-3.5 text-orange-400"></i>
             <span class="font-mono-code">index.html</span>
             <span id="badgeHtml" class="text-[10px] text-slate-500 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="css" class="ws-tab inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="css" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="palette" class="w-3.5 h-3.5 text-sky-400"></i>
             <span class="font-mono-code">style.css</span>
             <span id="badgeCss" class="text-[10px] text-slate-500 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="js" class="ws-tab inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="js" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="braces" class="w-3.5 h-3.5 text-amber-400"></i>
             <span class="font-mono-code">script.js</span>
             <span id="badgeJs" class="text-[10px] text-slate-500 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="preview" class="ws-tab inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="preview" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="monitor-play" class="w-3.5 h-3.5 text-emerald-400"></i>
-            <span>Live Preview</span>
+            <span>Preview</span>
           </button>
         </div>
 
-        <div class="flex items-center gap-1.5">
-          <button id="copyActiveBtn" type="button" title="Copy active notepad" class="inline-flex items-center gap-1 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 transition">
+        <div class="flex items-center gap-1 shrink-0">
+          <button id="copyActiveBtn" type="button" title="Copy active notepad" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 transition">
             <i data-lucide="copy" class="w-3 h-3"></i>
             <span class="hidden sm:inline">Copy</span>
           </button>
-          <button id="downloadActiveBtn" type="button" title="Download active file" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/35 text-[11px] font-medium text-cyan-200 transition">
+          <button id="downloadActiveBtn" type="button" title="Download active file" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/35 text-[11px] font-medium text-cyan-200 transition">
             <i data-lucide="download" class="w-3 h-3"></i>
-            <span id="downloadActiveLabel">Download notes.txt</span>
+            <span id="downloadActiveLabel" class="hidden sm:inline">Download notes.txt</span>
           </button>
-          <button id="downloadAllBtn" type="button" title="Download index.html, style.css, script.js, and notes.txt" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/35 text-[11px] font-medium text-emerald-200 transition">
+          <button id="downloadAllBtn" type="button" title="Download index.html, style.css, script.js, and notes.txt" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/35 text-[11px] font-medium text-emerald-200 transition">
             <i data-lucide="package-check" class="w-3 h-3"></i>
             <span class="hidden xl:inline">Download All</span>
-          </button>
-          <button id="closeMobileWorkspaceBtn" type="button" class="lg:hidden p-1.5 rounded bg-slate-800 text-slate-300" title="Close">
-            <i data-lucide="x" class="w-3.5 h-3.5"></i>
           </button>
         </div>
       </div>
 
       <!-- Sub-toolbar for notes.txt -->
-      <div id="notesSubBar" class="shrink-0 flex items-center justify-between px-4 py-1.5 border-b border-slate-800/70 bg-[#090d14] text-[11px] text-slate-400">
-        <div class="flex items-center gap-2">
-          <span>Updated &amp; processed by every single one of the 50 steps.</span>
-          <span id="notesTokenEstimate" class="font-mono-code text-[10px] text-slate-500">(~0 tok)</span>
+      <div id="notesSubBar" class="shrink-0 flex items-center justify-between px-3 sm:px-4 py-1 border-b border-slate-800/70 bg-[#090d14] text-[11px] text-slate-400">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="truncate hidden sm:inline">Updated &amp; processed by every single one of the 50 steps.</span>
+          <span class="sm:hidden text-slate-400">Cumulative 50-step log</span>
+          <span id="notesTokenEstimate" class="font-mono-code text-[10px] text-slate-500 shrink-0">(~0 tok)</span>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 shrink-0">
           <button id="linkFileBtn" type="button" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
             <i data-lucide="hard-drive" class="w-3 h-3"></i>
-            <span id="linkFileLabel">Auto-Save notes.txt</span>
+            <span id="linkFileLabel">Save Disk</span>
           </button>
-          <span id="fileSyncBadge" class="text-[10px] text-slate-500">Browser buffer</span>
+          <span id="fileSyncBadge" class="hidden sm:inline text-[10px] text-slate-500">Browser buffer</span>
         </div>
       </div>
 
       <!-- Sub-toolbar for Live Preview -->
-      <div id="previewSubBar" class="hidden shrink-0 items-center justify-between gap-2 flex-wrap px-4 py-1.5 border-b border-slate-800/70 bg-[#090d14] text-[11px] text-slate-400">
-        <div class="flex items-center gap-1.5">
-          <span class="text-slate-500 mr-1">Viewport:</span>
-          <button type="button" data-vp="100%" class="vp-btn px-2 py-0.5 rounded bg-indigo-600/25 text-indigo-200 border border-indigo-500/40">Desktop</button>
-          <button type="button" data-vp="768px" class="vp-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Tablet</button>
+      <div id="previewSubBar" class="hidden shrink-0 items-center justify-between gap-2 px-3 sm:px-4 py-1 border-b border-slate-800/70 bg-[#090d14] text-[11px] text-slate-400">
+        <div class="flex items-center gap-1">
+          <button type="button" data-vp="100%" class="vp-btn px-2 py-0.5 rounded bg-indigo-600/25 text-indigo-200 border border-indigo-500/40">Full</button>
+          <button type="button" data-vp="768px" class="vp-btn hidden sm:inline-block px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Tablet</button>
           <button type="button" data-vp="390px" class="vp-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Mobile</button>
         </div>
-        <div class="flex items-center gap-2">
-          <span id="previewErrorCountBadge" class="hidden px-2 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono-code text-[10px]">0 errors</span>
-          <button id="refreshPreviewBtn" type="button" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+        <div class="flex items-center gap-1.5">
+          <span id="previewErrorCountBadge" class="hidden px-2 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono-code text-[10px]">0 err</span>
+          <button id="refreshPreviewBtn" type="button" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
             <i data-lucide="refresh-cw" class="w-3 h-3"></i>
-            <span>Reload App</span>
+            <span>Reload</span>
           </button>
-          <button id="openPreviewTabBtn" type="button" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/35 text-emerald-200 transition">
+          <button id="openPreviewTabBtn" type="button" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/35 text-emerald-200 transition">
             <i data-lucide="external-link" class="w-3 h-3"></i>
-            <span>Pop Out</span>
+            <span class="hidden sm:inline">Pop Out</span>
           </button>
         </div>
       </div>
 
       <!-- Tab Panels -->
       <div class="flex-1 min-h-0 relative flex flex-col">
-        <textarea id="notesEditor" spellcheck="false" placeholder="# notes.txt&#10;All 50 stages (Research, Reasoning, Planning, Designing, Build & Code) accumulate here and feed every subsequent step..." class="tab-panel w-full flex-1 bg-[#070a10] text-slate-300 font-mono-code text-xs leading-relaxed p-4 outline-none resize-none"></textarea>
+        <textarea id="notesEditor" spellcheck="false" placeholder="# notes.txt&#10;All 50 stages (Research, Reasoning, Planning, Designing, Build & Code) accumulate here and feed every subsequent step..." class="tab-panel w-full flex-1 bg-[#070a10] text-slate-300 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
 
-        <textarea id="htmlEditor" spellcheck="false" placeholder="<!-- index.html will be crafted in Step 48 (or paste/edit HTML directly to preview) -->" class="tab-panel hidden w-full flex-1 bg-[#070a10] text-orange-100/90 font-mono-code text-xs leading-relaxed p-4 outline-none resize-none"></textarea>
+        <textarea id="htmlEditor" spellcheck="false" placeholder="<!-- index.html will be crafted in Step 48 (or paste/edit HTML directly to preview) -->" class="tab-panel hidden w-full flex-1 bg-[#070a10] text-orange-100/90 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
 
-        <textarea id="cssEditor" spellcheck="false" placeholder="/* style.css will be crafted in Step 49 (or paste/edit CSS directly to preview) */" class="tab-panel hidden w-full flex-1 bg-[#070a10] text-sky-100/90 font-mono-code text-xs leading-relaxed p-4 outline-none resize-none"></textarea>
+        <textarea id="cssEditor" spellcheck="false" placeholder="/* style.css will be crafted in Step 49 (or paste/edit CSS directly to preview) */" class="tab-panel hidden w-full flex-1 bg-[#070a10] text-sky-100/90 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
 
-        <textarea id="jsEditor" spellcheck="false" placeholder="// script.js will be crafted in Step 50 (or paste/edit JS directly to preview)" class="tab-panel hidden w-full flex-1 bg-[#070a10] text-amber-100/90 font-mono-code text-xs leading-relaxed p-4 outline-none resize-none"></textarea>
+        <textarea id="jsEditor" spellcheck="false" placeholder="// script.js will be crafted in Step 50 (or paste/edit JS directly to preview)" class="tab-panel hidden w-full flex-1 bg-[#070a10] text-amber-100/90 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
 
         <div id="previewPanel" class="tab-panel hidden w-full flex-1 min-h-0 flex flex-col bg-[#05070b]">
-          <div class="flex-1 min-h-0 flex items-center justify-center p-2 sm:p-4 overflow-auto">
-            <div id="previewFrameWrapper" class="w-full h-full bg-white rounded-xl overflow-hidden border border-slate-700/80 shadow-2xl transition-all duration-300">
+          <div class="flex-1 min-h-0 flex items-center justify-center p-0 sm:p-4 overflow-auto">
+            <div id="previewFrameWrapper" class="w-full h-full bg-white rounded-none sm:rounded-xl overflow-hidden border-0 sm:border border-slate-700/80 shadow-2xl transition-all duration-300">
               <iframe id="previewIframe" title="Generated Web App Live Preview" sandbox="allow-scripts allow-forms allow-modals allow-downloads allow-popups" class="w-full h-full border-0 bg-white"></iframe>
             </div>
           </div>
@@ -382,10 +393,32 @@
     </aside>
   </main>
 
+  <!-- Native-Style Mobile Bottom Navigation Bar (lg:hidden) -->
+  <nav id="mobileBottomNav" class="lg:hidden shrink-0 border-t border-slate-800/90 bg-[#0d131f]/95 backdrop-blur safe-bottom-pad">
+    <div class="grid grid-cols-4 h-12">
+      <button type="button" data-mobile-view="build" class="mob-nav-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-indigo-300">
+        <i data-lucide="list-checks" class="w-4 h-4"></i>
+        <span>Build</span>
+      </button>
+      <button type="button" data-mobile-view="notes" class="mob-nav-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-400">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>Notes</span>
+      </button>
+      <button type="button" data-mobile-view="code" class="mob-nav-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-400">
+        <i data-lucide="code-2" class="w-4 h-4"></i>
+        <span>Code</span>
+      </button>
+      <button type="button" data-mobile-view="preview" class="mob-nav-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-400">
+        <i data-lucide="monitor-play" class="w-4 h-4"></i>
+        <span>Preview</span>
+      </button>
+    </div>
+  </nav>
+
   <!-- API Key Pool & Rate-Limit Monitor Modal -->
-  <div id="keysModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+  <div id="keysModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div class="w-full max-w-lg rounded-2xl bg-[#111827] border border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90dvh]">
-      <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 shrink-0">
+      <div class="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-slate-800 shrink-0">
         <div>
           <h3 class="text-sm font-semibold text-slate-100">Multi-API Key Pool &amp; Rate-Limit Monitor</h3>
           <p class="text-[11px] text-slate-400">Keys cycle seamlessly on 429; pipeline freezes &amp; auto-resumes when all keys hit limits.</p>
@@ -395,10 +428,19 @@
         </button>
       </div>
 
-      <div class="p-5 space-y-4 overflow-y-auto text-xs">
+      <div class="p-4 sm:p-5 space-y-4 overflow-y-auto text-xs">
         <div>
-          <label for="bulkKeysInput" class="block font-medium text-slate-300 mb-1.5">Add API Keys (one per line or comma-separated)</label>
-          <textarea id="bulkKeysInput" rows="3" placeholder="AIzaSy...key1&#10;AIzaSy...key2&#10;AIzaSy...key3" class="w-full bg-[#090d14] border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono-code text-xs outline-none focus:border-indigo-500"></textarea>
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <label for="bulkKeysInput" class="block font-medium text-slate-300">Add API Keys (paste or upload CSV)</label>
+            <div>
+              <input id="csvKeysFileInput" type="file" accept=".csv,.txt,text/csv,text/plain" class="hidden" />
+              <button id="uploadCsvKeysBtn" type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/40 text-cyan-200 text-[11px] font-medium transition">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Upload CSV</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="bulkKeysInput" rows="3" placeholder="AIzaSy...key1&#10;AIzaSy...key2&#10;Or upload a .csv / .txt file of API keys" class="w-full bg-[#090d14] border border-slate-700 rounded-lg p-2.5 text-slate-200 font-mono-code text-xs outline-none focus:border-indigo-500"></textarea>
           <div class="flex flex-wrap items-center justify-between gap-2 mt-2">
             <div class="flex items-center gap-1.5">
               <button id="resetAllCooldownsBtn" type="button" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium transition">
@@ -426,7 +468,7 @@
   </div>
 
   <!-- Settings Modal -->
-  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div class="w-full max-w-md rounded-2xl bg-[#111827] border border-slate-800 shadow-2xl overflow-hidden max-h-[90dvh] flex flex-col">
       <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 shrink-0">
         <h3 class="text-sm font-semibold text-slate-100">Model, Rate-Limit &amp; Background Settings</h3>
@@ -502,7 +544,7 @@
   </div>
 
   <!-- Toast Container -->
-  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <div id="toastContainer" class="fixed bottom-14 lg:bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <script src="./script.js" defer></script>
 </body>
