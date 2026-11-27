@@ -352,6 +352,7 @@ const el = {
   addBulkKeysBtn: document.getElementById('addBulkKeysBtn'),
   csvKeysFileInput: document.getElementById('csvKeysFileInput'),
   uploadCsvKeysBtn: document.getElementById('uploadCsvKeysBtn'),
+  exportCsvKeysBtn: document.getElementById('exportCsvKeysBtn'),
   resetAllCooldownsBtn: document.getElementById('resetAllCooldownsBtn'),
   clearInvalidKeysBtn: document.getElementById('clearInvalidKeysBtn'),
   modalPoolSummary: document.getElementById('modalPoolSummary'),
@@ -1859,7 +1860,7 @@ async function registerServiceWorkerAndPwa() {
 }
 
 function stripMarkdownCodeFences(rawText) {
-  const text = (rawText || '').trim();
+  let text = String(rawText || '').replace(/^\uFEFF/, '').trim();
   const fencedMatch = text.match(/^```[a-zA-Z0-9_-]*\s*\r?\n([\s\S]*?)\r?\n```\s*$/);
   if (fencedMatch) {
     return fencedMatch[1].trim();
@@ -1871,6 +1872,12 @@ function stripMarkdownCodeFences(rawText) {
     if (extracted.length > text.length * 0.55) {
       return extracted;
     }
+  }
+  // Handle truncated/unclosed leading markdown fence (e.g. ```javascript\n...)
+  if (/^```[a-zA-Z0-9_-]*\s*\r?\n/.test(text)) {
+    text = text.replace(/^```[a-zA-Z0-9_-]*\s*\r?\n/, '');
+    text = text.replace(/\r?\n```\s*$/, '');
+    return text.trim();
   }
   return text;
 }
@@ -2139,23 +2146,32 @@ function escapeScriptCloseInCode(code) {
   });
 }
 
+function isEsModuleScript(code, htmlSource = '') {
+  if (/<script[^>]*type=["']module["'][^>]*src=["'](?:\.\/)?script\.js(?:\?[^"']*)?["'][^>]*>/i.test(htmlSource)) {
+    return true;
+  }
+  return /(?:^|\n)\s*(?:import\s+(?:[\w*{},\s]+from\s+)?['"][^'"]+['"]|export\s+(?:default|const|let|var|function|class|\{|\*))/m.test(code);
+}
+
 function buildCombinedPreviewHtml({ includePreviewBridge = true } = {}) {
-  const rawHtml = (state.htmlCode || '').trim();
-  const rawCss = (state.cssCode || '').trim();
-  const rawJs = (state.jsCode || '').trim();
+  const rawHtml = stripMarkdownCodeFences(state.htmlCode || '');
+  const rawCss = stripMarkdownCodeFences(state.cssCode || '');
+  const rawJs = stripMarkdownCodeFences(state.jsCode || '');
 
   if (!rawHtml && !rawCss && !rawJs) {
     return '<!DOCTYPE html><html><body style="font-family:sans-serif;background:#0f172a;color:#94a3b8;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:24px;"><div><h2 style="color:#e2e8f0;margin-bottom:8px;">Live Preview Ready</h2><p style="font-size:14px;">Run the 50-point pipeline (or paste code into index.html, style.css, and script.js tabs) to launch the app here.</p></div></body></html>';
   }
 
+  const useModule = isEsModuleScript(rawJs, rawHtml);
   let html = rawHtml || '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>App Preview</title></head><body><div id="app"></div></body></html>';
 
-  html = html.replace(/<link[^>]*href=["'](?:\.\/)?style\.css["'][^>]*>/gi, '');
-  html = html.replace(/<script[^>]*src=["'](?:\.\/)?script\.js["'][^>]*>\s*<\/script>/gi, '');
+  html = html.replace(/<link[^>]*href=["'](?:\.\/)?style\.css(?:\?[^"']*)?["'][^>]*>/gi, '');
+  html = html.replace(/<script[^>]*src=["'](?:\.\/)?script\.js(?:\?[^"']*)?["'][^>]*>\s*<\/script>/gi, '');
 
   const styleOpenTag = '<sty' + 'le>';
   const styleCloseTag = '</sty' + 'le>';
   const scriptOpenTag = '<scr' + 'ipt>';
+  const appScriptOpenTag = useModule ? '<scr' + 'ipt type="module">' : '<scr' + 'ipt>';
   const scriptCloseTag = '</scr' + 'ipt>';
 
   const bridgeScript = includePreviewBridge ? `${scriptOpenTag}
@@ -2202,7 +2218,7 @@ ${scriptCloseTag}` : '';
 
   const styleTag = rawCss ? `${styleOpenTag}\n${rawCss}\n${styleCloseTag}` : '';
   const safeJs = rawJs ? escapeScriptCloseInCode(rawJs) : '';
-  const scriptTag = safeJs ? `${scriptOpenTag}\n${safeJs}\n${scriptCloseTag}` : '';
+  const scriptTag = safeJs ? `${appScriptOpenTag}\n${safeJs}\n${scriptCloseTag}` : '';
 
   const headInjection = [bridgeScript, styleTag].filter(Boolean).join('\n');
   if (headInjection) {
@@ -2241,6 +2257,14 @@ function updatePreviewConsoleUI() {
 
 function renderLivePreview() {
   state.previewErrors = [];
+  const cleanJs = stripMarkdownCodeFences(state.jsCode || '');
+  if (cleanJs && !isEsModuleScript(cleanJs, state.htmlCode || '')) {
+    try {
+      new Function(cleanJs);
+    } catch (syntaxErr) {
+      state.previewErrors.push(`SyntaxError in script.js: ${syntaxErr.message}`);
+    }
+  }
   updatePreviewConsoleUI();
   el.previewIframe.srcdoc = buildCombinedPreviewHtml({ includePreviewBridge: true });
 }
@@ -2883,8 +2907,7 @@ async function runPipeline(startFresh = true) {
   }
 }
 
-function triggerDownload(filename, content, mime = 'text/plain;charset=utf-8') {
-  const blob = new Blob([content || ''], { type: mime });
+function triggerDownloadBlob(filename, blob) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -2892,7 +2915,130 @@ function triggerDownload(filename, content, mime = 'text/plain;charset=utf-8') {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function triggerDownload(filename, content, mime = 'text/plain;charset=utf-8') {
+  const blob = new Blob([content || ''], { type: mime });
+  triggerDownloadBlob(filename, blob);
+}
+
+const CRC32_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let j = 0; j < 8; j++) {
+      c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+    }
+    table[i] = c >>> 0;
+  }
+  return table;
+})();
+
+function crc32Bytes(bytes) {
+  let crc = 0xffffffff;
+  for (let i = 0; i < bytes.length; i++) {
+    crc = CRC32_TABLE[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function createZipBlob(files) {
+  const encoder = new TextEncoder();
+  const now = new Date();
+  const dosTime = ((now.getHours() & 0x1f) << 11) | ((now.getMinutes() & 0x3f) << 5) | ((now.getSeconds() >> 1) & 0x1f);
+  const dosDate = (((Math.max(1980, now.getFullYear()) - 1980) & 0x7f) << 9) | (((now.getMonth() + 1) & 0x0f) << 5) | (now.getDate() & 0x1f);
+
+  const localParts = [];
+  const centralParts = [];
+  let offset = 0;
+
+  files.forEach((file) => {
+    const nameBytes = encoder.encode(file.name);
+    const dataBytes = encoder.encode(file.content || '');
+    const crc = crc32Bytes(dataBytes);
+
+    const localHeader = new Uint8Array(30 + nameBytes.length);
+    const lView = new DataView(localHeader.buffer);
+    lView.setUint32(0, 0x04034b50, true);
+    lView.setUint16(4, 20, true);
+    lView.setUint16(6, 0x0800, true);
+    lView.setUint16(8, 0, true);
+    lView.setUint16(10, dosTime, true);
+    lView.setUint16(12, dosDate, true);
+    lView.setUint32(14, crc, true);
+    lView.setUint32(18, dataBytes.length, true);
+    lView.setUint32(22, dataBytes.length, true);
+    lView.setUint16(26, nameBytes.length, true);
+    lView.setUint16(28, 0, true);
+    localHeader.set(nameBytes, 30);
+
+    localParts.push(localHeader, dataBytes);
+
+    const centralHeader = new Uint8Array(46 + nameBytes.length);
+    const cView = new DataView(centralHeader.buffer);
+    cView.setUint32(0, 0x02014b50, true);
+    cView.setUint16(4, 20, true);
+    cView.setUint16(6, 20, true);
+    cView.setUint16(8, 0x0800, true);
+    cView.setUint16(10, 0, true);
+    cView.setUint16(12, dosTime, true);
+    cView.setUint16(14, dosDate, true);
+    cView.setUint32(16, crc, true);
+    cView.setUint32(20, dataBytes.length, true);
+    cView.setUint32(24, dataBytes.length, true);
+    cView.setUint16(28, nameBytes.length, true);
+    cView.setUint16(30, 0, true);
+    cView.setUint16(32, 0, true);
+    cView.setUint16(34, 0, true);
+    cView.setUint16(36, 0, true);
+    cView.setUint32(38, 0, true);
+    cView.setUint32(42, offset, true);
+    centralHeader.set(nameBytes, 46);
+
+    centralParts.push(centralHeader);
+    offset += localHeader.length + dataBytes.length;
+  });
+
+  const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+  const endRecord = new Uint8Array(22);
+  const eView = new DataView(endRecord.buffer);
+  eView.setUint32(0, 0x06054b50, true);
+  eView.setUint16(4, 0, true);
+  eView.setUint16(6, 0, true);
+  eView.setUint16(8, files.length, true);
+  eView.setUint16(10, files.length, true);
+  eView.setUint32(12, centralSize, true);
+  eView.setUint32(16, offset, true);
+  eView.setUint16(20, 0, true);
+
+  return new Blob([...localParts, ...centralParts, endRecord], { type: 'application/zip' });
+}
+
+function escapeCsvCell(value) {
+  const str = String(value ?? '');
+  if (/[",\r\n]/.test(str)) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function exportApiKeysToCsv() {
+  if (state.apiKeys.length === 0) {
+    showToast('No API keys to export.', 'warn');
+    return;
+  }
+  const header = ['label', 'api_key', 'status', 'calls', 'hits_429'];
+  const rows = state.apiKeys.map((k) => [
+    escapeCsvCell(k.label || ''),
+    escapeCsvCell(k.key || ''),
+    escapeCsvCell(k.status || 'ready'),
+    escapeCsvCell(k.calls || 0),
+    escapeCsvCell(k.hits429 || 0)
+  ].join(','));
+  const csvContent = [header.join(','), ...rows].join('\n');
+  triggerDownload('gemini-api-keys.csv', csvContent, 'text/csv;charset=utf-8');
+  showToast(`Exported ${state.apiKeys.length} API key(s) to CSV.`, 'success');
 }
 
 function getActiveNotepadData() {
@@ -2972,6 +3118,10 @@ el.uploadCsvKeysBtn.addEventListener('click', () => {
   el.csvKeysFileInput.value = '';
   el.csvKeysFileInput.click();
 });
+
+if (el.exportCsvKeysBtn) {
+  el.exportCsvKeysBtn.addEventListener('click', exportApiKeysToCsv);
+}
 
 el.csvKeysFileInput.addEventListener('change', async (e) => {
   const file = e.target.files && e.target.files[0];
@@ -3270,23 +3420,20 @@ el.downloadActiveBtn.addEventListener('click', () => {
 
 el.downloadAllBtn.addEventListener('click', () => {
   const files = [
-    { name: 'index.html', content: state.htmlCode, mime: 'text/html;charset=utf-8' },
-    { name: 'style.css', content: state.cssCode, mime: 'text/css;charset=utf-8' },
-    { name: 'script.js', content: state.jsCode, mime: 'application/javascript;charset=utf-8' },
-    { name: 'notes.txt', content: state.notesText, mime: 'text/plain;charset=utf-8' }
-  ];
-  let count = 0;
-  files.forEach((f, idx) => {
-    if (f.content) {
-      count += 1;
-      setTimeout(() => triggerDownload(f.name, f.content, f.mime), idx * 180);
-    }
-  });
-  if (count === 0) {
-    showToast('No files generated yet.', 'warn');
-  } else {
-    showToast(`Downloading ${count} file(s)...`, 'success');
+    { name: 'index.html', content: state.htmlCode },
+    { name: 'style.css', content: state.cssCode },
+    { name: 'script.js', content: state.jsCode },
+    { name: 'notes.txt', content: state.notesText }
+  ].filter((f) => Boolean(f.content && f.content.trim().length > 0));
+
+  if (files.length === 0) {
+    showToast('No documents or notes generated yet.', 'warn');
+    return;
   }
+
+  const zipBlob = createZipBlob(files);
+  triggerDownloadBlob('50-pt-studio-bundle.zip', zipBlob);
+  showToast(`Downloaded ZIP with ${files.length} document(s) (including notes).`, 'success');
 });
 
 el.linkFileBtn.addEventListener('click', async () => {
