@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wbs-studio-v5';
+const CACHE_NAME = 'wbs-studio-v6';
 const PROGRESS_NOTIF_TAG = 'wbs-pipeline-progress';
 const BATTERY_NOTIF_TAG = 'wbs-battery-warning';
 

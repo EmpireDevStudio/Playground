@@ -24,59 +24,75 @@
 </head>
 <body class="fixed inset-0 w-full h-full flex flex-col overflow-hidden antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
 
-  <!-- Compact Single-Row Top Header -->
-  <header class="shrink-0 safe-top-pad border-b border-slate-800/80 bg-[#0d131f]/95 backdrop-blur px-3 sm:px-5 py-2">
-    <div class="max-w-[1800px] mx-auto flex items-center justify-between gap-2">
+  <!-- Compact Single-Row Top Header (Zero Overlap) -->
+  <header class="shrink-0 safe-top-pad border-b border-slate-800/80 bg-[#0d131f]/95 backdrop-blur px-3 sm:px-4 py-1.5">
+    <div class="max-w-[1920px] mx-auto flex items-center justify-between gap-2">
       <!-- Brand -->
       <div class="flex items-center gap-2 min-w-0">
-        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-cyan-500 to-emerald-500 flex items-center justify-center shrink-0 shadow-sm shadow-indigo-500/20">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 via-cyan-500 to-emerald-500 flex items-center justify-center shrink-0 shadow-sm shadow-indigo-500/20">
           <i data-lucide="boxes" class="w-4 h-4 text-white"></i>
         </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-2">
-            <h1 class="text-xs sm:text-base font-semibold text-slate-100 truncate">
-              <span class="sm:hidden">50-Pt Studio</span>
-              <span class="hidden sm:inline">50-Point Web App Studio</span>
-            </h1>
-            <span id="modelBadge" class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/25">
-              gemini-4-hydrogen • xhigh
-            </span>
-          </div>
-          <p class="hidden md:block text-[11px] text-slate-400 truncate">Dynamic 5-Stage Blueprint Pipeline • Visual &amp; Stack Configurator • Mobile Background Lock</p>
+        <div class="min-w-0 flex items-center gap-2">
+          <h1 class="text-xs sm:text-sm font-semibold text-slate-100 truncate">
+            <span class="sm:hidden">50-Pt Studio</span>
+            <span class="hidden sm:inline">50-Point Web App Studio</span>
+          </h1>
+          <span id="modelBadge" class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/25 shrink-0">
+            gemini-4-hydrogen • xhigh
+          </span>
         </div>
       </div>
 
-      <!-- API Key Pool & Header Controls -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <div class="hidden lg:flex relative w-60 items-center">
+      <!-- Desktop Pane Layout Switcher (Saves & Expands Screen Real Estate) -->
+      <div id="layoutModeSwitcher" class="hidden lg:flex items-center gap-1 bg-[#090d14] border border-slate-800 rounded-lg p-0.5 shrink-0" role="group" aria-label="Workspace Layout">
+        <button type="button" data-layout="split" class="layout-mode-btn px-2.5 py-1 rounded-md text-[11px] font-medium bg-indigo-600/25 text-indigo-200 border border-indigo-500/40 transition" title="Show Steps & Workspace side-by-side">
+          Split View
+        </button>
+        <button type="button" data-layout="steps" class="layout-mode-btn px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 border border-transparent transition" title="Expand 50-Step Planner to full width">
+          Focus Steps
+        </button>
+        <button type="button" data-layout="workspace" class="layout-mode-btn px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 border border-transparent transition" title="Expand Notes, Code & Preview to full width">
+          Focus Output
+        </button>
+      </div>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <!-- Quick Key Input (XL screens only so it never crowds) -->
+        <div class="hidden xl:flex relative w-48 items-center">
           <input
             id="apiKeyInput"
             type="password"
-            placeholder="Add API Key(s) (comma/newline)"
+            placeholder="Paste API Key..."
             autocomplete="off"
-            class="w-full bg-[#090d14] border border-slate-700/80 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg pl-3 pr-20 py-1.5 text-xs text-slate-200 placeholder-slate-500 outline-none transition"
+            class="w-full bg-[#090d14] border border-slate-700/80 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg pl-2.5 pr-16 py-1 text-xs text-slate-200 placeholder-slate-500 outline-none transition"
           />
           <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
             <button id="addKeyQuickBtn" type="button" title="Add key(s) to pool" class="px-1.5 py-0.5 rounded bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 text-[10px] font-semibold transition">
               +Add
             </button>
             <button id="toggleKeyVisBtn" type="button" title="Show/hide input" class="p-1 text-slate-400 hover:text-slate-200 rounded transition">
-              <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              <i data-lucide="eye" class="w-3 h-3"></i>
             </button>
           </div>
         </div>
 
-        <button id="manageKeysBtn" type="button" title="Manage API Key Pool & Rate-Limit Timers" class="touch-target inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/70 text-xs font-medium text-slate-200 transition shrink-0">
-          <span id="keyPoolDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
-          <span id="keyPoolBadge" class="font-mono-code text-[11px]">Keys: 0/0</span>
+        <button id="manageKeysBtn" type="button" title="Manage API Keys & Rate Limits" class="touch-target inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/70 text-[11px] font-medium text-slate-200 transition shrink-0">
+          <span id="keyPoolDot" class="w-2 h-2 rounded-full bg-slate-500 shrink-0"></span>
+          <span id="keyPoolBadge" class="font-mono-code">Keys: 0/0</span>
         </button>
 
-        <button id="installAppBtn" type="button" title="Install App on Device" class="hidden touch-target items-center gap-1 px-2 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-xs font-medium text-emerald-200 transition shrink-0">
+        <button id="androidBatteryHelpBtn" type="button" title="Mobile Lock-Screen & Background Readiness" class="touch-target inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-cyan-950/50 hover:bg-cyan-900/50 border border-cyan-500/35 text-[11px] font-medium text-cyan-200 transition shrink-0">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span id="persistenceHeaderLabel" class="hidden sm:inline">Keep-Alive</span>
+        </button>
+
+        <button id="installAppBtn" type="button" title="Install App on Device" class="hidden touch-target items-center gap-1 px-2 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-[11px] font-medium text-emerald-200 transition shrink-0">
           <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Install</span>
         </button>
 
-        <button id="settingsBtn" type="button" title="Model, pacing & background settings" class="touch-target inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/70 text-xs font-medium text-slate-200 transition shrink-0">
+        <button id="settingsBtn" type="button" title="Model, pacing & background settings" class="touch-target inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700/70 text-[11px] font-medium text-slate-200 transition shrink-0">
           <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-slate-400"></i>
           <span class="hidden md:inline">Settings</span>
         </button>
@@ -84,127 +100,94 @@
     </div>
   </header>
 
-  <!-- Compact Persistent Live Notification Bar -->
-  <div id="liveNotificationBar" class="hidden shrink-0 border-b border-indigo-500/40 bg-indigo-950/40 px-3 sm:px-5 py-1.5">
-    <div class="max-w-[1800px] mx-auto flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2 min-w-0 flex-1">
-        <img src="./notif-badge.png" alt="" class="w-4 h-4 object-contain opacity-90 shrink-0" />
-        <span id="notifStatusDot" class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse-soft shrink-0"></span>
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-1.5 flex-nowrap overflow-x-auto no-scrollbar">
-            <span id="notifTitle" class="text-[11px] sm:text-xs font-semibold text-slate-100 truncate shrink-0">Pipeline Active</span>
-            <span id="notifProgressText" class="font-mono-code text-[10px] sm:text-[11px] text-indigo-200 shrink-0">0/50 (0%)</span>
-            <span id="notifKeyPill" class="px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-cyan-300 shrink-0">Key #1</span>
-            <span id="notifEtaPill" class="hidden sm:inline-block px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-slate-300 shrink-0">0s</span>
-            <span id="notifCallsPill" class="hidden md:inline-block px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-slate-400 shrink-0">Calls: 0</span>
-          </div>
-          <p id="notifDetail" class="text-[10px] sm:text-[11px] text-slate-300 truncate">Initializing...</p>
-        </div>
-      </div>
-
-      <!-- Keep-Alive, Power, Network & Quick Controls -->
-      <div class="flex items-center gap-1 shrink-0">
-        <span id="notifBatteryBadge" class="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-300" title="Device battery status">Bat: --</span>
-        <span id="notifNetBadge" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300" title="Network status">Online</span>
-        <span id="notifWakeBadge" class="hidden md:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400">Wake: Off</span>
-        <span id="notifAudioBadge" class="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400">BG: Off</span>
-        <button id="notifOsBtn" type="button" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 hover:bg-slate-800 border border-slate-700/70 text-slate-300 transition" title="OS Notification Bar status">
-          Notif
-        </button>
-        <button id="notifPauseBtn" type="button" class="hidden px-2 py-1 rounded bg-amber-600/25 hover:bg-amber-600/40 border border-amber-500/40 text-amber-200 text-[11px] font-medium transition">
-          Pause
-        </button>
-        <button id="notifResumeBtn" type="button" class="hidden px-2 py-1 rounded bg-cyan-600/25 hover:bg-cyan-600/40 border border-cyan-500/40 text-cyan-200 text-[11px] font-medium transition">
-          Resume
-        </button>
-      </div>
-    </div>
-    <div class="max-w-[1800px] mx-auto mt-1 w-full h-1 bg-slate-900/90 rounded-full overflow-hidden">
-      <div id="notifProgressFill" class="h-full w-0 bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 transition-all duration-300"></div>
-    </div>
-  </div>
-
-  <!-- 5-Stage (Desktop) & Thin Progress Bar -->
-  <div class="shrink-0 border-b border-slate-800/70 bg-[#0b101b] px-3 sm:px-5 py-1.5">
-    <div class="max-w-[1800px] mx-auto space-y-1.5">
-      <div class="flex items-center justify-between gap-2">
-        <div class="hidden md:flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="stageStepper">
-          <button type="button" data-stage-filter="1" class="stage-pill flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition">
-            <span class="stage-dot w-2 h-2 rounded-full bg-slate-600"></span>
+  <!-- Unified Slim Stage & Progress Strip -->
+  <div class="shrink-0 border-b border-slate-800/70 bg-[#0b101b] px-3 sm:px-4 py-1">
+    <div class="max-w-[1920px] mx-auto space-y-1">
+      <div class="flex items-center justify-between gap-3">
+        <div class="hidden md:flex items-center gap-1 overflow-x-auto no-scrollbar" id="stageStepper">
+          <button type="button" data-stage-filter="1" class="stage-pill flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition shrink-0">
+            <span class="stage-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
             <span>1. Discovery (1–10)</span>
           </button>
-          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600 shrink-0"></i>
-          <button type="button" data-stage-filter="2" class="stage-pill flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition">
-            <span class="stage-dot w-2 h-2 rounded-full bg-slate-600"></span>
+          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-700 shrink-0"></i>
+          <button type="button" data-stage-filter="2" class="stage-pill flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition shrink-0">
+            <span class="stage-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
             <span>2. Systems (11–20)</span>
           </button>
-          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600 shrink-0"></i>
-          <button type="button" data-stage-filter="3" class="stage-pill flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition">
-            <span class="stage-dot w-2 h-2 rounded-full bg-slate-600"></span>
+          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-700 shrink-0"></i>
+          <button type="button" data-stage-filter="3" class="stage-pill flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition shrink-0">
+            <span class="stage-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
             <span>3. Blueprint (21–30)</span>
           </button>
-          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600 shrink-0"></i>
-          <button type="button" data-stage-filter="4" class="stage-pill flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition">
-            <span class="stage-dot w-2 h-2 rounded-full bg-slate-600"></span>
+          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-700 shrink-0"></i>
+          <button type="button" data-stage-filter="4" class="stage-pill flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition shrink-0">
+            <span class="stage-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
             <span>4. Visual Craft (31–40)</span>
           </button>
-          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600 shrink-0"></i>
-          <button type="button" data-stage-filter="5" class="stage-pill flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition">
-            <span class="stage-dot w-2 h-2 rounded-full bg-slate-600"></span>
+          <i data-lucide="chevron-right" class="w-3 h-3 text-slate-700 shrink-0"></i>
+          <button type="button" data-stage-filter="5" class="stage-pill flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-800 bg-slate-900/70 text-[11px] font-medium text-slate-400 transition shrink-0">
+            <span class="stage-dot w-1.5 h-1.5 rounded-full bg-slate-600"></span>
             <span>5. Build &amp; Code (41–50)</span>
           </button>
         </div>
 
         <div class="flex items-center justify-between md:justify-end gap-2 text-[11px] text-slate-400 w-full md:w-auto min-w-0">
-          <span id="pipelineStatusText" class="text-slate-200 font-medium truncate">Idle — Configure Blueprint &amp; Prompt</span>
+          <span id="pipelineStatusText" class="text-slate-200 font-medium truncate">Ready — Choose your options &amp; describe your idea</span>
           <div class="flex items-center gap-2 shrink-0">
-            <span class="text-slate-700">|</span>
             <span id="stepProgressText" class="font-mono-code text-cyan-300">0 / 50</span>
             <span class="hidden sm:inline text-slate-700">|</span>
-            <span id="requestCounterText" class="hidden sm:inline font-mono-code text-slate-400">Calls: 0 (Retries: 0)</span>
+            <span id="requestCounterText" class="hidden sm:inline font-mono-code text-slate-400">Calls: 0</span>
           </div>
         </div>
       </div>
 
-      <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden border border-slate-800/70">
+      <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden">
         <div id="overallProgressBar" class="h-full w-0 bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 transition-all duration-300"></div>
       </div>
     </div>
   </div>
 
-  <!-- Android Background Persistence & Permission Banner -->
-  <div id="mobilePersistenceBanner" class="shrink-0 border-b border-cyan-500/35 bg-cyan-950/30 px-3 sm:px-5 py-1.5">
-    <div class="max-w-[1800px] mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
-      <div class="flex items-center gap-2 min-w-0">
-        <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400 shrink-0"></i>
-        <div class="min-w-0 text-[11px] sm:text-xs">
-          <span class="font-semibold text-slate-100">Mobile Persistence:</span>
-          <span id="persistenceSummaryText" class="text-slate-300">Request OS notification shade &amp; background keep-alive permissions for lock-screen runs.</span>
-        </div>
+  <!-- Compact Live Activity Bar (Only visible during or after a run) -->
+  <div id="liveNotificationBar" class="hidden shrink-0 border-b border-indigo-500/40 bg-indigo-950/40 px-3 sm:px-4 py-1">
+    <div class="max-w-[1920px] mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0 flex-1">
+        <span id="notifStatusDot" class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse-soft shrink-0"></span>
+        <span id="notifTitle" class="text-[11px] font-semibold text-slate-100 shrink-0">Active</span>
+        <span id="notifProgressText" class="font-mono-code text-[10px] text-indigo-200 shrink-0">0/50</span>
+        <span id="notifDetail" class="text-[11px] text-slate-300 truncate min-w-0">Initializing...</span>
       </div>
-      <div class="flex items-center gap-1.5 shrink-0">
-        <button id="grantPersistenceBtn" type="button" class="px-2.5 py-1 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/45 border border-cyan-400/50 text-cyan-100 text-[11px] font-medium transition">
-          Enable Always-Active Mode
-        </button>
-        <button id="androidBatteryHelpBtn" type="button" class="px-2 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px] transition">
-          Lock Screen &amp; Battery
-        </button>
+
+      <div class="flex items-center gap-1 shrink-0">
+        <span id="notifKeyPill" class="hidden sm:inline-block px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-cyan-300">Key #1</span>
+        <span id="notifEtaPill" class="hidden md:inline-block px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-slate-300">0s</span>
+        <span id="notifCallsPill" class="hidden xl:inline-block px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700/80 font-mono-code text-[10px] text-slate-400">Calls: 0</span>
+        <span id="notifBatteryBadge" class="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-300">Bat: --</span>
+        <span id="notifNetBadge" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-emerald-500/15 border border-emerald-500/35 text-emerald-300">Online</span>
+        <span id="notifWakeBadge" class="hidden lg:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400">Wake: Off</span>
+        <span id="notifAudioBadge" class="hidden lg:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 border border-slate-700/70 text-slate-400">BG: Off</span>
+        <button id="notifOsBtn" type="button" class="px-1.5 py-0.5 rounded text-[10px] font-mono-code bg-slate-900/80 hover:bg-slate-800 border border-slate-700/70 text-slate-300 transition">Notif</button>
+        <button id="notifPauseBtn" type="button" class="hidden px-2 py-0.5 rounded bg-amber-600/25 hover:bg-amber-600/40 border border-amber-500/40 text-amber-200 text-[11px] font-medium transition">Pause</button>
+        <button id="notifResumeBtn" type="button" class="hidden px-2 py-0.5 rounded bg-cyan-600/25 hover:bg-cyan-600/40 border border-cyan-500/40 text-cyan-200 text-[11px] font-medium transition">Resume</button>
       </div>
+    </div>
+    <div class="max-w-[1920px] mx-auto mt-1 w-full h-0.5 bg-slate-900/90 rounded-full overflow-hidden">
+      <div id="notifProgressFill" class="h-full w-0 bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 transition-all duration-300"></div>
     </div>
   </div>
 
   <!-- Main Workspace -->
-  <main class="flex-1 min-h-0 flex max-w-[1800px] w-full mx-auto relative">
+  <main class="flex-1 min-h-0 flex max-w-[1920px] w-full mx-auto relative overflow-hidden">
 
-    <!-- Left Pane: Dynamic Pre-Prompt Studio Configurator + 50-Point Matrix -->
-    <section id="leftPane" class="w-full lg:w-[48%] xl:w-[46%] flex flex-col h-full border-r border-slate-800/80 min-w-0">
+    <!-- Left Pane: Pre-Prompt Setup + 50-Step Matrix -->
+    <section id="leftPane" class="w-full lg:w-[46%] xl:w-[44%] flex flex-col h-full border-r border-slate-800/80 min-w-0 transition-all duration-200">
 
-      <!-- Prompt & Blueprint Box -->
-      <div class="shrink-0 p-2.5 sm:p-4 border-b border-slate-800/80 bg-[#0d131f]/70">
+      <!-- Clean Collapsible Pre-Prompt & Prompt Card -->
+      <div class="shrink-0 p-2.5 sm:p-3 border-b border-slate-800/80 bg-[#0d131f]/75">
+        <!-- Collapsed Bar -->
         <div id="promptCollapsedBar" class="hidden items-center justify-between gap-2">
           <button id="expandPromptBtn" type="button" class="flex-1 min-w-0 text-left flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#090d14] border border-slate-800 hover:border-slate-700 transition">
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
-            <span id="collapsedPromptPreview" class="text-xs text-slate-300 truncate">Edit Web App Prompt &amp; Blueprint...</span>
+            <span id="collapsedPromptPreview" class="text-xs text-slate-300 truncate">Show Prompt &amp; Setup Options...</span>
           </button>
           <div class="flex items-center gap-1.5 shrink-0">
             <button id="collapsedResumeBtn" type="button" class="hidden px-2.5 py-1.5 rounded-lg bg-cyan-600/20 border border-cyan-500/40 text-cyan-200 text-xs font-medium">Resume</button>
@@ -213,69 +196,69 @@
         </div>
 
         <form id="buildForm" class="space-y-2">
-          <!-- Top Row: Project Type Selector + Sample Prompts -->
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <div class="flex items-center gap-1" id="projectTypeSelector" role="group" aria-label="Project Type">
-              <button type="button" data-type="app" class="proj-type-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-indigo-600/25 text-indigo-200 border-indigo-500/50">
+          <!-- Row 1: What are you building? + Quick Examples + Collapse -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1 overflow-x-auto no-scrollbar" id="projectTypeSelector" role="group" aria-label="Project Type">
+              <button type="button" data-type="app" class="proj-type-btn shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-indigo-600/25 text-indigo-200 border-indigo-500/50">
                 <i data-lucide="layout-dashboard" class="w-3 h-3"></i>
-                <span>App</span>
+                <span>Web App</span>
               </button>
-              <button type="button" data-type="tool" class="proj-type-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-slate-900/90 text-slate-400 border-slate-800 hover:text-slate-200">
+              <button type="button" data-type="tool" class="proj-type-btn shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-slate-900/90 text-slate-400 border-slate-800 hover:text-slate-200">
                 <i data-lucide="wrench" class="w-3 h-3"></i>
                 <span>Tool</span>
               </button>
-              <button type="button" data-type="game" class="proj-type-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-slate-900/90 text-slate-400 border-slate-800 hover:text-slate-200">
+              <button type="button" data-type="game" class="proj-type-btn shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-slate-900/90 text-slate-400 border-slate-800 hover:text-slate-200">
                 <i data-lucide="gamepad-2" class="w-3 h-3"></i>
                 <span>Game</span>
               </button>
-              <button type="button" data-type="experimental" class="proj-type-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-slate-900/90 text-slate-400 border-slate-800 hover:text-slate-200">
+              <button type="button" data-type="experimental" class="proj-type-btn shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-slate-900/90 text-slate-400 border-slate-800 hover:text-slate-200">
                 <i data-lucide="flask-conical" class="w-3 h-3"></i>
-                <span>Experimental</span>
+                <span>Creative</span>
               </button>
             </div>
 
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-              <div id="dynamicSamplePrompts" class="flex items-center gap-1"></div>
-              <button id="collapsePromptBtn" type="button" title="Collapse prompt box" class="p-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 shrink-0 transition">
+            <div class="flex items-center gap-1 shrink-0">
+              <div id="dynamicSamplePrompts" class="hidden sm:flex items-center gap-1"></div>
+              <button id="collapsePromptBtn" type="button" title="Minimize prompt area for more step space" class="p-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition">
                 <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
               </button>
             </div>
           </div>
 
-          <!-- Active Blueprint Summary Strip + Configurator Trigger -->
+          <!-- Row 2: Active Blueprint Summary & Big Clear Customize Button -->
           <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-xl bg-[#090d14] border border-slate-800/90">
-            <div id="blueprintSummaryChips" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[10px] font-mono-code"></div>
+            <div id="blueprintSummaryChips" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[10px]"></div>
             <button id="openBlueprintModalBtn" type="button" class="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/35 border border-cyan-500/45 text-cyan-200 text-[11px] font-semibold transition">
               <i data-lucide="sliders" class="w-3 h-3"></i>
-              <span>Customize Stack &amp; Visuals</span>
+              <span>Customize Options</span>
             </button>
           </div>
 
-          <!-- Main Prompt Input -->
+          <!-- Row 3: Prompt Box -->
           <div class="bg-[#090d14] border border-slate-700/80 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 rounded-xl p-2 transition">
             <textarea
               id="promptInput"
               rows="2"
-              placeholder="Describe what you want to build (your selected Type, Visuals, Lighting, HTML5/CSS3/JS specs will weave dynamically into all 50 steps)..."
+              placeholder="Describe your idea in plain English (your chosen layout, look, lighting, features & tech options will weave into all 50 steps)..."
               class="w-full bg-transparent resize-none text-xs sm:text-sm text-slate-100 placeholder-slate-500 px-1 py-0.5 outline-none"
             ></textarea>
             <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-800/80 mt-1">
-              <div class="hidden sm:block text-[11px] text-slate-500">
-                Dynamic Blueprint + <code class="text-slate-300">notes.txt</code> → <code class="text-indigo-300">index.html</code> + <code class="text-cyan-300">style.css</code> + <code class="text-emerald-300">script.js</code>
-              </div>
-              <div class="flex items-center gap-1.5 ml-auto">
-                <button id="resetRunBtn" type="button" title="Reset 50-step progress & clear outputs" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition">
+              <span class="hidden sm:inline text-[11px] text-slate-500 truncate">
+                Outputs: <code class="text-slate-300">notes.txt</code> + <code class="text-indigo-300">index.html</code> + <code class="text-cyan-300">style.css</code> + <code class="text-emerald-300">script.js</code>
+              </span>
+              <div class="flex items-center gap-1.5 ml-auto shrink-0">
+                <button id="resetRunBtn" type="button" title="Reset 50-step progress & clear outputs" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition">
                   Reset
                 </button>
-                <button id="resumeBtn" type="button" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/40 text-cyan-200 text-xs font-medium transition">
+                <button id="resumeBtn" type="button" class="hidden items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/40 text-cyan-200 text-xs font-medium transition">
                   <i data-lucide="play" class="w-3.5 h-3.5"></i>
                   <span id="resumeBtnLabel">Resume</span>
                 </button>
-                <button id="pauseBtn" type="button" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/40 text-amber-200 text-xs font-medium transition">
+                <button id="pauseBtn" type="button" class="hidden items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/40 text-amber-200 text-xs font-medium transition">
                   <i data-lucide="pause" class="w-3.5 h-3.5"></i>
                   <span>Pause</span>
                 </button>
-                <button id="startBuildBtn" type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-45 disabled:cursor-not-allowed text-white text-xs font-medium transition shadow-sm shadow-indigo-600/25">
+                <button id="startBuildBtn" type="submit" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-45 disabled:cursor-not-allowed text-white text-xs font-semibold transition shadow-sm shadow-indigo-600/25">
                   <i data-lucide="rocket" class="w-3.5 h-3.5"></i>
                   <span>Run 50-Point</span>
                 </button>
@@ -284,7 +267,7 @@
           </div>
         </form>
 
-        <!-- Persistent Error Banner -->
+        <!-- Error Banner -->
         <div id="errorBanner" class="hidden mt-2 rounded-xl border border-rose-500/45 bg-rose-950/60 p-2.5 text-xs text-rose-200">
           <div class="flex items-start justify-between gap-2">
             <div class="flex items-start gap-2 min-w-0">
@@ -301,74 +284,74 @@
         </div>
       </div>
 
-      <!-- Stage Filter Pills for 50-Point Checklist -->
-      <div class="shrink-0 flex items-center justify-between gap-2 px-2.5 sm:px-4 py-1.5 border-b border-slate-800/70 bg-[#0b101b]">
+      <!-- Stage Filter Pills -->
+      <div class="shrink-0 flex items-center justify-between gap-2 px-2.5 sm:px-3 py-1.5 border-b border-slate-800/70 bg-[#0b101b]">
         <div class="flex items-center gap-1 overflow-x-auto no-scrollbar" id="checklistFilterBar">
           <button type="button" data-filter="all" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-indigo-600/25 text-indigo-200 border border-indigo-500/40">All 50</button>
-          <button type="button" data-filter="1" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S1: Discovery</button>
-          <button type="button" data-filter="2" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S2: Systems</button>
-          <button type="button" data-filter="3" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S3: Blueprint</button>
-          <button type="button" data-filter="4" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S4: Visuals</button>
-          <button type="button" data-filter="5" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">S5: Build</button>
+          <button type="button" data-filter="1" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">1. Discovery</button>
+          <button type="button" data-filter="2" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">2. Systems</button>
+          <button type="button" data-filter="3" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">3. Blueprint</button>
+          <button type="button" data-filter="4" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">4. Visuals</button>
+          <button type="button" data-filter="5" class="filter-btn shrink-0 px-2.5 py-1 rounded text-[11px] font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200">5. Build</button>
         </div>
-        <span class="text-[11px] text-slate-500 shrink-0 hidden sm:inline">Click step to inspect</span>
+        <span class="text-[10px] text-slate-500 shrink-0 hidden sm:inline">Tap any step to view output</span>
       </div>
 
-      <!-- 50-Point Interactive Task List -->
-      <div id="checklistContainer" class="flex-1 overflow-y-auto p-2.5 sm:p-4 space-y-2"></div>
+      <!-- 50-Point Interactive Task List (Maximum Vertical Space) -->
+      <div id="checklistContainer" class="flex-1 overflow-y-auto p-2.5 sm:p-3.5 space-y-2.5"></div>
     </section>
 
-    <!-- Right Pane: Tabbed Notepads (notes.txt, index.html, style.css, script.js) + Live Preview -->
-    <aside id="rightPane" class="hidden lg:flex flex-col flex-1 min-w-0 bg-[#0b101b] h-full">
+    <!-- Right Pane: Notes, Code & Live Preview -->
+    <aside id="rightPane" class="hidden lg:flex flex-col flex-1 min-w-0 bg-[#0b101b] h-full transition-all duration-200">
 
-      <div class="shrink-0 flex items-center justify-between gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 border-b border-slate-800/80 bg-[#0f1624]">
+      <div class="shrink-0 flex items-center justify-between gap-2 px-2.5 sm:px-3.5 py-1.5 border-b border-slate-800/80 bg-[#0f1624]">
         <div class="flex items-center gap-1 overflow-x-auto no-scrollbar" id="workspaceTabs">
-          <button type="button" data-tab="notes" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-indigo-600/20 text-indigo-200 border border-indigo-500/40 transition">
+          <button type="button" data-tab="notes" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-indigo-600/20 text-indigo-200 border border-indigo-500/40 transition">
             <i data-lucide="file-text" class="w-3.5 h-3.5 text-cyan-400"></i>
             <span class="font-mono-code">notes.txt</span>
             <span id="badgeNotes" class="text-[10px] text-slate-400 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="html" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="html" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="file-code" class="w-3.5 h-3.5 text-orange-400"></i>
             <span class="font-mono-code">index.html</span>
             <span id="badgeHtml" class="text-[10px] text-slate-500 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="css" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="css" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="palette" class="w-3.5 h-3.5 text-sky-400"></i>
             <span class="font-mono-code">style.css</span>
             <span id="badgeCss" class="text-[10px] text-slate-500 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="js" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="js" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="braces" class="w-3.5 h-3.5 text-amber-400"></i>
             <span class="font-mono-code">script.js</span>
             <span id="badgeJs" class="text-[10px] text-slate-500 font-mono-code">0</span>
           </button>
-          <button type="button" data-tab="preview" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
+          <button type="button" data-tab="preview" class="ws-tab shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200 transition">
             <i data-lucide="monitor-play" class="w-3.5 h-3.5 text-emerald-400"></i>
             <span>Preview</span>
           </button>
         </div>
 
         <div class="flex items-center gap-1 shrink-0">
-          <button id="copyActiveBtn" type="button" title="Copy active notepad" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 transition">
+          <button id="copyActiveBtn" type="button" title="Copy active file" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 transition">
             <i data-lucide="copy" class="w-3 h-3"></i>
             <span class="hidden sm:inline">Copy</span>
           </button>
           <button id="downloadActiveBtn" type="button" title="Download active file" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/35 text-[11px] font-medium text-cyan-200 transition">
             <i data-lucide="download" class="w-3 h-3"></i>
-            <span id="downloadActiveLabel" class="hidden sm:inline">Download notes.txt</span>
+            <span id="downloadActiveLabel" class="hidden md:inline">Download notes.txt</span>
           </button>
-          <button id="downloadAllBtn" type="button" title="Download ZIP archive of index.html, style.css, script.js, and notes.txt" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/35 text-[11px] font-medium text-emerald-200 transition">
+          <button id="downloadAllBtn" type="button" title="Download ZIP bundle of all files" class="inline-flex items-center gap-1 px-2 py-1.5 rounded bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/35 text-[11px] font-medium text-emerald-200 transition">
             <i data-lucide="archive" class="w-3 h-3"></i>
-            <span class="hidden sm:inline">Download ZIP</span>
+            <span class="hidden sm:inline">ZIP</span>
           </button>
         </div>
       </div>
 
       <div id="notesSubBar" class="shrink-0 flex items-center justify-between px-3 sm:px-4 py-1 border-b border-slate-800/70 bg-[#090d14] text-[11px] text-slate-400">
         <div class="flex items-center gap-2 min-w-0">
-          <span class="truncate hidden sm:inline">Updated &amp; processed by every single one of the 50 steps.</span>
-          <span class="sm:hidden text-slate-400">Cumulative 50-step log</span>
+          <span class="truncate hidden sm:inline">Every step reads and builds upon this shared engineering notebook.</span>
+          <span class="sm:hidden text-slate-400">Shared 50-step notebook</span>
           <span id="notesTokenEstimate" class="font-mono-code text-[10px] text-slate-500 shrink-0">(~0 tok)</span>
         </div>
         <div class="flex items-center gap-2 shrink-0">
@@ -400,7 +383,7 @@
       </div>
 
       <div class="flex-1 min-h-0 relative flex flex-col">
-        <textarea id="notesEditor" spellcheck="false" placeholder="# notes.txt&#10;All 50 dynamic stages (Discovery, Systems, Blueprint, Visual Craft, Build & Code) accumulate here and feed every subsequent step..." class="tab-panel w-full flex-1 bg-[#070a10] text-slate-300 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
+        <textarea id="notesEditor" spellcheck="false" placeholder="# notes.txt&#10;All 50 stages (Discovery, Systems, Blueprint, Visual Craft, Build & Code) build upon each other here..." class="tab-panel w-full flex-1 bg-[#070a10] text-slate-300 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
 
         <textarea id="htmlEditor" spellcheck="false" placeholder="<!-- index.html will be crafted in Step 48 (or paste/edit HTML directly to preview) -->" class="tab-panel hidden w-full flex-1 bg-[#070a10] text-orange-100/90 font-mono-code text-xs leading-relaxed p-3 sm:p-4 outline-none resize-none"></textarea>
 
@@ -426,7 +409,7 @@
     </aside>
   </main>
 
-  <!-- Native-Style Mobile Bottom Navigation Bar (lg:hidden) -->
+  <!-- Mobile Bottom Navigation Bar -->
   <nav id="mobileBottomNav" class="lg:hidden shrink-0 border-t border-slate-800/90 bg-[#0d131f]/95 backdrop-blur safe-bottom-pad">
     <div class="grid grid-cols-4 h-12">
       <button type="button" data-mobile-view="build" class="mob-nav-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-indigo-300">
@@ -448,17 +431,17 @@
     </div>
   </nav>
 
-  <!-- Studio Blueprint Configurator Modal -->
+  <!-- Studio Blueprint Configurator Modal (Plain-Language + In-Depth Options) -->
   <div id="blueprintModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
     <div class="w-full max-w-5xl rounded-2xl bg-[#0e1523] border border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[92dvh]">
       <!-- Modal Header -->
       <div class="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-slate-800 bg-[#0b101b] shrink-0">
         <div class="min-w-0">
           <div class="flex items-center gap-2">
-            <h3 class="text-sm sm:text-base font-semibold text-slate-100">Dynamic Studio Blueprint Configurator</h3>
-            <span id="bpModalTypeBadge" class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 uppercase">APP</span>
+            <h3 class="text-sm sm:text-base font-semibold text-slate-100">Pre-Prompt Studio Customizer</h3>
+            <span id="bpModalTypeBadge" class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 uppercase">WEB APP</span>
           </div>
-          <p class="text-[11px] text-slate-400 truncate">Every selection here dynamically reshapes the 50-step prompts, architecture contracts, and generated code.</p>
+          <p class="text-[11px] text-slate-400 truncate">Everything here is written in plain English and dynamically woven into all 50 steps.</p>
         </div>
         <button id="closeBlueprintModalBtn" type="button" class="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 transition">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -469,61 +452,97 @@
       <div class="shrink-0 flex items-center justify-between gap-2 px-4 sm:px-6 py-2 border-b border-slate-800/80 bg-[#0d131f] overflow-x-auto no-scrollbar" id="blueprintTabs">
         <div class="flex items-center gap-1.5">
           <button type="button" data-bp-tab="essentials" class="bp-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600/25 text-indigo-200 border border-indigo-500/40 transition shrink-0">
-            1. Essentials &amp; Mode
+            1. Goals &amp; Features
           </button>
           <button type="button" data-bp-tab="visuals" class="bp-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200 transition shrink-0">
-            2. Visuals &amp; Lighting
+            2. Look, Color &amp; Lighting
           </button>
           <button type="button" data-bp-tab="htmlcss" class="bp-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200 transition shrink-0">
-            3. HTML5 &amp; CSS3
+            3. Browser Superpowers
           </button>
           <button type="button" data-bp-tab="jslibs" class="bp-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200 transition shrink-0">
-            4. JS &amp; Libraries
+            4. Smart Engine &amp; Add-Ons
           </button>
         </div>
         <button id="applyRecommendedPresetBtn" type="button" class="shrink-0 px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/35 border border-emerald-500/40 text-emerald-200 text-[11px] font-medium transition">
-          Auto-Match Mode Defaults
+          Reset to Mode Defaults
         </button>
       </div>
 
       <!-- Modal Body -->
       <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 text-xs">
 
-        <!-- TAB 1: Essentials & Dynamic Mode -->
+        <!-- TAB 1: Goals, Experience & Mode Essentials -->
         <div id="bpTab-essentials" class="bp-tab-panel space-y-5">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="rounded-xl border border-slate-800 bg-[#090d14] p-3.5 space-y-2.5">
-              <label for="bpTargetPlatform" class="block font-semibold text-slate-200">Target Platform &amp; Ergonomics</label>
-              <select id="bpTargetPlatform" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
-                <option value="responsive-parity">Responsive Desktop &amp; Mobile Parity</option>
-                <option value="mobile-first-thumb">Mobile-First (One-Handed Thumb Zone)</option>
-                <option value="desktop-pro">Desktop Pro Workspace (Dense + Shortcuts)</option>
-                <option value="fullscreen-arcade">Fullscreen Stage / Handheld Arcade</option>
-              </select>
-              <label for="bpDataPersistence" class="block font-semibold text-slate-200 pt-1">Data Persistence &amp; Portability</label>
-              <select id="bpDataPersistence" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
-                <option value="localstorage-json">Versioned localStorage + JSON Export/Import</option>
-                <option value="indexeddb-heavy">IndexedDB (Large/Binary State) + Export</option>
-                <option value="localstorage-csv">localStorage + CSV / Clipboard Export</option>
-                <option value="ephemeral">Ephemeral Session (Zero Storage / Instant Reset)</option>
-              </select>
+            <div class="rounded-xl border border-slate-800 bg-[#090d14] p-3.5 space-y-3">
+              <div>
+                <label for="bpTargetPlatform" class="block font-semibold text-slate-200 mb-1">Where will people use this?</label>
+                <select id="bpTargetPlatform" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
+                  <option value="responsive-parity">Both Phone &amp; Computer (Adapts cleanly to any screen)</option>
+                  <option value="mobile-first-thumb">Phone First (Easy one-handed thumb controls at bottom)</option>
+                  <option value="desktop-pro">Computer Power Workspace (Side-by-side panels &amp; shortcuts)</option>
+                  <option value="fullscreen-arcade">Full-Screen Stage (Zero distractions, edge-to-edge)</option>
+                </select>
+              </div>
+              <div>
+                <label for="bpDataPersistence" class="block font-semibold text-slate-200 mb-1">How should user work &amp; progress be saved?</label>
+                <select id="bpDataPersistence" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
+                  <option value="localstorage-json">Auto-Save in Browser + Backup/Restore File (JSON)</option>
+                  <option value="indexeddb-heavy">Large Browser Database (IndexedDB) for big projects + Backup</option>
+                  <option value="localstorage-csv">Auto-Save in Browser + Spreadsheet (CSV) &amp; Copy Export</option>
+                  <option value="ephemeral">Fresh Start Every Visit (No saving, instant reset)</option>
+                </select>
+              </div>
+              <div>
+                <label for="bpComplexity" class="block font-semibold text-slate-200 mb-1">How deep &amp; feature-rich should it be?</label>
+                <select id="bpComplexity" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
+                  <option value="focused-minimal">Focused &amp; Simple (Do one thing effortlessly well)</option>
+                  <option value="balanced-complete">Balanced &amp; Complete (Polished everyday features)</option>
+                  <option value="powerhouse-deep">Deep Powerhouse (Rich controls, analytics, presets &amp; shortcuts)</option>
+                </select>
+              </div>
             </div>
 
-            <div class="rounded-xl border border-slate-800 bg-[#090d14] p-3.5 space-y-2.5">
-              <label for="bpSensoryAudio" class="block font-semibold text-slate-200">Sensory &amp; Web Audio Feedback</label>
-              <select id="bpSensoryAudio" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
-                <option value="web-audio-subtle">Subtle Web Audio Micro-Chimes (With Mute Toggle)</option>
-                <option value="web-audio-arcade">Rich Procedural Web Audio Synth &amp; SFX</option>
-                <option value="haptic-visual">Visual + Vibration API (Silent Audio)</option>
-                <option value="silent-clean">Purely Visual (Zero Audio)</option>
-              </select>
-              <label for="bpA11yMotion" class="block font-semibold text-slate-200 pt-1">Accessibility &amp; Motion Budget</label>
-              <select id="bpA11yMotion" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
-                <option value="wcag-aa-fluid">WCAG 2.2 AA + Fluid Reduced-Motion Fallbacks</option>
-                <option value="wcag-aaa-high">WCAG AAA High-Contrast + Screen-Reader First</option>
-                <option value="high-refresh-120">120Hz High-Refresh Motion + Reduced-Motion Safe</option>
-                <option value="battery-eco">Ultra-Light Battery &amp; Low-Power Mode</option>
-              </select>
+            <div class="rounded-xl border border-slate-800 bg-[#090d14] p-3.5 space-y-3">
+              <div>
+                <label for="bpSensoryAudio" class="block font-semibold text-slate-200 mb-1">Sound &amp; Touch Feedback</label>
+                <select id="bpSensoryAudio" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
+                  <option value="web-audio-subtle">Gentle Clicks &amp; Chimes (Built-in sound with Mute button)</option>
+                  <option value="web-audio-arcade">Rich Arcade Sound Effects &amp; Synth (Built-in audio)</option>
+                  <option value="haptic-visual">Phone Vibration &amp; Visual Flash Only (Silent)</option>
+                  <option value="silent-clean">Completely Silent (Purely visual feedback)</option>
+                </select>
+              </div>
+              <div>
+                <label for="bpA11yMotion" class="block font-semibold text-slate-200 mb-1">Readability &amp; Animation Speed</label>
+                <select id="bpA11yMotion" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
+                  <option value="wcag-aa-fluid">Easy to Read + Smooth Animations (Respects reduce-motion)</option>
+                  <option value="wcag-aaa-high">Extra High Contrast + Screen-Reader Priority</option>
+                  <option value="high-refresh-120">Ultra-Smooth 120fps Motion (Great for games &amp; canvas)</option>
+                  <option value="battery-eco">Battery Saver (Crisp &amp; instant, minimal motion)</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label for="bpNavStyle" class="block font-semibold text-slate-200 mb-1">How users move around</label>
+                  <select id="bpNavStyle" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 outline-none focus:border-indigo-500">
+                    <option value="single-screen">Single Screen (Everything visible)</option>
+                    <option value="tabbed-views">Clean Tabs / Views</option>
+                    <option value="guided-steps">Step-by-Step Flow</option>
+                    <option value="floating-dock">Floating Dock / Canvas HUD</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="bpStarterExp" class="block font-semibold text-slate-200 mb-1">First-5-Seconds Experience</label>
+                  <select id="bpStarterExp" class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 outline-none focus:border-indigo-500">
+                    <option value="realistic-demo">Pre-filled Realistic Examples</option>
+                    <option value="quick-tour">Quick Interactive Hint Banner</option>
+                    <option value="template-picker">Starter Presets / Templates</option>
+                    <option value="clean-blank">Clean Blank Canvas</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -531,69 +550,90 @@
           <div class="rounded-xl border border-indigo-500/30 bg-indigo-950/15 p-4 space-y-3">
             <div class="flex items-center justify-between gap-2">
               <div>
-                <h4 id="dynamicEssentialsTitle" class="text-xs font-semibold text-indigo-200">Mode-Specific Essentials</h4>
-                <p id="dynamicEssentialsSubtitle" class="text-[11px] text-slate-400">Dynamically tailored toggles for your selected project type.</p>
+                <h4 id="dynamicEssentialsTitle" class="text-xs font-semibold text-indigo-200">Recommended Features for This Mode</h4>
+                <p id="dynamicEssentialsSubtitle" class="text-[11px] text-slate-400">Toggle the capabilities you want woven into the 50-step design.</p>
               </div>
-              <span id="dynamicEssentialsBadge" class="px-2 py-0.5 rounded text-[10px] font-mono-code bg-indigo-500/20 text-indigo-200 border border-indigo-500/35">Dynamic</span>
+              <span id="dynamicEssentialsBadge" class="px-2 py-0.5 rounded text-[10px] font-mono-code bg-indigo-500/20 text-indigo-200 border border-indigo-500/35">Active</span>
             </div>
-            <div id="dynamicCategoryEssentials" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+            <div id="dynamicCategoryEssentials" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2"></div>
           </div>
 
-          <!-- Custom Audience / Constraints -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Plain-English Custom Guidance -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label for="bpTargetAudience" class="block font-semibold text-slate-200 mb-1">Target Audience / Player Persona (Optional)</label>
-              <input id="bpTargetAudience" type="text" placeholder="e.g., Solo developers, casual mobile puzzle players, financial analysts..." class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
+              <label for="bpTargetAudience" class="block font-semibold text-slate-200 mb-1">Who is this made for? (Optional)</label>
+              <input id="bpTargetAudience" type="text" placeholder="e.g., Busy parents, indie musicians, students, casual puzzle fans..." class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
             </div>
             <div>
-              <label for="bpExtraConstraints" class="block font-semibold text-slate-200 mb-1">Non-Negotiable Constraints / Must-Haves (Optional)</label>
-              <input id="bpExtraConstraints" type="text" placeholder="e.g., Must work offline, keyboard-navigable, include sample starter data..." class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
+              <label for="bpExtraConstraints" class="block font-semibold text-slate-200 mb-1">Must-Have Details (Optional)</label>
+              <input id="bpExtraConstraints" type="text" placeholder="e.g., Must work offline, print-friendly summary, keyboard shortcuts..." class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
+            </div>
+            <div>
+              <label for="bpAntiGoals" class="block font-semibold text-slate-200 mb-1">Things to Avoid (Optional)</label>
+              <input id="bpAntiGoals" type="text" placeholder="e.g., No cluttered menus, no harsh neon, no tiny text..." class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
             </div>
           </div>
         </div>
 
-        <!-- TAB 2: Visual References (Interface, Design Style, Element Style, Lighting Style) -->
+        <!-- TAB 2: Look, Color, Typography & Lighting -->
         <div id="bpTab-visuals" class="bp-tab-panel hidden space-y-6">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">1. App Interface Architecture (Layout &amp; Spatial Flow)</h4>
-              <span class="text-[11px] text-slate-400">Select 1 primary layout</span>
+              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">1. Screen Layout (How things are arranged)</h4>
+              <span class="text-[11px] text-slate-400">Pick 1 layout</span>
             </div>
             <div id="interfaceGallery" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
           </div>
 
           <div>
             <div class="flex items-center justify-between mb-2">
-              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">2. App Design Style (Aesthetic &amp; Surface Language)</h4>
-              <span class="text-[11px] text-slate-400">Select 1 primary style</span>
+              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">2. Overall Look &amp; Feel (Visual personality)</h4>
+              <span class="text-[11px] text-slate-400">Pick 1 style</span>
             </div>
             <div id="designStyleGallery" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5"></div>
           </div>
 
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">3. Color Palette &amp; Mood</h4>
+                <span class="text-[11px] text-slate-400">Pick 1 palette</span>
+              </div>
+              <div id="colorMoodGallery" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">4. Typography &amp; Text Voice</h4>
+                <span class="text-[11px] text-slate-400">Pick 1 font voice</span>
+              </div>
+              <div id="typographyStyleGallery" class="grid grid-cols-2 gap-2"></div>
+            </div>
+          </div>
+
           <div>
             <div class="flex items-center justify-between mb-2">
-              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">3. Element Design Style (Cards, Buttons &amp; Controls)</h4>
-              <span class="text-[11px] text-slate-400">Select 1 component style</span>
+              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">5. Buttons, Cards &amp; Controls Style</h4>
+              <span class="text-[11px] text-slate-400">Pick 1 style</span>
             </div>
             <div id="elementStyleGallery" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
           </div>
 
           <div>
             <div class="flex items-center justify-between mb-2">
-              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">4. Popular App Lighting Style (Depth, Glow &amp; Contrast)</h4>
-              <span class="text-[11px] text-slate-400">Select 1 lighting model</span>
+              <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">6. Lighting, Glow &amp; Depth</h4>
+              <span class="text-[11px] text-slate-400">Pick 1 lighting mood</span>
             </div>
             <div id="lightingStyleGallery" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
           </div>
         </div>
 
-        <!-- TAB 3: HTML5 & CSS3 Advanced Properties -->
+        <!-- TAB 3: Browser Superpowers (Plain-Language HTML5 & CSS3) -->
         <div id="bpTab-htmlcss" class="bp-tab-panel hidden space-y-5">
           <div>
             <div class="flex items-center justify-between mb-2">
               <div>
-                <h4 class="text-xs font-semibold text-orange-200 uppercase tracking-wider">HTML5 Advanced Properties &amp; Web APIs</h4>
-                <p class="text-[11px] text-slate-400">Multi-select structural &amp; native browser capabilities to enforce in Steps 23, 42, and 48.</p>
+                <h4 class="text-xs font-semibold text-orange-200 uppercase tracking-wider">Built-in Browser Capabilities (HTML5)</h4>
+                <p class="text-[11px] text-slate-400">Plain-English features the browser gives us natively without extra bloat.</p>
               </div>
               <span id="html5SelectedCount" class="font-mono-code text-[11px] text-orange-300">0 selected</span>
             </div>
@@ -603,8 +643,8 @@
           <div class="pt-3 border-t border-slate-800">
             <div class="flex items-center justify-between mb-2">
               <div>
-                <h4 class="text-xs font-semibold text-sky-200 uppercase tracking-wider">CSS3 Modern Capabilities &amp; Layout Engine</h4>
-                <p class="text-[11px] text-slate-400">Multi-select modern CSS features to enforce in Steps 24, 31–40, 43, and 49.</p>
+                <h4 class="text-xs font-semibold text-sky-200 uppercase tracking-wider">Visual Polish &amp; Responsive Styling (CSS3)</h4>
+                <p class="text-[11px] text-slate-400">Modern styling rules that keep the app crisp, fast, and comfortable on every screen.</p>
               </div>
               <span id="css3SelectedCount" class="font-mono-code text-[11px] text-sky-300">0 selected</span>
             </div>
@@ -612,13 +652,13 @@
           </div>
         </div>
 
-        <!-- TAB 4: JS Architecture & Libraries -->
+        <!-- TAB 4: Smart Engine & Add-Ons (Plain-Language JS & Libraries) -->
         <div id="bpTab-jslibs" class="bp-tab-panel hidden space-y-5">
           <div>
             <div class="flex items-center justify-between mb-2">
               <div>
-                <h4 class="text-xs font-semibold text-amber-200 uppercase tracking-wider">JavaScript Architecture &amp; Engine Patterns</h4>
-                <p class="text-[11px] text-slate-400">Multi-select engineering patterns enforced in Steps 21–30, 46, and 50.</p>
+                <h4 class="text-xs font-semibold text-amber-200 uppercase tracking-wider">How the App Thinks &amp; Responds (JavaScript Architecture)</h4>
+                <p class="text-[11px] text-slate-400">Under-the-hood engineering patterns explained in everyday language.</p>
               </div>
               <span id="jsArchSelectedCount" class="font-mono-code text-[11px] text-amber-300">0 selected</span>
             </div>
@@ -628,8 +668,8 @@
           <div class="pt-3 border-t border-slate-800">
             <div class="flex items-center justify-between mb-2">
               <div>
-                <h4 class="text-xs font-semibold text-emerald-200 uppercase tracking-wider">Optional JS / CSS Libraries (Verified CDN Injection)</h4>
-                <p class="text-[11px] text-slate-400">Leave all unchecked for 100% zero-dependency Vanilla code, or select libraries to weave into index.html &amp; script.js.</p>
+                <h4 class="text-xs font-semibold text-emerald-200 uppercase tracking-wider">Optional Power-Up Libraries (CDN Add-Ons)</h4>
+                <p class="text-[11px] text-slate-400">Leave unchecked for a 100% pure, zero-dependency build, or pick add-ons for 3D, physics, charts, or audio.</p>
               </div>
               <span id="jsLibsSelectedCount" class="font-mono-code text-[11px] text-emerald-300">0 selected</span>
             </div>
@@ -642,7 +682,7 @@
       <!-- Modal Footer -->
       <div class="px-4 sm:px-6 py-3 bg-[#0b101b] border-t border-slate-800 flex items-center justify-between gap-2 shrink-0">
         <div class="text-[11px] text-slate-400 truncate">
-          Changes save automatically and inject into every step of the 50-point pipeline.
+          Saved automatically — every choice shapes all 50 steps.
         </div>
         <button id="doneBlueprintModalBtn" type="button" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition shrink-0">
           Apply &amp; Close
@@ -656,8 +696,8 @@
     <div class="w-full max-w-lg rounded-2xl bg-[#111827] border border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90dvh]">
       <div class="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-slate-800 shrink-0">
         <div>
-          <h3 class="text-sm font-semibold text-slate-100">Multi-API Key Pool &amp; Rate-Limit Monitor</h3>
-          <p class="text-[11px] text-slate-400">Keys cycle seamlessly on 429; pipeline freezes &amp; auto-resumes across long cooldowns.</p>
+          <h3 class="text-sm font-semibold text-slate-100">API Key Pool &amp; Rate-Limit Monitor</h3>
+          <p class="text-[11px] text-slate-400">Keys rotate automatically on rate limits and auto-resume when timers reset.</p>
         </div>
         <button id="closeKeysModalBtn" type="button" class="text-slate-400 hover:text-slate-200 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -698,7 +738,7 @@
 
         <div class="space-y-2">
           <div class="flex items-center justify-between text-[11px] text-slate-400">
-            <span>Configured Keys &amp; Live Reset Timers</span>
+            <span>Configured Keys &amp; Live Timers</span>
             <span id="modalPoolSummary" class="font-mono-code text-cyan-300">0 Ready</span>
           </div>
           <div id="keysListContainer" class="space-y-2"></div>
@@ -711,14 +751,14 @@
   <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
     <div class="w-full max-w-md rounded-2xl bg-[#111827] border border-slate-800 shadow-2xl overflow-hidden max-h-[90dvh] flex flex-col">
       <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 shrink-0">
-        <h3 class="text-sm font-semibold text-slate-100">Model, Rate-Limit &amp; Background Settings</h3>
+        <h3 class="text-sm font-semibold text-slate-100">Model, Pacing &amp; Background Settings</h3>
         <button id="closeSettingsBtn" type="button" class="text-slate-400 hover:text-slate-200 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
       <div class="p-5 space-y-4 text-xs overflow-y-auto">
         <div class="rounded-lg bg-indigo-950/40 border border-indigo-500/30 p-3 text-indigo-200 leading-relaxed">
-          <strong>Strict Primary Model Mode:</strong> Never falls back to a lesser model. Cycles across all ready API keys on HTTP 429, records each key's reset time across hours if needed, and resumes automatically when keys reset.
+          <strong>Strict Primary Model Mode:</strong> Always uses your chosen model. Rotates across your API keys on rate limits and waits safely if all keys are cooling down.
         </div>
         <div>
           <label for="modelInput" class="block font-medium text-slate-300 mb-1">Primary Model ID</label>
@@ -726,12 +766,12 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label for="thinkingLevelSelect" class="block font-medium text-slate-300 mb-1">Thinking Level</label>
+            <label for="thinkingLevelSelect" class="block font-medium text-slate-300 mb-1">Reasoning Depth</label>
             <select id="thinkingLevelSelect" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-3 py-2 text-slate-200 outline-none focus:border-indigo-500">
-              <option value="low">low</option>
-              <option value="medium">medium</option>
-              <option value="high">high</option>
-              <option value="xhigh" selected>xhigh (deepest)</option>
+              <option value="low">low (Fastest)</option>
+              <option value="medium">medium (Balanced)</option>
+              <option value="high">high (Deep)</option>
+              <option value="xhigh" selected>xhigh (Deepest)</option>
             </select>
           </div>
           <div>
@@ -741,7 +781,7 @@
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <div>
-            <label for="delayInput" class="block font-medium text-slate-300 mb-1">Pacing (ms)</label>
+            <label for="delayInput" class="block font-medium text-slate-300 mb-1">Step Pause (ms)</label>
             <input id="delayInput" type="number" min="1000" max="60000" step="500" value="4000" class="w-full bg-[#090d14] border border-slate-700 rounded-lg px-2 py-2 text-slate-200 font-mono-code outline-none focus:border-indigo-500" />
           </div>
           <div>
@@ -763,21 +803,21 @@
             <input id="bgKeepAliveToggle" type="checkbox" checked class="mt-0.5 rounded border-slate-600 bg-slate-900 text-indigo-500 focus:ring-indigo-500" />
             <div>
               <div class="font-medium text-slate-200">Background &amp; Lock-Screen Keep-Alive</div>
-              <div class="text-[11px] text-slate-400">Uses Screen Wake Lock, Web Worker heartbeat timers, Web Locks &amp; silent MediaSession audio so the app keeps running on lock screens and in the background.</div>
+              <div class="text-[11px] text-slate-400">Keeps the build running smoothly when your phone screen locks or you switch tabs.</div>
             </div>
           </label>
           <label class="flex items-start gap-2.5 cursor-pointer">
             <input id="osNotifToggle" type="checkbox" checked class="mt-0.5 rounded border-slate-600 bg-slate-900 text-indigo-500 focus:ring-indigo-500" />
             <div>
-              <div class="font-medium text-slate-200">Persistent OS &amp; Lock-Screen Notification</div>
-              <div class="text-[11px] text-slate-400">Shows live step progress, progress bar, key rotation, battery warnings, and cooldown timers in your notification shade &amp; lock screen.</div>
+              <div class="font-medium text-slate-200">Live Lock-Screen Progress Notification</div>
+              <div class="text-[11px] text-slate-400">Shows current step, progress bar, and cooldown timers in your notification shade.</div>
             </div>
           </label>
           <label class="flex items-start gap-2.5 cursor-pointer">
             <input id="autoResumeOnReloadToggle" type="checkbox" checked class="mt-0.5 rounded border-slate-600 bg-slate-900 text-indigo-500 focus:ring-indigo-500" />
             <div>
-              <div class="font-medium text-slate-200">Auto-Resume Interrupted Runs on Reopen</div>
-              <div class="text-[11px] text-slate-400">Automatically resumes from the exact step if the OS suspends or reloads the app during a long API cooldown.</div>
+              <div class="font-medium text-slate-200">Auto-Resume Interrupted Runs</div>
+              <div class="text-[11px] text-slate-400">Automatically picks up from the exact step if the browser reloads during a long run.</div>
             </div>
           </label>
         </div>
@@ -795,8 +835,8 @@
     <div class="w-full max-w-md rounded-2xl bg-[#111827] border border-slate-800 shadow-2xl overflow-hidden max-h-[90dvh] flex flex-col">
       <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 shrink-0">
         <div>
-          <h3 class="text-sm font-semibold text-slate-100">Mobile Lock-Screen &amp; Battery Readiness</h3>
-          <p class="text-[11px] text-slate-400">Ensure unattended runs survive lock screens, doze, and low battery.</p>
+          <h3 class="text-sm font-semibold text-slate-100">Mobile &amp; Background Readiness</h3>
+          <p class="text-[11px] text-slate-400">Ensure unattended runs survive lock screens, sleep mode, and low battery.</p>
         </div>
         <button id="closeReadinessBtn" type="button" class="text-slate-400 hover:text-slate-200 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -808,20 +848,16 @@
         <div class="rounded-xl border border-amber-500/35 bg-amber-950/25 p-3 space-y-1.5 text-amber-100">
           <div class="font-semibold flex items-center gap-1.5 text-amber-200">
             <i data-lucide="battery-charging" class="w-4 h-4"></i>
-            <span>Android Battery Optimization (Important)</span>
+            <span>Android Battery Optimization Tip</span>
           </div>
           <p class="text-[11px] text-amber-100/90 leading-relaxed">
-            Android Doze can throttle browsers after 10–30 minutes on a lock screen unless Battery Optimization is disabled:
+            Android may pause background browsers after 10–30 minutes unless set to Unrestricted:
           </p>
           <ol class="list-decimal list-inside text-[11px] text-amber-100/85 space-y-0.5">
-            <li>Open Android <strong>Settings → Apps → Chrome</strong> (or installed <strong>50-Pt Studio</strong>)</li>
+            <li>Open Android <strong>Settings → Apps → Chrome</strong> (or <strong>50-Pt Studio</strong>)</li>
             <li>Tap <strong>Battery</strong> → select <strong>Unrestricted</strong></li>
-            <li>In <strong>Notifications</strong>, ensure <strong>Show on lock screen</strong> is enabled</li>
+            <li>In <strong>Notifications</strong>, enable <strong>Show on lock screen</strong></li>
           </ol>
-        </div>
-
-        <div class="rounded-xl border border-slate-800 bg-[#090d14] p-3 text-[11px] text-slate-300 leading-relaxed">
-          <strong>Tip for Walking Away:</strong> Once you start the pipeline, you can lock your phone screen. Silent MediaSession audio keeps the task alive on the lock screen while turning off the display saves battery. Every step is saved immediately to persistent storage.
         </div>
       </div>
       <div class="px-5 py-3 bg-[#0b101b] border-t border-slate-800 flex items-center justify-between gap-2 shrink-0">
