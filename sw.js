@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wbs-studio-v6';
+const CACHE_NAME = 'wbs-studio-v8';
 const PROGRESS_NOTIF_TAG = 'wbs-pipeline-progress';
 const BATTERY_NOTIF_TAG = 'wbs-battery-warning';
 
@@ -10,8 +10,7 @@ const APP_SHELL_ASSETS = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  './notif-badge.png',
-  './notif-badge.svg'
+  './notif-badge.png'
 ];
 
 let cachedBadgeDataUrl = null;
@@ -103,6 +102,11 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
   if (url.hostname === 'generativelanguage.googleapis.com') {
+    return;
+  }
+  // Never intercept version-check / update traffic — update checks must always
+  // hit the network directly so users see the real latest version.
+  if (url.hostname === 'raw.githubusercontent.com' || url.hostname === 'api.github.com' || url.hostname === 'github.com' || url.hostname === 'objects.githubusercontent.com') {
     return;
   }
 
