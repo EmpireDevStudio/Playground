@@ -1,279 +1,757 @@
+// =========================================================================
+// DYNAMIC STUDIO CATALOG: MODES, VISUAL REFERENCES & TECH STACK
+// =========================================================================
+const STUDIO_CATALOG = {
+  projectTypes: {
+    app: {
+      id: 'app',
+      label: 'Web App',
+      roleLens: 'Interactive client-side application with structured views, persistent state, intuitive onboarding, and responsive workflows.',
+      samplePrompts: [
+        { label: 'Kanban', prompt: 'Build an advanced interactive Kanban & Sprint Planner web app with drag-and-drop columns, priority tags, WIP limits, search/filter, keyboard shortcuts, localStorage persistence, and JSON import/export.' },
+        { label: 'Cashflow', prompt: 'Build a sleek Financial Expense & Cashflow Analyzer web app with multi-category budgets, recurring entries, interactive charts, CSV export, and real-time balance projections.' },
+        { label: 'Focus Synth', prompt: 'Build a precision Pomodoro & Deep Focus Workspace web app featuring customizable timer intervals, ambient sound synthesizer via Web Audio API, task queue, daily focus analytics, and themes.' }
+      ],
+      categoryEssentials: [
+        { id: 'onboarding-seed', label: 'Realistic Starter / Sample Data', desc: 'Instant 5-second aha moment on first load without an empty blank screen.' },
+        { id: 'search-filter', label: 'Instant Search, Filter & Sort', desc: 'Live client-side filtering across items, tags, and statuses.' },
+        { id: 'multi-view', label: 'Multi-View / Tab Navigation', desc: 'Clean workspace switching with preserved state.' },
+        { id: 'undo-redo', label: 'Undo / Redo Safety Net', desc: 'Non-destructive actions with toast undo or command stack.' },
+        { id: 'command-palette', label: 'Keyboard Shortcuts & Quick Actions', desc: 'Power-user keybindings with input-focus guards.' },
+        { id: 'empty-cta', label: 'Actionable Empty States', desc: 'Helpful guidance and primary CTA when lists are cleared.' }
+      ],
+      defaults: {
+        targetPlatform: 'responsive-parity',
+        dataPersistence: 'localstorage-json',
+        sensoryAudio: 'web-audio-subtle',
+        a11yMotion: 'wcag-aa-fluid',
+        interfaceDesign: 'bento-grid',
+        designStyle: 'obsidian-saas',
+        elementStyle: 'specular-hairline',
+        lightingStyle: 'top-specular-rim',
+        html5: ['semantic-landmarks', 'dialog-popover', 'template-cloning', 'inline-svg', 'aria-live', 'viewport-safe-area', 'file-blob-io'],
+        css3: ['oklch-tokens', 'grid-subgrid', 'container-queries', 'has-selector', 'fluid-clamp-tabular', 'custom-scroll-selection', 'reduced-motion'],
+        jsArch: ['central-state', 'event-delegation', 'undo-redo-stack', 'web-audio-synth'],
+        jsLibs: [],
+        essentials: ['onboarding-seed', 'search-filter', 'multi-view', 'undo-redo']
+      }
+    },
+    tool: {
+      id: 'tool',
+      label: 'Utility / Tool',
+      roleLens: 'High-precision, zero-friction utility tool prioritizing instant input-to-output feedback, batch operations, and clean export.',
+      samplePrompts: [
+        { label: 'CSS Lab', prompt: 'Build a live CSS3 Gradient, Shadow & Glassmorphism Lab tool with multi-stop controls, real-time preview card, contrast checker, presets, and one-click CSS copy/export.' },
+        { label: 'JSON Forge', prompt: 'Build a client-side JSON/CSV Schema Transformer & Diff Inspector tool with syntax validation, tree explorer, jq-style path filtering, and instant download.' },
+        { label: 'Audio EQ', prompt: 'Build a browser-based Waveform & Parametric Audio Tone Analyzer tool using Web Audio API with real-time FFT spectrum canvas, frequency presets, and WAV export.' }
+      ],
+      categoryEssentials: [
+        { id: 'live-calc', label: 'Instant Live Output / Preview', desc: 'Zero-submit-button reactive updates as parameters change.' },
+        { id: 'batch-io', label: 'Batch / Drag-Drop File Processing', desc: 'Drop or paste raw data and transform/export immediately.' },
+        { id: 'precision-inputs', label: 'Precision Scrubbers & Unit Controls', desc: 'Numeric steppers, range sliders, and tabular-nums readouts.' },
+        { id: 'copy-export', label: 'One-Click Copy & Multi-Format Export', desc: 'Clipboard feedback + Blob download (.json, .csv, .svg, .txt).' },
+        { id: 'preset-bank', label: 'Curated Preset Bank', desc: 'Built-in starter presets to test and customize immediately.' },
+        { id: 'strict-validation', label: 'Inline Validation & Error Recovery', desc: 'Clear line/field diagnostics without crashing state.' }
+      ],
+      defaults: {
+        targetPlatform: 'desktop-pro',
+        dataPersistence: 'localstorage-csv',
+        sensoryAudio: 'silent-clean',
+        a11yMotion: 'wcag-aa-fluid',
+        interfaceDesign: 'split-workbench',
+        designStyle: 'swiss-minimal',
+        elementStyle: 'layered-elevation',
+        lightingStyle: 'soft-studio-shadow',
+        html5: ['semantic-landmarks', 'template-cloning', 'inline-svg', 'aria-live', 'drag-drop', 'file-blob-io', 'viewport-safe-area'],
+        css3: ['oklch-tokens', 'grid-subgrid', 'container-queries', 'has-selector', 'cascade-layers', 'fluid-clamp-tabular', 'custom-scroll-selection', 'reduced-motion'],
+        jsArch: ['central-state', 'event-delegation', 'undo-redo-stack', 'web-worker'],
+        jsLibs: [],
+        essentials: ['live-calc', 'precision-inputs', 'copy-export', 'preset-bank', 'strict-validation']
+      }
+    },
+    game: {
+      id: 'game',
+      label: 'Game',
+      roleLens: 'Frame-rate-independent interactive game centered on a tight core gameplay loop, responsive controls, crisp game feel ("juice"), and replayability.',
+      samplePrompts: [
+        { label: 'Neon Drift', prompt: 'Build an arcade Neon Vector Space Dodge & Combo Wave game on HTML5 Canvas with twin-stick/mouse/touch controls, procedural enemy waves, particle explosions, Web Audio synth SFX, and local high-score leaderboard.' },
+        { label: 'Hex Tactics', prompt: 'Build a turn-based Tactical Hex Grid Roguelite Puzzle game with procedural boards, unit abilities, move/attack previews, undo move, progressive difficulty stages, and synthesized sound effects.' },
+        { label: 'Rhythm Tap', prompt: 'Build a precision 4-Lane Synth Rhythm Game with Web Audio API beat synthesis, timing judgment windows (Perfect/Good/Miss), combo multiplier, custom BPM tracks, and responsive touch/keyboard lanes.' }
+      ],
+      categoryEssentials: [
+        { id: 'core-loop', label: 'Tight Core Gameplay Loop', desc: 'Clear Challenge -> Action -> Feedback -> Reward cycle in <5 seconds.' },
+        { id: 'game-fsm', label: 'Title / Playing / Pause / Game-Over FSM', desc: 'Clean state machine with instant 1-click Restart and reset().' },
+        { id: 'game-feel', label: 'Game Feel & Juice (Particles / Shake)', desc: 'Hit-stop, screen shake, floating score popups, and sound cues.' },
+        { id: 'score-progression', label: 'Scoring, Combos & High-Score Save', desc: 'Multipliers, streaks, and persistent localStorage best runs.' },
+        { id: 'difficulty-curve', label: 'Adaptive Difficulty & Wave Pacing', desc: 'Fair onboarding ramp into escalating mastery challenges.' },
+        { id: 'dual-controls', label: 'Keyboard + Touch/Pointer Parity', desc: 'WASD/Arrows + on-screen touch zones or drag/aim support.' }
+      ],
+      defaults: {
+        targetPlatform: 'fullscreen-arcade',
+        dataPersistence: 'localstorage-json',
+        sensoryAudio: 'web-audio-arcade',
+        a11yMotion: 'high-refresh-120',
+        interfaceDesign: 'fullscreen-stage',
+        designStyle: 'cyberpunk-hud',
+        elementStyle: 'chamfered-scifi',
+        lightingStyle: 'neon-bloom',
+        html5: ['canvas-surface', 'inline-svg', 'aria-live', 'viewport-safe-area'],
+        css3: ['oklch-tokens', 'fluid-clamp-tabular', 'reduced-motion'],
+        jsArch: ['central-state', 'fsm-states', 'delta-raf-loop', 'web-audio-synth', 'pointer-gesture-lock'],
+        jsLibs: [],
+        essentials: ['core-loop', 'game-fsm', 'game-feel', 'score-progression', 'difficulty-curve', 'dual-controls']
+      }
+    },
+    experimental: {
+      id: 'experimental',
+      label: 'Experimental',
+      roleLens: 'Avant-garde creative web experience blending generative visuals, procedural audio/physics, and expressive tactile interaction.',
+      samplePrompts: [
+        { label: 'Boid Field', prompt: 'Build an interactive Generative Flow-Field & Boids Ecosystem simulator with real-time attractor/repulsor pointer brushes, color palette mutator, parameter HUD, and PNG snapshot export.' },
+        { label: 'Modular Synth', prompt: 'Build an experimental Visual Node-Based Web Audio Ambient Drone & Sequencer playground where dragging glowing orbs modulates oscillators, filters, and canvas ripples.' },
+        { label: 'Kinetic Type', prompt: 'Build a kinetic interactive Typography & Physics Poster sandbox where user text shatters, orbits, and reacts to pointer velocity, gravity sliders, and beat pulses.' }
+      ],
+      categoryEssentials: [
+        { id: 'procedural-seed', label: 'Procedural / Generative Seed Engine', desc: 'Deterministic or randomized seed mutator for endless variations.' },
+        { id: 'param-hud', label: 'Collapsible Parameter Tweaker HUD', desc: 'Live sliders/knobs that mutate the simulation in real time.' },
+        { id: 'canvas-shader', label: 'Reactive Canvas / Particle / Shader Stage', desc: 'Full-bleed interactive visual canvas responding to pointer/audio.' },
+        { id: 'snapshot-export', label: 'Snapshot / Preset Share Export', desc: 'Save PNG frame or JSON parameter seed.' },
+        { id: 'audio-reactive', label: 'Audio-Visual Coupling', desc: 'Web Audio synthesis or analyzer driving visual geometry.' },
+        { id: 'unconventional-ui', label: 'Expressive Non-Standard Spatial UI', desc: 'Radial menus, floating pills, or kinetic overlays.' }
+      ],
+      defaults: {
+        targetPlatform: 'fullscreen-arcade',
+        dataPersistence: 'localstorage-json',
+        sensoryAudio: 'web-audio-arcade',
+        a11yMotion: 'high-refresh-120',
+        interfaceDesign: 'floating-hud',
+        designStyle: 'glassmorphism',
+        elementStyle: 'pill-tactile',
+        lightingStyle: 'ambient-aura',
+        html5: ['canvas-surface', 'inline-svg', 'viewport-safe-area', 'file-blob-io'],
+        css3: ['oklch-tokens', 'view-transitions', 'fluid-clamp-tabular', 'reduced-motion'],
+        jsArch: ['central-state', 'delta-raf-loop', 'web-audio-synth', 'pointer-gesture-lock'],
+        jsLibs: [],
+        essentials: ['procedural-seed', 'param-hud', 'canvas-shader', 'snapshot-export']
+      }
+    }
+  },
+
+  interfaceDesigns: [
+    {
+      id: 'bento-grid',
+      name: 'Bento Grid Workspace',
+      desc: 'Modular asymmetric cards with clear KPI & action zones.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="8" y="8" width="68" height="42" rx="6" fill="#131c2e" stroke="#334155"/><rect x="82" y="8" width="70" height="20" rx="5" fill="#172542" stroke="#6366f1" stroke-opacity=".6"/><rect x="82" y="32" width="33" height="18" rx="4" fill="#131c2e" stroke="#334155"/><rect x="120" y="32" width="32" height="18" rx="4" fill="#131c2e" stroke="#334155"/><rect x="8" y="55" width="94" height="27" rx="5" fill="#131c2e" stroke="#334155"/><rect x="108" y="55" width="44" height="27" rx="5" fill="#0f2933" stroke="#22d3ee" stroke-opacity=".6"/></svg>`
+    },
+    {
+      id: 'split-workbench',
+      name: 'Command Split Pane',
+      desc: 'Left control/inspector rail + right live workspace.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="6" y="6" width="148" height="12" rx="3" fill="#111827" stroke="#334155"/><rect x="6" y="22" width="48" height="62" rx="5" fill="#0f172a" stroke="#6366f1" stroke-opacity=".5"/><rect x="12" y="28" width="36" height="8" rx="2" fill="#1e293b"/><rect x="12" y="40" width="36" height="8" rx="2" fill="#1e293b"/><rect x="12" y="52" width="36" height="8" rx="2" fill="#1e293b"/><rect x="59" y="22" width="95" height="62" rx="5" fill="#0b1220" stroke="#334155"/><rect x="66" y="29" width="81" height="48" rx="3" fill="#131c2e"/></svg>`
+    },
+    {
+      id: 'fullscreen-stage',
+      name: 'Fullscreen Canvas Stage',
+      desc: '100dvh playfield/canvas with minimal corner HUD.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#050811"/><circle cx="80" cy="46" r="22" fill="none" stroke="#22d3ee" stroke-opacity=".4" stroke-dasharray="4 3"/><circle cx="80" cy="46" r="8" fill="#6366f1" fill-opacity=".8"/><rect x="8" y="8" width="38" height="11" rx="5" fill="#111827" stroke="#334155"/><rect x="114" y="8" width="38" height="11" rx="5" fill="#111827" stroke="#22d3ee" stroke-opacity=".6"/><rect x="50" y="73" width="60" height="10" rx="5" fill="#111827" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'focus-card',
+      name: 'Single-Column Focus',
+      desc: 'Centered distraction-free flow with sticky action bar.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="34" y="8" width="92" height="74" rx="7" fill="#111827" stroke="#334155"/><rect x="42" y="16" width="54" height="8" rx="2" fill="#6366f1" fill-opacity=".6"/><rect x="42" y="30" width="76" height="18" rx="4" fill="#1e293b"/><rect x="42" y="53" width="76" height="12" rx="4" fill="#1e293b"/><rect x="82" y="69" width="36" height="8" rx="3" fill="#22d3ee" fill-opacity=".75"/></svg>`
+    },
+    {
+      id: 'floating-hud',
+      name: 'Floating HUD & Dock',
+      desc: 'Open interactive canvas with translucent floating dock.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#060a12"/><path d="M10 65 Q50 20 90 50 T150 30" fill="none" stroke="#6366f1" stroke-width="2" stroke-opacity=".55"/><rect x="10" y="10" width="44" height="24" rx="6" fill="#111827" fill-opacity=".85" stroke="#334155"/><rect x="35" y="68" width="90" height="14" rx="7" fill="#111827" fill-opacity=".9" stroke="#22d3ee" stroke-opacity=".6"/><circle cx="52" cy="75" r="3" fill="#6366f1"/><circle cx="70" cy="75" r="3" fill="#22d3ee"/><circle cx="88" cy="75" r="3" fill="#34d399"/><circle cx="106" cy="75" r="3" fill="#f59e0b"/></svg>`
+    },
+    {
+      id: 'tabbed-studio',
+      name: 'Multi-Tab Studio',
+      desc: 'Structured top/bottom tabs for deep multi-mode workflows.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="8" y="8" width="32" height="11" rx="3" fill="#4f46e5"/><rect x="44" y="8" width="32" height="11" rx="3" fill="#1e293b"/><rect x="80" y="8" width="32" height="11" rx="3" fill="#1e293b"/><rect x="8" y="23" width="144" height="59" rx="5" fill="#111827" stroke="#334155"/><rect x="16" y="31" width="60" height="43" rx="4" fill="#1e293b"/><rect x="82" y="31" width="62" height="20" rx="4" fill="#1e293b"/><rect x="82" y="54" width="62" height="20" rx="4" fill="#0f2933"/></svg>`
+    }
+  ],
+
+  designStyles: [
+    {
+      id: 'obsidian-saas',
+      name: 'Obsidian Precision',
+      desc: 'Deep slate layers, crisp hairlines, high-signal accents.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#090d14"/><rect x="14" y="14" width="132" height="62" rx="8" fill="#111827" stroke="#334155"/><rect x="24" y="24" width="52" height="10" rx="3" fill="#e2e8f0" fill-opacity=".85"/><rect x="24" y="40" width="112" height="24" rx="5" fill="#0b101b" stroke="#1e293b"/><rect x="100" y="22" width="36" height="12" rx="4" fill="#6366f1"/></svg>`
+    },
+    {
+      id: 'glassmorphism',
+      name: 'Glassmorphism',
+      desc: 'Frosted translucent layers, backdrop blur & soft highlights.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><defs><radialGradient id="g1" cx="30%" cy="30%" r="60%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#090d14"/></radialGradient></defs><rect width="160" height="90" fill="url(#g1)"/><circle cx="122" cy="64" r="24" fill="#22d3ee" fill-opacity=".45"/><rect x="20" y="16" width="120" height="58" rx="10" fill="#ffffff" fill-opacity=".12" stroke="#ffffff" stroke-opacity=".35"/><rect x="30" y="28" width="55" height="8" rx="4" fill="#ffffff" fill-opacity=".7"/><rect x="30" y="42" width="96" height="20" rx="6" fill="#ffffff" fill-opacity=".1" stroke="#ffffff" stroke-opacity=".2"/></svg>`
+    },
+    {
+      id: 'swiss-minimal',
+      name: 'Swiss Minimalist',
+      desc: 'Editorial grid, stark typography, generous breathing room.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#f8fafc"/><rect x="14" y="14" width="46" height="10" fill="#0f172a"/><rect x="14" y="30" width="132" height="1" fill="#cbd5e1"/><rect x="14" y="38" width="62" height="36" fill="#ffffff" stroke="#e2e8f0"/><rect x="84" y="38" width="62" height="36" fill="#ffffff" stroke="#e2e8f0"/><circle cx="136" cy="19" r="5" fill="#ef4444"/></svg>`
+    },
+    {
+      id: 'neubrutalism',
+      name: 'Neubrutalism',
+      desc: 'Thick ink borders, vivid fills, hard offset drop shadows.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#fef08a"/><rect x="22" y="18" width="120" height="56" rx="4" fill="#000000"/><rect x="18" y="14" width="120" height="56" rx="4" fill="#ffffff" stroke="#000000" stroke-width="2.5"/><rect x="28" y="24" width="56" height="12" fill="#f472b6" stroke="#000" stroke-width="2"/><rect x="94" y="44" width="36" height="16" fill="#34d399" stroke="#000" stroke-width="2"/></svg>`
+    },
+    {
+      id: 'cyberpunk-hud',
+      name: 'Cyberpunk HUD',
+      desc: 'High-tech telemetry, neon cyan/magenta accents & grid lines.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#050510"/><path d="M0 70 L160 70 M0 20 L160 20" stroke="#22d3ee" stroke-opacity=".18"/><polygon points="18,16 132,16 144,28 144,74 28,74 18,64" fill="#0b1024" stroke="#22d3ee" stroke-width="1.5"/><rect x="28" y="28" width="68" height="8" fill="#f43f5e"/><rect x="28" y="42" width="102" height="18" fill="#111936" stroke="#22d3ee" stroke-opacity=".4"/></svg>`
+    },
+    {
+      id: 'neumorphism-clay',
+      name: 'Soft Clay / Tactile',
+      desc: 'Sculpted dual-shadow surfaces with plush rounded forms.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#1e2433"/><rect x="20" y="16" width="120" height="58" rx="16" fill="#232a3b" stroke="#2f384f"/><rect x="32" y="28" width="44" height="34" rx="12" fill="#2a3347" stroke="#3b4661"/><circle cx="108" cy="45" r="15" fill="#6366f1"/></svg>`
+    },
+    {
+      id: 'retro-crt',
+      name: 'Retro Pixel / CRT',
+      desc: 'Crisp phosphor monospace, scanline texture & arcade charm.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#041008"/><rect x="12" y="10" width="136" height="70" rx="8" fill="#071a0e" stroke="#22c55e" stroke-width="2"/><rect x="22" y="22" width="70" height="8" fill="#22c55e"/><rect x="22" y="36" width="116" height="6" fill="#166534"/><rect x="22" y="48" width="90" height="6" fill="#166534"/><rect x="22" y="62" width="14" height="8" fill="#4ade80"/></svg>`
+    }
+  ],
+
+  elementStyles: [
+    {
+      id: 'specular-hairline',
+      name: '1px Specular & Nested Radii',
+      desc: 'Top-edge inner light, 1px hairline border, nested radius.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#080c14"/><rect x="18" y="16" width="124" height="58" rx="12" fill="#111827" stroke="#334155"/><line x1="28" y1="17" x2="132" y2="17" stroke="#94a3b8" stroke-opacity=".55"/><rect x="28" y="26" width="104" height="38" rx="7" fill="#0b101b" stroke="#1e293b"/></svg>`
+    },
+    {
+      id: 'brutal-offset',
+      name: 'Hard-Offset Crisp',
+      desc: 'Sharp 2px strokes with solid zero-blur offset shadow.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#111827"/><rect x="30" y="24" width="106" height="46" rx="4" fill="#000"/><rect x="24" y="18" width="106" height="46" rx="4" fill="#1e293b" stroke="#e2e8f0" stroke-width="2"/><rect x="34" y="30" width="52" height="22" rx="3" fill="#22d3ee"/></svg>`
+    },
+    {
+      id: 'pill-tactile',
+      name: 'Pill & Squircle Tactile',
+      desc: 'Full-pill buttons, soft press scale & friendly curves.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#090d14"/><rect x="20" y="22" width="120" height="46" rx="23" fill="#131c2e" stroke="#334155"/><rect x="30" y="32" width="56" height="26" rx="13" fill="#6366f1"/><rect x="94" y="32" width="36" height="26" rx="13" fill="#1e293b" stroke="#475569"/></svg>`
+    },
+    {
+      id: 'chamfered-scifi',
+      name: 'Chamfered Angled',
+      desc: '45-degree cut corners via clip-path for tactical UI.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070a12"/><polygon points="24,18 130,18 142,30 142,72 30,72 18,60 18,24" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/><polygon points="32,32 88,32 96,40 96,58 32,58" fill="#164e63"/></svg>`
+    },
+    {
+      id: 'flat-borderless',
+      name: 'Flat Tonal Surfaces',
+      desc: 'Zero borders; hierarchy via subtle background luminance.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#0f172a"/><rect x="18" y="16" width="124" height="58" rx="8" fill="#1e293b"/><rect x="28" y="26" width="54" height="38" rx="6" fill="#293548"/><rect x="90" y="26" width="42" height="38" rx="6" fill="#334155"/></svg>`
+    },
+    {
+      id: 'layered-elevation',
+      name: 'Layered Multi-Shadow',
+      desc: 'Soft multi-stop ambient + key shadows for clear z-depth.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#0b101b"/><rect x="18" y="24" width="100" height="50" rx="8" fill="#131c2e" stroke="#1e293b"/><rect x="42" y="14" width="100" height="50" rx="8" fill="#1a2438" stroke="#475569"/></svg>`
+    }
+  ],
+
+  lightingStyles: [
+    {
+      id: 'top-specular-rim',
+      name: 'Top Specular Rim Light',
+      desc: 'Overhead key light casting crisp 1px top highlights.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><defs><linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity=".22"/><stop offset="40%" stop-color="#111827" stop-opacity="1"/></linearGradient></defs><rect width="160" height="90" fill="#070a10"/><rect x="22" y="20" width="116" height="52" rx="10" fill="url(#rim)" stroke="#334155"/><line x1="30" y1="20.5" x2="130" y2="20.5" stroke="#e2e8f0" stroke-width="1.5"/></svg>`
+    },
+    {
+      id: 'ambient-aura',
+      name: 'Ambient Radial Aura',
+      desc: 'Soft diffused color wash behind primary focal cards.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><defs><radialGradient id="aura" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#6366f1" stop-opacity=".65"/><stop offset="100%" stop-color="#070a10" stop-opacity="0"/></radialGradient></defs><rect width="160" height="90" fill="#070a10"/><circle cx="80" cy="45" r="46" fill="url(#aura)"/><rect x="30" y="22" width="100" height="46" rx="9" fill="#0f172a" fill-opacity=".88" stroke="#6366f1" stroke-opacity=".5"/></svg>`
+    },
+    {
+      id: 'neon-bloom',
+      name: 'Neon Bloom & Trace',
+      desc: 'Interactive outer glow on focus, hover & active states.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#05070e"/><rect x="28" y="22" width="104" height="46" rx="8" fill="#0a1222" stroke="#22d3ee" stroke-width="2" stroke-opacity=".9"/><rect x="24" y="18" width="112" height="54" rx="11" fill="none" stroke="#22d3ee" stroke-width="4" stroke-opacity=".22"/></svg>`
+    },
+    {
+      id: 'soft-studio-shadow',
+      name: 'Soft Studio Diffused',
+      desc: 'Gentle directional shadows with zero harsh glare.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#131926"/><rect x="32" y="25" width="100" height="46" rx="10" fill="#090d14" fill-opacity=".6"/><rect x="28" y="19" width="100" height="46" rx="10" fill="#1e293b" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'daylight-flat',
+      name: 'High-Contrast Daylight',
+      desc: 'Clean matte illumination optimized for outdoor readability.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#f1f5f9"/><rect x="24" y="18" width="112" height="54" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/><rect x="36" y="30" width="52" height="10" rx="3" fill="#0f172a"/><rect x="36" y="48" width="88" height="12" rx="4" fill="#e2e8f0"/></svg>`
+    },
+    {
+      id: 'volumetric-vignette',
+      name: 'Spotlight & Vignette',
+      desc: 'Focused center stage with darkened peripheral edges.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><defs><radialGradient id="vig" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#030508"/></radialGradient></defs><rect width="160" height="90" fill="url(#vig)"/><rect x="38" y="22" width="84" height="46" rx="8" fill="#0f172a" stroke="#475569"/></svg>`
+    }
+  ],
+
+  html5Options: [
+    { id: 'semantic-landmarks', label: 'Semantic Landmarks', desc: '<header>, <main>, <nav>, <section>, <aside>' },
+    { id: 'dialog-popover', label: 'Native <dialog> & Popover', desc: 'Top-layer modals & popover attributes' },
+    { id: 'template-cloning', label: '<template> Cloning', desc: 'XSS-safe DOM cloning for repeated items' },
+    { id: 'canvas-surface', label: '<canvas> 2D / WebGL', desc: 'High-FPS pixel/vector rendering surface' },
+    { id: 'inline-svg', label: 'Inline <svg> Vector Craft', desc: 'Crisp resolution-independent icons & charts' },
+    { id: 'aria-live', label: 'ARIA Live Regions', desc: 'Screen-reader status & alert announcements' },
+    { id: 'drag-drop', label: 'HTML5 Drag & Drop / Pointer', desc: 'Sortable cards or file dropzones' },
+    { id: 'viewport-safe-area', label: 'viewport-fit=cover & Safe Area', desc: 'Notch & mobile bottom-bar safe insets' },
+    { id: 'file-blob-io', label: 'FileReader & Blob Export', desc: 'Client-side file import & download' }
+  ],
+
+  css3Options: [
+    { id: 'oklch-tokens', label: ':root Tokens + oklch()/color-mix()', desc: 'Perceptually uniform 60-30-10 color system' },
+    { id: 'grid-subgrid', label: 'CSS Grid & Subgrid', desc: 'Aligned multi-card tracks & responsive layout' },
+    { id: 'container-queries', label: '@container Queries', desc: 'Component-level responsiveness inside panes' },
+    { id: 'has-selector', label: ':has() Parent Selectors', desc: 'Zero-JS parent state styling on inputs/cards' },
+    { id: 'cascade-layers', label: '@layer Cascade Control', desc: 'Clean reset/base/components/utilities order' },
+    { id: 'view-transitions', label: 'View Transitions API', desc: 'Smooth cross-fade/morph state transitions' },
+    { id: 'scroll-driven', label: 'Scroll-Driven Animations', desc: 'Compositor-thread scroll progress & reveals' },
+    { id: 'fluid-clamp-tabular', label: 'clamp() + tabular-nums', desc: 'Fluid typography & jitter-free live counters' },
+    { id: 'custom-scroll-selection', label: 'Custom Scrollbars & ::selection', desc: 'Polished native chrome details' },
+    { id: 'reduced-motion', label: 'prefers-reduced-motion', desc: 'Mandatory accessibility motion fallback' }
+  ],
+
+  jsArchOptions: [
+    { id: 'central-state', label: 'Central State + Render Flow', desc: 'Single source of truth with deterministic renders' },
+    { id: 'event-delegation', label: 'Root Event Delegation', desc: 'Parent listeners via event.target.closest()' },
+    { id: 'fsm-states', label: 'Finite State Machine (FSM)', desc: 'Explicit mode transitions (idle/active/paused/over)' },
+    { id: 'delta-raf-loop', label: 'Delta-Time (dt) RAF Loop', desc: '60Hz–120Hz frame-rate-independent simulation' },
+    { id: 'web-worker', label: 'Web Worker Offloading', desc: 'Background computation without UI jank' },
+    { id: 'undo-redo-stack', label: 'Undo / Redo Command Stack', desc: 'Reversible history snapshots' },
+    { id: 'web-audio-synth', label: 'Web Audio API Synth', desc: 'Zero-asset procedural SFX unlocked on first tap' },
+    { id: 'pointer-gesture-lock', label: 'PointerEvents + touch-action', desc: 'Unified mouse/touch/pen without scroll hijacks' }
+  ],
+
+  jsLibsOptions: [
+    { id: 'threejs', label: 'Three.js (3D WebGL)', modes: ['game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.min.js"></script>', desc: '3D scenes, meshes, lighting & cameras' },
+    { id: 'pixijs', label: 'PixiJS (2D WebGL)', modes: ['game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.6.6/dist/pixi.min.js"></script>', desc: 'Ultra-fast 2D sprites & particle batches' },
+    { id: 'matterjs', label: 'Matter.js (2D Physics)', modes: ['game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>', desc: 'Rigid bodies, collisions, gravity & constraints' },
+    { id: 'gsap', label: 'GSAP (Motion Timelines)', modes: ['app', 'game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>', desc: 'Choreographed UI & game-feel animations' },
+    { id: 'chartjs', label: 'Chart.js (Data Viz)', modes: ['app', 'tool'], cdn: '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>', desc: 'Responsive canvas charts & analytics' },
+    { id: 'konva', label: 'Konva.js (2D Canvas Stages)', modes: ['tool', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/konva@9.3.18/konva.min.js"></script>', desc: 'Interactive shapes, layers & drag transformers' },
+    { id: 'tonejs', label: 'Tone.js (Audio Framework)', modes: ['game', 'experimental', 'tool'], cdn: '<script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>', desc: 'Synthesizers, sequencers & audio effects' },
+    { id: 'd3', label: 'D3.js (Custom Data/SVG)', modes: ['tool', 'app', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>', desc: 'Scales, force graphs & custom SVG data' },
+    { id: 'confetti', label: 'Canvas-Confetti', modes: ['app', 'game'], cdn: '<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>', desc: 'Rewarding celebration bursts' },
+    { id: 'lucide', label: 'Lucide Icons', modes: ['app', 'tool', 'game', 'experimental'], cdn: '<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>', desc: 'Clean consistent vector icon set' },
+    { id: 'tailwind', label: 'Tailwind CSS (CDN)', modes: ['app', 'tool'], cdn: '<script src="https://cdn.tailwindcss.com/3.4.17"></script>', desc: 'Utility-first styling alongside custom style.css' }
+  ]
+};
+
+// =========================================================================
+// UPGRADED 50-STEP DYNAMIC WORKFLOW PIPELINE
+// =========================================================================
 const PIPELINE_STEPS = [
   // =========================================================================
-  // STAGE 1: RESEARCH (Steps 1–10)
+  // STAGE 1: DISCOVERY & DOMAIN INTELLIGENCE (Steps 1–10)
   // =========================================================================
   {
-    num: 1, stage: 1, stageName: 'Research',
-    title: 'The Core Problem or Desire',
-    directive: 'Confirm whether the underlying pain point (for a utility/tool) or itch (for a game/creative app) is real, frequent, and urgent enough that people actively seek a solution. Define the core value proposition, trigger moments, usage frequency, and the exact functional or emotional payoff deliverable purely client-side with zero backend.'
+    num: 1, stage: 1, stageName: 'Discovery', section: '1A: Domain & Value',
+    role: 'Product & Domain Strategist',
+    upstreamInputs: 'Initial Prompt + Project Type + Mode Essentials',
+    downstreamTarget: 'Steps 2–5 (Audience, Gaps & Differentiator)',
+    directive: 'Deconstruct the core user desire, pain point, or gameplay itch from the prompt and project type. Define the exact trigger moment, primary emotional/functional payoff, and what makes a standalone browser execution uniquely compelling.'
   },
   {
-    num: 2, stage: 1, stageName: 'Research',
-    title: 'Target Audience and Context of Use',
-    directive: 'Define primary, secondary, and first-time user archetypes, their technical fluency, natural mental models, and real-world operating contexts (e.g., focused desktop workspace vs. one-handed two-minute mobile commute, offline/low-connectivity environments, ambient lighting, and distraction levels).'
+    num: 2, stage: 1, stageName: 'Discovery', section: '1A: Domain & Value',
+    role: 'User & Context Researcher',
+    upstreamInputs: 'Step 1 + Target Platform + Audience Input',
+    downstreamTarget: 'Steps 6–8 (Onboarding, Flow & Ergonomics)',
+    directive: 'Profile primary and first-time user/player archetypes, their mental models, technical fluency, and physical operating contexts (desktop focus vs. one-handed mobile thumb zone, offline/commute use, ambient lighting).'
   },
   {
-    num: 3, stage: 1, stageName: 'Research',
-    title: 'Existing Alternatives and Workarounds',
-    directive: 'Map direct web and native competitors alongside the makeshift habits people already rely on—spreadsheets, notes apps, calculators, timers, or manual pen-and-paper routines—to uncover what this app truly competes against, where alternatives feel bloated, and which familiar conventions users expect.'
+    num: 3, stage: 1, stageName: 'Discovery', section: '1A: Domain & Value',
+    role: 'Competitive & Workaround Analyst',
+    upstreamInputs: 'Steps 1–2 + Prompt Domain',
+    downstreamTarget: 'Steps 4–5 (Friction Audit & Edge)',
+    directive: 'Map existing web/native alternatives and makeshift workarounds (spreadsheets, pen-and-paper, bloated SaaS, ad-heavy arcade clones) to identify entrenched conventions users expect and where incumbents overcomplicate the experience.'
   },
   {
-    num: 4, stage: 1, stageName: 'Research',
-    title: 'User Complaints, Reviews and Friction Audit',
-    directive: 'Analyze recurring 1-to-3-star complaints, forum/Reddit pain points, and abandonment triggers across existing tools or games—such as confusing navigation, forced logins, sluggish rendering, intrusive popups, unclear states, or broken mobile layouts—to catalog concrete failure modes to eliminate.'
+    num: 4, stage: 1, stageName: 'Discovery', section: '1B: Friction & Edge',
+    role: 'UX Failure & Friction Auditor',
+    upstreamInputs: 'Step 3 + Selected Platform',
+    downstreamTarget: 'Steps 7 & 14 (Flow Stripping & Edge Cases)',
+    directive: 'Catalog the top recurring failure modes and abandonment triggers in similar apps/games (forced logins, sluggish state updates, unclear HUD/controls, cramped mobile tap targets, data loss on refresh) so this build systematically eliminates them.'
   },
   {
-    num: 5, stage: 1, stageName: 'Research',
-    title: 'Your Clear Differentiator & Zero-Bloat Edge',
-    directive: 'Pinpoint the unmistakable advantage this three-file (index.html, style.css, script.js) app delivers over alternatives—whether faster instant execution, calmer zero-bloat UI, a fresher game mechanic, or superior keyboard/touch ergonomics—so users have a compelling reason to choose and keep using it.'
+    num: 5, stage: 1, stageName: 'Discovery', section: '1B: Friction & Edge',
+    role: 'Differentiation Architect',
+    upstreamInputs: 'Steps 1–4 + Selected Visual & Tech Stack',
+    downstreamTarget: 'Step 11 (MVP Scope Lock)',
+    directive: 'Lock the unmistakable competitive edge of this specific build—combining its functional/gameplay hook with the chosen interface architecture, lighting/design style, and zero-backend speed.'
   },
   {
-    num: 6, stage: 1, stageName: 'Research',
-    title: 'Onboarding and Immediate Time-to-Value',
-    directive: 'Examine how top browser products deliver an "aha" moment within the first 5 seconds without forced sign-ups, account walls, or lengthy tutorials. Identify intuitive visual cues, interactive empty states, and realistic starter/sample data that let first-time users succeed on their very first tap or click.'
+    num: 6, stage: 1, stageName: 'Discovery', section: '1B: Friction & Edge',
+    role: 'Time-to-Value & Onboarding Designer',
+    upstreamInputs: 'Steps 2 & 5 + Mode Essentials',
+    downstreamTarget: 'Steps 12 & 40 (Shortest Path & Living States)',
+    directive: 'Design the first-5-seconds experience: zero account walls, zero modal tutorials—instead using realistic starter data, intuitive visual affordances, or an immediate playable/interactive entry state.'
   },
   {
-    num: 7, stage: 1, stageName: 'Research',
-    title: 'Core UX Flow and Friction Points',
-    directive: 'Study the shortest possible path from opening index.html to completing the primary task or core game loop. Pinpoint every step where ambiguous labels, extra clicks, slow transitions, awkward scrolling, or unnecessary modal detours could break user momentum.'
+    num: 7, stage: 1, stageName: 'Discovery', section: '1B: Friction & Edge',
+    role: 'Core Loop & Flow Cartographer',
+    upstreamInputs: 'Steps 1, 4, 6',
+    downstreamTarget: 'Steps 12 & 17 (Journey & Feedback Loops)',
+    directive: 'Trace the tightest possible Action -> Feedback -> Outcome loop (for apps/tools: task completion; for games: challenge-action-reward; for experimental: parameter-mutation-response) and flag every unnecessary click or detour.'
   },
   {
-    num: 8, stage: 1, stageName: 'Research',
-    title: 'Platform Expectations, Mobile Ergonomics and Accessibility',
-    directive: 'Research target platform conventions across desktop and mobile: WCAG 2.2 AA contrast (>=4.5:1), semantic landmarks, screen-reader ARIA live regions, colorblind-safe multi-sensory cues, desktop keyboard shortcuts, and thumb-friendly mobile layouts (>=44x44px tap targets, safe-area insets, zero horizontal overflow).'
+    num: 8, stage: 1, stageName: 'Discovery', section: '1C: Platform & Trust',
+    role: 'Accessibility & Ergonomics Specialist',
+    upstreamInputs: 'Steps 2 & 4 + A11y/Motion Config',
+    downstreamTarget: 'Steps 25 & 36 (Input Parity & Contrast)',
+    directive: 'Establish concrete ergonomic and accessibility requirements: WCAG contrast targets, ARIA live announcements, colorblind-safe multi-sensory cues, desktop keyboard shortcuts, and >=44x44px mobile thumb-zone ergonomics.'
   },
   {
-    num: 9, stage: 1, stageName: 'Research',
-    title: 'Trust, Local-Only Privacy and Zero-Backend Value Fit',
-    directive: 'Because the app runs 100% client-side in three files with zero backend, servers, ads, or paywalls, research how to maximize user trust: transparent local-only localStorage persistence, zero tracking/telemetry, clear data ownership (easy export/reset), and reliable offline-ready execution.'
+    num: 9, stage: 1, stageName: 'Discovery', section: '1C: Platform & Trust',
+    role: 'Client-Side Privacy & Persistence Strategist',
+    upstreamInputs: 'Data Persistence Config + Project Type',
+    downstreamTarget: 'Steps 18 & 28 (Data Minimization & Storage)',
+    directive: 'Define how 100% local-only execution builds user trust: zero tracking/telemetry, transparent local persistence (localStorage/IndexedDB), private-browsing fallbacks, and effortless export/reset ownership.'
   },
   {
-    num: 10, stage: 1, stageName: 'Research',
-    title: 'Discovery, Shareability and Audience Search Language',
-    directive: 'Identify where the target audience discovers standalone web tools or games (search, niche communities, itch.io, GitHub, direct link sharing) and capture the exact plain-language terminology, page title/meta cues, and self-explanatory UI copy that make the app immediately clear when opened cold.'
+    num: 10, stage: 1, stageName: 'Discovery', section: '1C: Platform & Trust',
+    role: 'Domain Language & Copy Architect',
+    upstreamInputs: 'Steps 1–9 + Prompt',
+    downstreamTarget: 'Steps 16 & 48 (IA & Semantic UI Copy)',
+    directive: 'Synthesize the exact plain-language terminology, microcopy, status labels, page title/meta description, and self-explanatory control names so a cold visitor understands every control instantaneously.'
   },
 
   // =========================================================================
-  // STAGE 2: REASONING (Steps 11–20)
+  // STAGE 2: SYSTEMS REASONING & ARCHITECTURE (Steps 11–20)
   // =========================================================================
   {
-    num: 11, stage: 2, stageName: 'Reasoning',
-    title: 'Core Scope and Strict MVP Boundaries',
-    directive: 'Synthesize Stage 1 research to lock the single core workflow or game loop that delivers the primary user benefit. Explicitly separate non-negotiable essentials from "nice-to-have" bloat so every shipped feature is deeply polished within three standalone files.'
+    num: 11, stage: 2, stageName: 'Systems', section: '2A: Scope & Journey',
+    role: 'Scope & MVP Boundary Lead',
+    upstreamInputs: 'Stage 1 (Steps 1–10) + Mode Essentials',
+    downstreamTarget: 'Steps 12–20 & Step 41 Inventory',
+    directive: 'Consolidate Stage 1 into a strict, high-craft MVP boundary. Explicitly list every in-scope feature and every out-of-scope distraction cut to keep the 3-file implementation razor-sharp and bug-free.'
   },
   {
-    num: 12, stage: 2, stageName: 'Reasoning',
-    title: 'Primary User Journey & Shortest Path to Value',
-    directive: 'Map the exact end-to-end path a user takes from opening index.html to getting value or completing a game loop, ruthlessly stripping unnecessary steps, redundant confirmations, multi-field forms, and decision fatigue along the way.'
+    num: 12, stage: 2, stageName: 'Systems', section: '2A: Scope & Journey',
+    role: 'User Journey Optimizer',
+    upstreamInputs: 'Steps 6, 7, 11',
+    downstreamTarget: 'Steps 16 & 23 (IA & DOM Skeleton)',
+    directive: 'Lock the step-by-step primary user/player journey from cold page load to peak value, eliminating redundant confirmations, nested menus, and cognitive friction.'
   },
   {
-    num: 13, stage: 2, stageName: 'Reasoning',
-    title: 'Intentional Architectural & UX Trade-offs',
-    directive: 'Weigh competing priorities—simplicity vs. power-user customization, instant load speed vs. heavy visual effects, compact desktop density vs. mobile breathing room, and smart defaults vs. manual configuration—justifying each choice based on target user needs.'
+    num: 13, stage: 2, stageName: 'Systems', section: '2A: Scope & Journey',
+    role: 'Principal Systems Trade-off Engineer',
+    upstreamInputs: 'Steps 11–12 + Platform/Motion Config',
+    downstreamTarget: 'Steps 15 & 21 (Stack & Module Structure)',
+    directive: 'Resolve competing engineering trade-offs (power-user density vs. calm minimalism, visual richness vs. battery/60fps budget, smart defaults vs. manual knobs) with explicit rationale tied to the selected project type.'
   },
   {
-    num: 14, stage: 2, stageName: 'Reasoning',
-    title: 'Edge Cases, Boundary Inputs and Empty States',
-    directive: 'Reason through non-ideal conditions: 0-item first-time empty states, 1,000+ item stress loads, invalid or extreme user inputs, rapid double-taps, narrow 320px mobile viewports, mid-session page reloads, and blocked or full localStorage in private browsing.'
+    num: 14, stage: 2, stageName: 'Systems', section: '2B: Edge Cases & Stack',
+    role: 'Adversarial Edge-Case Engineer',
+    upstreamInputs: 'Steps 4, 11, 12',
+    downstreamTarget: 'Steps 28–30 & Step 41 Audit',
+    directive: 'Enumerate all boundary conditions: 0-item empty state, 1,000+ item or high-entity stress load, malformed imports, rapid double-taps, 320px narrow mobile viewports, mid-session reloads, and disabled/full storage.'
   },
   {
-    num: 15, stage: 2, stageName: 'Reasoning',
-    title: 'Zero-Dependency Three-File Stack & Browser API Fit',
-    directive: 'Validate how pure semantic HTML5, modern CSS3, and Vanilla ES6+ JavaScript (index.html, style.css, script.js) satisfy every requirement with zero backend, zero build step, and zero external runtime dependencies—selecting native APIs (localStorage, Blob, Canvas, SVG, Web Audio, Pointer Events, Intl, requestAnimationFrame) only where they add genuine value.'
+    num: 15, stage: 2, stageName: 'Systems', section: '2B: Edge Cases & Stack',
+    role: 'Web Platform & Library Integration Architect',
+    upstreamInputs: 'HTML5/CSS3/JS Config + Selected CDN Libraries',
+    downstreamTarget: 'Steps 21–30 & Steps 48–50',
+    directive: 'Map every feature to the exact HTML5 APIs, CSS3 capabilities, and (if selected) CDN libraries from the Studio Blueprint—justifying how index.html, style.css, and script.js collaborate with zero unrequested dependencies.'
   },
   {
-    num: 16, stage: 2, stageName: 'Reasoning',
-    title: 'Information Architecture and Visual Hierarchy',
-    directive: 'Organize workspaces, toolbars, cards, secondary drawers/modals, and progressive disclosure tiers so the primary action is immediately obvious at a glance while secondary settings, export/import, and power options stay cleanly tucked out of sight.'
+    num: 16, stage: 2, stageName: 'Systems', section: '2B: Edge Cases & Stack',
+    role: 'Information Architecture Director',
+    upstreamInputs: 'Steps 10, 12 + Selected Interface Design',
+    downstreamTarget: 'Steps 23 & 33 (HTML Skeleton & Spatial Grid)',
+    directive: 'Structure primary stage, secondary drawers/dialogs, toolbars, and progressive disclosure tiers to match the chosen Interface Design so primary actions dominate the visual hierarchy.'
   },
   {
-    num: 17, stage: 2, stageName: 'Reasoning',
-    title: 'Feedback Loops, Tactile Responsiveness and App/Game Feel',
-    directive: 'Reason through every user interaction to guarantee immediate, unmistakable feedback—optimistic UI updates, inline validation, non-destructive undo/reset safety nets, crisp status indicators, and satisfying micro-rewards—so nothing ever feels broken or unresponsive.'
+    num: 17, stage: 2, stageName: 'Systems', section: '2B: Edge Cases & Stack',
+    role: 'Interaction & Feedback Loop Engineer',
+    upstreamInputs: 'Steps 7, 13 + Sensory/Audio Config',
+    downstreamTarget: 'Steps 30, 38, 40 (Audio, Tactile & Living States)',
+    directive: 'Specify the immediate feedback contract for every user action—optimistic DOM updates, inline validation, non-destructive undo/reset, synthesized audio/haptic cues, and clear busy/idle indicators.'
   },
   {
-    num: 18, stage: 2, stageName: 'Reasoning',
-    title: 'Client-Side Privacy and Local Data Minimization',
-    directive: 'With zero backend or server storage, decide the bare minimum state needed in localStorage, avoiding unnecessary personal data while designing schema versioning, an in-memory fallback for restricted storage contexts, and one-click user control to export or wipe local data.'
+    num: 18, stage: 2, stageName: 'Systems', section: '2C: Quality & Sequence',
+    role: 'Client Storage & Schema Designer',
+    upstreamInputs: 'Steps 9, 14 + Data Persistence Config',
+    downstreamTarget: 'Steps 22 & 28 (Central State & Storage Layer)',
+    directive: 'Design the minimal versioned JSON schema (or IndexedDB store), corrupt-payload recovery, in-memory fallback, and user-controlled export/import/wipe flows.'
   },
   {
-    num: 19, stage: 2, stageName: 'Reasoning',
-    title: 'Measurable Success Criteria and Quality Benchmarks',
-    directive: 'Define what "working exceptionally well" looks like in concrete, testable terms—such as sub-second cold load, task completion in minimal steps, smooth 60Hz–120Hz frame-rate-independent responsiveness, zero console errors, full keyboard/touch parity, and reliable reload persistence.'
+    num: 19, stage: 2, stageName: 'Systems', section: '2C: Quality & Sequence',
+    role: 'Quality & Performance Benchmark Lead',
+    upstreamInputs: 'Steps 11–18 + Motion/A11y Config',
+    downstreamTarget: 'Steps 47–50 (Verification & Code)',
+    directive: 'Define measurable acceptance criteria: sub-second cold load, zero console errors, 60Hz–120Hz frame-rate stability, full keyboard/touch parity, WCAG contrast compliance, and 100% reload persistence.'
   },
   {
-    num: 20, stage: 2, stageName: 'Reasoning',
-    title: 'Iterative Build Sequence and Verification Strategy',
-    directive: 'Structure the logical progression from semantic DOM skeleton and central state model to core engine logic, mobile-first styling, sensory polish, and integration checks—locking non-negotiable engineering invariants that keep index.html, style.css, and script.js synchronized.'
+    num: 20, stage: 2, stageName: 'Systems', section: '2C: Quality & Sequence',
+    role: 'Build Sequence & Invariants Architect',
+    upstreamInputs: 'All Stage 2 Decisions (Steps 11–19)',
+    downstreamTarget: 'Stage 3 Blueprinting (Steps 21–30)',
+    directive: 'Lock the non-negotiable architectural invariants and dependency order connecting DOM hooks, CSS state classes, and JS modules so index.html, style.css, and script.js remain 100% synchronized.'
   },
 
   // =========================================================================
-  // STAGE 3: PLANNING (Steps 21–30)
+  // STAGE 3: BLUEPRINTING & TECHNICAL CONTRACTS (Steps 21–30)
   // =========================================================================
   {
-    num: 21, stage: 3, stageName: 'Planning',
-    title: 'Internal Sections and Modular Architecture for script.js',
-    directive: 'Plan a consistent top-to-bottom structure for script.js (strict-mode/IIFE encapsulation, constants & seed data, central state, DOM hooks, pure domain logic, persistence helpers, batched renderers, Web Audio/Canvas effects, event delegation, reset(), and init()) for fast debugging and zero global pollution.'
+    num: 21, stage: 3, stageName: 'Blueprint', section: '3A: JS & State',
+    role: 'JavaScript Module Architect',
+    upstreamInputs: 'Steps 15, 20 + JS Architecture Config',
+    downstreamTarget: 'Step 46 & Step 50 (script.js)',
+    directive: 'Define the exact top-to-bottom section layout of script.js (strict IIFE/module encapsulation, constants & seed data, central state/FSM, DOM cache, pure domain/simulation logic, persistence, batched renderers, audio/canvas FX, delegated listeners, reset(), init()).'
   },
   {
-    num: 22, stage: 3, stageName: 'Planning',
-    title: 'Single Central state Object and Unidirectional Render Flow',
-    directive: 'Store all app or game data in one central state object with pure derived selectors and a deterministic unidirectional flow (Action -> State Update -> Persist -> Targeted Render), eliminating out-of-sync UI panels and guaranteeing predictable behavior.'
+    num: 22, stage: 3, stageName: 'Blueprint', section: '3A: JS & State',
+    role: 'State Schema & Unidirectional Data Lead',
+    upstreamInputs: 'Steps 18, 21',
+    downstreamTarget: 'Step 46 & Step 50 (script.js)',
+    directive: 'Specify the exact central state object shape, derived selectors, FSM states (if applicable), and unidirectional Action -> State -> Persist -> Targeted Render pipeline eliminating stale UI.'
   },
   {
-    num: 23, stage: 3, stageName: 'Planning',
-    title: 'Mobile-Ready index.html Skeleton and Semantic Hooks',
-    directive: 'Blueprint semantic index.html with <link rel="stylesheet" href="style.css">, <script src="script.js" defer></script>, <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">, landmarks, <template> blocks, ARIA attributes, and dedicated id/data-* hooks separate from styling classes.'
+    num: 23, stage: 3, stageName: 'Blueprint', section: '3B: HTML5 & CSS3',
+    role: 'Semantic HTML5 & Accessibility Architect',
+    upstreamInputs: 'Steps 8, 16 + HTML5 Config + Selected CDN Libs',
+    downstreamTarget: 'Step 42 & Step 48 (index.html)',
+    directive: 'Blueprint the exact index.html DOM tree: viewport-fit=cover meta, CDN tags (if selected), semantic landmarks, <dialog>/popover elements, <template> blocks, inline <svg> defs, ARIA live regions, and dedicated id/data-* hooks.'
   },
   {
-    num: 24, stage: 3, stageName: 'Planning',
-    title: 'Mobile-First style.css with :root Tokens and State Classes',
-    directive: 'Plan style.css starting with :root custom properties and mobile-first base rules, scaling cleanly with Flexbox/CSS Grid, fluid clamp() sizing, safe-area inset padding (env(safe-area-inset-*)), and toggleable state classes (.is-active, .is-hidden, .is-loading, .is-error) to prevent specificity battles.'
+    num: 24, stage: 3, stageName: 'Blueprint', section: '3B: HTML5 & CSS3',
+    role: 'CSS3 Architecture & Token Systems Engineer',
+    upstreamInputs: 'Steps 16, 23 + CSS3 Config',
+    downstreamTarget: 'Step 43 & Step 49 (style.css)',
+    directive: 'Blueprint style.css architecture: @layer cascade order (if enabled), :root design tokens, mobile-first Grid/Flexbox/Subgrid, @container queries, :has() rules, safe-area env() padding, and toggleable state classes (.is-active, .is-hidden, .is-loading, .is-error).'
   },
   {
-    num: 25, stage: 3, stageName: 'Planning',
-    title: 'Touch-Friendly Controls and Cross-Device Input Parity',
-    directive: 'Plan minimum 44x44px tap targets, thumb-zone control placement, unified PointerEvent handlers (instead of mouse-only events), touch-action CSS rules to prevent accidental pinch-zoom or pull-to-refresh in games/canvases, and full desktop keyboard shortcuts (safely ignoring active text inputs).'
+    num: 25, stage: 3, stageName: 'Blueprint', section: '3C: Input & Engine',
+    role: 'Cross-Device Input & Ergonomics Engineer',
+    upstreamInputs: 'Steps 8, 23 + Platform Config',
+    downstreamTarget: 'Step 44 & Step 50 (Input Handlers)',
+    directive: 'Map unified PointerEvent handlers, touch-action rules (preventing accidental pinch-zoom/pull-to-refresh on stages/canvases), >=44x44px thumb-zone targets, and complete desktop keyboard shortcuts with active-input focus guards.'
   },
   {
-    num: 26, stage: 3, stageName: 'Planning',
-    title: 'Root-Level Event Delegation Architecture',
-    directive: 'Attach listeners to stable parent containers in index.html using event.target.closest(...) instead of binding handlers to every dynamic button or list item—reducing memory overhead, surviving DOM re-renders, and keeping mobile processors responsive.'
+    num: 26, stage: 3, stageName: 'Blueprint', section: '3C: Input & Engine',
+    role: 'Event Delegation & Lifecycle Architect',
+    upstreamInputs: 'Steps 21, 23, 25',
+    downstreamTarget: 'Step 46 & Step 50 (script.js)',
+    directive: 'Map every interactive trigger to stable parent-container delegation using event.target.closest("[data-action]") so dynamic re-renders never leak memory or drop listeners.'
   },
   {
-    num: 27, stage: 3, stageName: 'Planning',
-    title: 'Safe, Fast DOM Updates and Mobile Battery Performance',
-    directive: 'Plan XSS-safe, high-speed DOM updates using <template> cloning, document.createDocumentFragment(), and textContent instead of heavy innerHTML rewrites—while avoiding layout-thrashing reads/writes and excessive full-screen blurs to preserve mobile smoothness and battery life.'
+    num: 27, stage: 3, stageName: 'Blueprint', section: '3C: Input & Engine',
+    role: 'DOM Performance & XSS-Safety Engineer',
+    upstreamInputs: 'Steps 14, 23',
+    downstreamTarget: 'Step 46 & Step 50 (script.js)',
+    directive: 'Specify XSS-safe DOM updates using <template> cloning, DocumentFragment batching, and textContent (zero unsafe innerHTML with user data), avoiding layout thrashing and heavy full-screen repaints.'
   },
   {
-    num: 28, stage: 3, stageName: 'Planning',
-    title: 'localStorage Safety, Versioning and Data Portability',
-    directive: 'Wrap all localStorage reads/writes in try/catch with a versioned JSON key, corrupt-data recovery, and an in-memory fallback for private browsing—paired with simple one-click clipboard copy or JSON/CSV export and validated import so user progress never vanishes.'
+    num: 28, stage: 3, stageName: 'Blueprint', section: '3C: Input & Engine',
+    role: 'Persistence & Portability Engineer',
+    upstreamInputs: 'Steps 9, 18',
+    downstreamTarget: 'Step 46 & Step 50 (script.js)',
+    directive: 'Detail try/catch localStorage/IndexedDB wrappers, versioned schema migration, in-memory fallback, and validated JSON/CSV/Blob export & import routines.'
   },
   {
-    num: 29, stage: 3, stageName: 'Planning',
-    title: 'Frame-Rate-Independent Loops and Clean reset() Logic',
-    directive: 'For games or animated tools, plan a single delta-time (clamped dt) requestAnimationFrame loop alongside a thorough reset() function that clears active timers/RAFs and restores clean initial/seed state—ensuring consistent speed across 60Hz desktops and 120Hz mobile screens.'
+    num: 29, stage: 3, stageName: 'Blueprint', section: '3C: Input & Engine',
+    role: 'Simulation Loop & Reset Lifecycle Engineer',
+    upstreamInputs: 'Steps 21, 22 + JS Arch Config',
+    downstreamTarget: 'Step 46 & Step 50 (script.js)',
+    directive: 'Specify the clamped delta-time (dt) requestAnimationFrame loop (or worker/timer loop) for 60Hz–120Hz consistency alongside a clean reset() lifecycle that cancels active RAFs/timers and restores seed state.'
   },
   {
-    num: 30, stage: 3, stageName: 'Planning',
-    title: 'Zero-Asset Sensory Feedback and Error Guardrails',
-    directive: 'Plan inline <svg> icons, <canvas> visuals, Web Audio API synthesized sound effects (safely unlocked on the user first tap/gesture for mobile browsers, with a mute toggle), and lightweight try/catch + aria-live toast guardrails—keeping everything self-contained in three files.'
+    num: 30, stage: 3, stageName: 'Blueprint', section: '3C: Input & Engine',
+    role: 'Sensory Audio & Resilience Engineer',
+    upstreamInputs: 'Steps 17, 19 + Sensory/Audio Config',
+    downstreamTarget: 'Step 45 & Step 50 (script.js)',
+    directive: 'Specify Web Audio API procedural synthesis (unlocked safely on first user gesture with persisted mute toggle) or library audio hooks, paired with try/catch error boundaries and aria-live toast notifications.'
   },
 
   // =========================================================================
-  // STAGE 4: DESIGN (Steps 31–40)
+  // STAGE 4: VISUAL CRAFT, LIGHTING & MOTION SYSTEM (Steps 31–40)
   // =========================================================================
   {
-    num: 31, stage: 4, stageName: 'Designing',
-    title: 'Visual Direction, Mood and 60-30-10 Color Tokens',
-    directive: 'Choose an intentional aesthetic (e.g., crisp editorial utility, tactile retro, frosted matte, or vibrant arcade) built on :root hex/HSL tokens following a 60-30-10 balance (neutral canvas, elevated surfaces, one sharp accent, plus semantic status hues) with verified contrast and optional light/dark parity.'
+    num: 31, stage: 4, stageName: 'Visual Craft', section: '4A: Color & Type',
+    role: 'Color System & Aesthetic Director',
+    upstreamInputs: 'Selected Design Style + Lighting Style + CSS3 Config',
+    downstreamTarget: 'Step 43 & Step 49 (style.css)',
+    directive: 'Define exact :root hex/oklch() color tokens adhering to the chosen Design Style and a 60-30-10 balance (canvas, elevated surfaces, primary accent, semantic status hues) with verified contrast.'
   },
   {
-    num: 32, stage: 4, stageName: 'Designing',
-    title: 'Typography, Hierarchy, clamp() Scale and Optical Rhythm',
-    directive: 'Pair clean, legible system/modern fonts with a fluid clamp() type scale, tight tracking on large headings, wider uppercase tracking on micro-labels, comfortable line-heights, and font-variant-numeric: tabular-nums for live timers, counters, or scores so numbers never jitter.'
+    num: 32, stage: 4, stageName: 'Visual Craft', section: '4A: Color & Type',
+    role: 'Typography & Optical Rhythm Designer',
+    upstreamInputs: 'Steps 10, 31 + CSS3 Config',
+    downstreamTarget: 'Step 43 & Step 49 (style.css)',
+    directive: 'Specify font pairings, fluid clamp() type scale, display tracking, uppercase micro-label spacing, comfortable line-heights, and font-variant-numeric: tabular-nums for live counters/timers/scores.'
   },
   {
-    num: 33, stage: 4, stageName: 'Designing',
-    title: 'Spatial Grid, Breathing Room and Mobile Thumb Zones',
-    directive: 'Anchor all layout spacing to a strict 4px or 8px scale with generous padding, clear visual focal points, balanced density, and primary interactive controls positioned within comfortable thumb reach on mobile viewports.'
+    num: 33, stage: 4, stageName: 'Visual Craft', section: '4A: Color & Type',
+    role: 'Spatial Grid & Thumb-Zone Layout Designer',
+    upstreamInputs: 'Steps 16, 25 + Selected Interface Design',
+    downstreamTarget: 'Step 43 & Step 49 (style.css)',
+    directive: 'Define the 4px/8px spacing scale, responsive breakpoints, @container card adaptations, visual focal hierarchy, and ergonomic mobile thumb-zone placement matching the selected Interface Design.'
   },
   {
-    num: 34, stage: 4, stageName: 'Designing',
-    title: 'Surface Textures, Subtle Grain and Tactile Depth',
-    directive: 'Layer subtle CSS film grain (via inline SVG feTurbulence filter), faint dot-matrix or grid backgrounds (radial-gradient), selective frosted glass (backdrop-filter: blur()), and soft multi-layered directional shadows instead of flat solid rectangles so surfaces feel custom-crafted.'
+    num: 34, stage: 4, stageName: 'Visual Craft', section: '4B: Surface & Light',
+    role: 'Surface Texture & Materiality Artist',
+    upstreamInputs: 'Selected Design Style + Element Style',
+    downstreamTarget: 'Step 43 & Step 49 (style.css)',
+    directive: 'Specify CSS surface craftsmanship—subtle inline SVG noise/grain, dot-matrix/grid backgrounds, selective backdrop-filter glass, or bold ink fills—tailored to the selected Design Style without hurting mobile FPS.'
   },
   {
-    num: 35, stage: 4, stageName: 'Designing',
-    title: 'Lighting, Borders, Nested Radii and Micro-Details',
-    directive: 'Add 1px top-edge inner specular highlights (inset 0 1px 0), subtle gradient or hairline borders, mathematically nested border-radius values (outer radius = inner radius + padding), and custom ::selection and scrollbar styling for cohesive light and native-app polish.'
+    num: 35, stage: 4, stageName: 'Visual Craft', section: '4B: Surface & Light',
+    role: 'Lighting, Specular & Nested-Radii Director',
+    upstreamInputs: 'Selected Lighting Style + Element Style',
+    downstreamTarget: 'Step 43 & Step 49 (style.css)',
+    directive: 'Translate the selected Lighting Style & Element Style into exact CSS shadow stacks, 1px specular top-edge highlights (inset 0 1px 0), border gradients, mathematically nested border-radius values, and custom ::selection/scrollbars.'
   },
   {
-    num: 36, stage: 4, stageName: 'Designing',
-    title: 'Accessible Contrast and Multi-Sensory State Cues',
-    directive: 'Maintain >=4.5:1 text contrast (>=3:1 UI graphics) for outdoor mobile readability while pairing color with distinct inline SVG icons, border patterns, or explicit labels for success, warning, error, and active states so clarity never depends on color alone.'
+    num: 36, stage: 4, stageName: 'Visual Craft', section: '4B: Surface & Light',
+    role: 'Contrast & Multi-Sensory Cue Designer',
+    upstreamInputs: 'Steps 8, 31, 35',
+    downstreamTarget: 'Steps 48–50',
+    directive: 'Audit all foreground/background token pairs for >=4.5:1 text contrast (>=3:1 UI graphics) and pair every color state with distinct inline SVG icons, border treatments, or explicit text labels.'
   },
   {
-    num: 37, stage: 4, stageName: 'Designing',
-    title: 'Motion Choreography, Custom Easing and Reduced-Motion Rules',
-    directive: 'Replace stiff linear transitions with custom cubic-bezier curves, staggered list entrances, and GPU-accelerated transform/opacity animations—always paired with a strict @media (prefers-reduced-motion: reduce) fallback to keep users spatially oriented and comfortable.'
+    num: 37, stage: 4, stageName: 'Visual Craft', section: '4C: Motion & Craft',
+    role: 'Motion Choreography & Transition Director',
+    upstreamInputs: 'Motion Config + CSS3 Config',
+    downstreamTarget: 'Step 43 & Step 49 (style.css)',
+    directive: 'Define custom cubic-bezier easing curves, View Transitions / scroll-driven rules (if selected), staggered entrances, GPU-only transform/opacity animations, and strict @media (prefers-reduced-motion: reduce) fallbacks.'
   },
   {
-    num: 38, stage: 4, stageName: 'Designing',
-    title: 'Micro-Interactions and Tactile Control States',
-    directive: 'Design responsive :hover lifts, crisp press-down feedback (transform: scale(0.97) on :active), high-contrast :focus-visible rings, and smooth toggle, chip, or slider transitions so every control feels physically responsive under a finger or cursor.'
+    num: 38, stage: 4, stageName: 'Visual Craft', section: '4C: Motion & Craft',
+    role: 'Tactile Micro-Interaction Designer',
+    upstreamInputs: 'Steps 35, 37 + Element Style',
+    downstreamTarget: 'Step 49 (style.css)',
+    directive: 'Specify :hover lifts, crisp :active press feedback, high-contrast :focus-visible rings, and smooth toggle/slider/chip state transitions tailored to the selected Element Style.'
   },
   {
-    num: 39, stage: 4, stageName: 'Designing',
-    title: 'Custom Inline SVG Craft and Canvas Visual Effects',
-    directive: 'Design inline <svg> icons with uniform viewBox and stroke weights, animated SVG line-draws (stroke-dashoffset) or progress meters, and <canvas> particle trails, ripples, or ambient shaders where appropriate—keeping all visuals razor-sharp inside the three files.'
+    num: 39, stage: 4, stageName: 'Visual Craft', section: '4C: Motion & Craft',
+    role: 'Inline SVG & Canvas Visual Artist',
+    upstreamInputs: 'HTML5/JS Config + Selected Visual Styles',
+    downstreamTarget: 'Steps 45, 48, 50',
+    directive: 'Design the custom inline <svg> icon/illustration set (uniform viewBox & stroke weights) and <canvas>/particle visual effects aligned with the chosen Design & Lighting Style.'
   },
   {
-    num: 40, stage: 4, stageName: 'Designing',
-    title: 'Living States, Ambient Motion and Rewarding Celebrations',
-    directive: 'Craft inviting empty/zero states with helpful copy and a primary call-to-action, smooth shimmer/loading states, subtle ambient life, and rewarding completion moments (micro-confetti, floating score pop-ups, and optional Web Audio chimes) that deliver genuine delight.'
+    num: 40, stage: 4, stageName: 'Visual Craft', section: '4C: Motion & Craft',
+    role: 'Living States & Celebration Designer',
+    upstreamInputs: 'Steps 6, 17, 30, 39',
+    downstreamTarget: 'Steps 45, 48, 50',
+    directive: 'Craft inviting empty/zero states, smooth loading/shimmer states, subtle ambient life, and rewarding completion/victory moments (micro-confetti, floating popups, audio chimes).'
   },
 
   // =========================================================================
-  // STAGE 5: BUILDING (Steps 41–50)
+  // STAGE 5: PRE-BUILD AUDIT & PRODUCTION CODE SYNTHESIS (Steps 41–50)
   // =========================================================================
   {
-    num: 41, stage: 5, stageName: 'Build & Code',
-    title: 'Complete Feature, State and Edge-Case Inventory',
-    directive: 'Audit every user flow, interactive control, game rule, data field, empty state, error state, and reset condition across notes.txt before writing a line of code—guaranteeing zero missing features or forgotten edge cases and one unified mental model across index.html, style.css, and script.js.'
+    num: 41, stage: 5, stageName: 'Build & Code', section: '5A: Contracts',
+    role: 'Completeness & Edge-Case Auditor',
+    upstreamInputs: 'All Stages 1–4 (Steps 1–40)',
+    downstreamTarget: 'Steps 42–50',
+    directive: 'Audit every user flow, mode-specific essential, edge case, empty state, and reset condition across notes.txt to guarantee zero missing features or contradictions before locking code contracts.'
   },
   {
-    num: 42, stage: 5, stageName: 'Build & Code',
-    title: 'Exact DOM Contract and Component Blueprint',
-    directive: 'Map out the canonical manifest of every section, modal/drawer, <template>, id, data-* hook, ARIA attribute, and dynamic container alongside its exact CSS state classes (.is-active, .is-hidden, .is-loading, .is-error) so markup, styling, and logic synchronize with 0% selector mismatch.'
+    num: 42, stage: 5, stageName: 'Build & Code', section: '5A: Contracts',
+    role: 'Canonical DOM & Selector Contract Lead',
+    upstreamInputs: 'Steps 23, 26, 41',
+    downstreamTarget: 'Steps 48–50 (100% Selector Parity)',
+    directive: 'Publish the exact canonical manifest of every section, <dialog>, <template>, id, data-* hook, ARIA attribute, and CSS state class (.is-active, .is-hidden, .is-loading, .is-error) so HTML, CSS, and JS have 0% selector mismatch.'
   },
   {
-    num: 43, stage: 5, stageName: 'Build & Code',
-    title: 'Design Token, Texture and Motion Specification',
-    directive: 'Finalize the exact :root color palette, clamp() typography scale, 4px/8px spacing tokens, multi-layered shadows, inline SVG noise/grain or pattern layers, 1px inner highlights, nested border radii, and cubic-bezier easing curves—plus prefers-reduced-motion fallbacks—ready for verbatim CSS implementation.'
+    num: 43, stage: 5, stageName: 'Build & Code', section: '5A: Contracts',
+    role: 'Final CSS Token, Texture & Motion Specifier',
+    upstreamInputs: 'Steps 24, 31–38, 42',
+    downstreamTarget: 'Step 49 (style.css)',
+    directive: 'Lock the exact :root tokens, @layer blocks, typography clamp() scale, surface textures, lighting shadows/rims, nested radii, tactile states, and reduced-motion rules ready for verbatim CSS emission.'
   },
   {
-    num: 44, stage: 5, stageName: 'Build & Code',
-    title: 'Mobile-First Ergonomics and Cross-Device Input Mapping',
-    directive: 'Lock mobile viewport rules (viewport-fit=cover, safe-area insets), >=44x44px minimum tap targets, thumb-zone control placement, unified PointerEvent handlers, touch-action protections against accidental zooming or pull-to-refresh, and every desktop keyboard shortcut with input-focus guards.'
+    num: 44, stage: 5, stageName: 'Build & Code', section: '5A: Contracts',
+    role: 'Cross-Device Input & Responsive Specifier',
+    upstreamInputs: 'Steps 25, 33, 42',
+    downstreamTarget: 'Steps 48–50',
+    directive: 'Lock mobile viewport/safe-area rules, >=44x44px tap targets, touch-action protections, pointer handlers, and every keyboard shortcut with input-focus guards.'
   },
   {
-    num: 45, stage: 5, stageName: 'Build & Code',
-    title: 'Self-Contained SVG, Canvas and Web Audio Engineering',
-    directive: 'Specify all zero-asset visual and audio modules in exact detail—crisp inline <svg> icons, <canvas> rendering or particle celebration routines, and Web Audio API synthesized feedback unlocked on first mobile tap with mute persistence—keeping the entire app strictly inside three files.'
+    num: 45, stage: 5, stageName: 'Build & Code', section: '5A: Contracts',
+    role: 'Visual, Audio & Library Integration Specifier',
+    upstreamInputs: 'Steps 15, 30, 39, 40 + Selected JS Libs',
+    downstreamTarget: 'Steps 48 & 50',
+    directive: 'Finalize exact inline <svg> assets, <canvas> rendering/particle routines, Web Audio synth patches, and any selected CDN library initialization hooks.'
   },
   {
-    num: 46, stage: 5, stageName: 'Build & Code',
-    title: 'Algorithm, Persistence and Performance Architecture',
-    directive: 'Finalize the core algorithms, delta-time requestAnimationFrame loop (if animated/game), parent-level event delegation map, DocumentFragment + <template> DOM batching, versioned try/catch localStorage persistence (plus export/import where useful), and clean reset() lifecycle.'
+    num: 46, stage: 5, stageName: 'Build & Code', section: '5A: Contracts',
+    role: 'Core Algorithm, State & Persistence Specifier',
+    upstreamInputs: 'Steps 21, 22, 26–29, 42',
+    downstreamTarget: 'Step 50 (script.js)',
+    directive: 'Lock the exact central state schema, domain/game algorithms, delta-time RAF loop (if needed), root event delegation map, DocumentFragment/<template> renderers, storage keys, and reset() routine.'
   },
   {
-    num: 47, stage: 5, stageName: 'Build & Code',
-    title: 'Final Pre-Build Harmony and Completeness Check',
-    directive: 'Cross-verify that every research insight, UX reasoning decision, visual texture, accessibility requirement, XSS guard, and mobile constraint is accounted for with zero TODOs, stubs, or half-wired features—setting up index.html, style.css, and script.js to lock together cleanly.'
+    num: 47, stage: 5, stageName: 'Build & Code', section: '5A: Contracts',
+    role: 'Final Pre-Build Harmony Gatekeeper',
+    upstreamInputs: 'Steps 41–46',
+    downstreamTarget: 'Steps 48, 49, 50',
+    directive: 'Perform a final cross-check of Steps 41–46: confirm every selected Blueprint option, library CDN, accessibility rule, and DOM/CSS/JS hook locks together seamlessly with zero TODOs or stubs.'
   },
   {
-    num: 48, stage: 5, stageName: 'Build & Code',
-    title: 'Develop and Build the Full index.html File',
+    num: 48, stage: 5, stageName: 'Build & Code', section: '5B: Code Output',
     targetFile: 'html',
-    directive: 'Write the complete, production-ready index.html with mobile-optimized <meta> tags (viewport-fit=cover), semantic landmarks, accessible ARIA labels/live regions, inline <svg> assets, <template> blocks for dynamic elements, every locked id/data-* hook from Steps 42–47, <link rel="stylesheet" href="style.css">, and <script src="script.js" defer></script>. Zero placeholder comments or omitted markup. Output ONLY valid HTML code.'
+    role: 'Principal HTML5 Engineer',
+    upstreamInputs: 'Steps 42, 44, 45, 47 + Blueprint CDN Tags',
+    downstreamTarget: 'index.html Deliverable & Step 49–50',
+    directive: 'Write the complete, production-ready index.html implementing every semantic landmark, <meta viewport-fit=cover>, ARIA attributes, inline <svg> assets, <template> blocks, selected CDN tags (if any), every locked id/data-* hook from Step 42, <link rel="stylesheet" href="style.css">, and <script src="script.js" defer></script>. Output ONLY valid HTML code.'
   },
   {
-    num: 49, stage: 5, stageName: 'Build & Code',
-    title: 'Develop and Build the Full style.css File',
+    num: 49, stage: 5, stageName: 'Build & Code', section: '5B: Code Output',
     targetFile: 'css',
-    directive: 'Write the complete, production-ready style.css implementing every :root design token, mobile-first responsive Grid/Flexbox layout, surface textures/grain, inner lighting, nested border radii, >=44px touch targets, touch-action rules, tactile control states, fluid cubic-bezier animations, @media (prefers-reduced-motion: reduce) rules, and state classes matching index.html (Step 48). Zero placeholders or omitted rules. Output ONLY valid CSS code.'
+    role: 'Principal CSS3 & Visual Engineer',
+    upstreamInputs: 'Steps 43, 44, 48 (index.html)',
+    downstreamTarget: 'style.css Deliverable & Step 50',
+    directive: 'Write the complete, production-ready style.css implementing every :root token, selected Design/Element/Lighting style, CSS3 features, mobile-first Grid/Flexbox, >=44px touch targets, tactile states, fluid motion, prefers-reduced-motion rules, and state classes matching Step 48 index.html. Output ONLY valid CSS code.'
   },
   {
-    num: 50, stage: 5, stageName: 'Build & Code',
-    title: 'Develop and Build the Full script.js File',
+    num: 50, stage: 5, stageName: 'Build & Code', section: '5B: Code Output',
     targetFile: 'js',
-    directive: 'Write the complete, production-ready script.js organized into clear sections (constants & seed data, central state, DOM cache, pure core logic, safe localStorage persistence & export, batched <template>/DocumentFragment renderers, root event delegation, pointer/keyboard handlers, Web Audio/Canvas effects, reset(), and init()) matching 100% of index.html (Step 48) and style.css (Step 49) with full error handling and zero stubs or TODOs. Output ONLY valid JavaScript code.'
+    role: 'Principal JavaScript Systems Engineer',
+    upstreamInputs: 'Steps 45, 46, 48 (index.html), 49 (style.css)',
+    downstreamTarget: 'script.js Deliverable & Live Preview',
+    directive: 'Write the complete, production-ready script.js organized into clean sections matching 100% of Step 48 index.html hooks and Step 49 style.css state classes, with full error handling, persistence, sensory feedback, and zero stubs or TODOs. Output ONLY valid JavaScript code.'
   }
 ];
 
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+
+function createDefaultStudioConfig(type = 'app') {
+  const mode = STUDIO_CATALOG.projectTypes[type] || STUDIO_CATALOG.projectTypes.app;
+  const d = mode.defaults;
+  return {
+    projectType: mode.id,
+    targetPlatform: d.targetPlatform,
+    dataPersistence: d.dataPersistence,
+    sensoryAudio: d.sensoryAudio,
+    a11yMotion: d.a11yMotion,
+    targetAudience: '',
+    extraConstraints: '',
+    interfaceDesign: d.interfaceDesign,
+    designStyle: d.designStyle,
+    elementStyle: d.elementStyle,
+    lightingStyle: d.lightingStyle,
+    html5: [...d.html5],
+    css3: [...d.css3],
+    jsArch: [...d.jsArch],
+    jsLibs: [...d.jsLibs],
+    essentials: [...d.essentials]
+  };
+}
 
 const state = {
   apiKeys: [],
@@ -289,6 +767,8 @@ const state = {
   osNotifEnabled: true,
   autoResumeOnReload: true,
   storagePersisted: false,
+  studioConfig: createDefaultStudioConfig('app'),
+  activeBpTab: 'essentials',
   userPrompt: '',
   notesText: '',
   htmlCode: '',
@@ -399,6 +879,37 @@ const el = {
   notifResumeBtn: document.getElementById('notifResumeBtn'),
   buildForm: document.getElementById('buildForm'),
   promptInput: document.getElementById('promptInput'),
+  projectTypeSelector: document.getElementById('projectTypeSelector'),
+  dynamicSamplePrompts: document.getElementById('dynamicSamplePrompts'),
+  blueprintSummaryChips: document.getElementById('blueprintSummaryChips'),
+  openBlueprintModalBtn: document.getElementById('openBlueprintModalBtn'),
+  blueprintModal: document.getElementById('blueprintModal'),
+  bpModalTypeBadge: document.getElementById('bpModalTypeBadge'),
+  closeBlueprintModalBtn: document.getElementById('closeBlueprintModalBtn'),
+  doneBlueprintModalBtn: document.getElementById('doneBlueprintModalBtn'),
+  applyRecommendedPresetBtn: document.getElementById('applyRecommendedPresetBtn'),
+  bpTargetPlatform: document.getElementById('bpTargetPlatform'),
+  bpDataPersistence: document.getElementById('bpDataPersistence'),
+  bpSensoryAudio: document.getElementById('bpSensoryAudio'),
+  bpA11yMotion: document.getElementById('bpA11yMotion'),
+  bpTargetAudience: document.getElementById('bpTargetAudience'),
+  bpExtraConstraints: document.getElementById('bpExtraConstraints'),
+  dynamicEssentialsTitle: document.getElementById('dynamicEssentialsTitle'),
+  dynamicEssentialsSubtitle: document.getElementById('dynamicEssentialsSubtitle'),
+  dynamicEssentialsBadge: document.getElementById('dynamicEssentialsBadge'),
+  dynamicCategoryEssentials: document.getElementById('dynamicCategoryEssentials'),
+  interfaceGallery: document.getElementById('interfaceGallery'),
+  designStyleGallery: document.getElementById('designStyleGallery'),
+  elementStyleGallery: document.getElementById('elementStyleGallery'),
+  lightingStyleGallery: document.getElementById('lightingStyleGallery'),
+  html5OptionsGrid: document.getElementById('html5OptionsGrid'),
+  css3OptionsGrid: document.getElementById('css3OptionsGrid'),
+  jsArchOptionsGrid: document.getElementById('jsArchOptionsGrid'),
+  jsLibsOptionsGrid: document.getElementById('jsLibsOptionsGrid'),
+  html5SelectedCount: document.getElementById('html5SelectedCount'),
+  css3SelectedCount: document.getElementById('css3SelectedCount'),
+  jsArchSelectedCount: document.getElementById('jsArchSelectedCount'),
+  jsLibsSelectedCount: document.getElementById('jsLibsSelectedCount'),
   startBuildBtn: document.getElementById('startBuildBtn'),
   pauseBtn: document.getElementById('pauseBtn'),
   resumeBtn: document.getElementById('resumeBtn'),
@@ -475,6 +986,10 @@ function safeSet(key, val) {
   }
 }
 
+function saveStudioConfig() {
+  safeSet('wbs_studio_config', JSON.stringify(state.studioConfig));
+}
+
 function saveWorkspaceSnapshot() {
   safeSet('wbs_prompt', state.userPrompt);
   safeSet('wbs_notes', state.notesText);
@@ -491,6 +1006,7 @@ function saveWorkspaceSnapshot() {
     compactCompleted[k] = { timestamp: state.completedSteps[k].timestamp || '' };
   });
   safeSet('wbs_completed_meta', JSON.stringify(compactCompleted));
+  saveStudioConfig();
 }
 
 function saveKeyPool() {
@@ -577,6 +1093,312 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+// =========================================================================
+// STUDIO BLUEPRINT CONFIGURATOR UI & DYNAMIC CONTEXT WEAVER
+// =========================================================================
+function findCatalogItem(list, id) {
+  return list.find((item) => item.id === id) || list[0];
+}
+
+function setProjectType(typeId, applyDefaults = true) {
+  const mode = STUDIO_CATALOG.projectTypes[typeId] || STUDIO_CATALOG.projectTypes.app;
+  if (applyDefaults) {
+    const fresh = createDefaultStudioConfig(mode.id);
+    fresh.targetAudience = state.studioConfig.targetAudience;
+    fresh.extraConstraints = state.studioConfig.extraConstraints;
+    state.studioConfig = fresh;
+  } else {
+    state.studioConfig.projectType = mode.id;
+  }
+  saveStudioConfig();
+  renderProjectTypeUI();
+  renderBlueprintSummaryStrip();
+  if (el.blueprintModal && !el.blueprintModal.classList.contains('hidden')) {
+    renderBlueprintModalContents();
+  }
+}
+
+function renderProjectTypeUI() {
+  const current = state.studioConfig.projectType;
+  document.querySelectorAll('#projectTypeSelector .proj-type-btn').forEach((btn) => {
+    const active = btn.dataset.type === current;
+    btn.className = active
+      ? 'proj-type-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-indigo-600/25 text-indigo-200 border-indigo-500/50'
+      : 'proj-type-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition flex items-center gap-1 bg-slate-900/90 text-slate-400 border-slate-800 hover:text-slate-200';
+  });
+
+  const mode = STUDIO_CATALOG.projectTypes[current] || STUDIO_CATALOG.projectTypes.app;
+  el.dynamicSamplePrompts.innerHTML = '';
+  mode.samplePrompts.forEach((sp) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'shrink-0 text-[11px] px-2 py-1 rounded bg-slate-800/90 hover:bg-slate-700 border border-slate-700/70 text-slate-300 transition';
+    b.textContent = sp.label;
+    b.addEventListener('click', () => {
+      if (state.isRunning) return;
+      el.promptInput.value = sp.prompt;
+      el.promptInput.focus();
+    });
+    el.dynamicSamplePrompts.appendChild(b);
+  });
+}
+
+function renderBlueprintSummaryStrip() {
+  if (!el.blueprintSummaryChips) return;
+  const cfg = state.studioConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+  const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
+  const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
+  const light = findCatalogItem(STUDIO_CATALOG.lightingStyles, cfg.lightingStyle);
+
+  const chips = [
+    { text: mode.label, cls: 'bg-indigo-500/15 text-indigo-200 border-indigo-500/35' },
+    { text: iface.name, cls: 'bg-slate-800/90 text-slate-300 border-slate-700' },
+    { text: style.name, cls: 'bg-fuchsia-500/10 text-fuchsia-200 border-fuchsia-500/30' },
+    { text: light.name, cls: 'bg-amber-500/10 text-amber-200 border-amber-500/30' },
+    { text: `HTML5:${cfg.html5.length}`, cls: 'bg-orange-500/10 text-orange-200 border-orange-500/30' },
+    { text: `CSS3:${cfg.css3.length}`, cls: 'bg-sky-500/10 text-sky-200 border-sky-500/30' },
+    { text: cfg.jsLibs.length > 0 ? `Libs:${cfg.jsLibs.length}` : 'Vanilla JS', cls: 'bg-emerald-500/10 text-emerald-200 border-emerald-500/30' }
+  ];
+
+  el.blueprintSummaryChips.innerHTML = chips
+    .map((c) => `<span class="shrink-0 px-1.5 py-0.5 rounded border ${c.cls}">${escapeHtml(c.text)}</span>`)
+    .join('');
+}
+
+function switchBlueprintTab(tabId) {
+  state.activeBpTab = tabId;
+  document.querySelectorAll('#blueprintTabs .bp-tab-btn').forEach((btn) => {
+    const active = btn.dataset.bpTab === tabId;
+    btn.className = active
+      ? 'bp-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600/25 text-indigo-200 border border-indigo-500/40 transition shrink-0'
+      : 'bp-tab-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200 transition shrink-0';
+  });
+  document.querySelectorAll('.bp-tab-panel').forEach((panel) => {
+    panel.classList.toggle('hidden', panel.id !== `bpTab-${tabId}`);
+  });
+}
+
+function renderVisualGallery(container, items, selectedId, onSelect) {
+  container.innerHTML = '';
+  items.forEach((item) => {
+    const isSel = item.id === selectedId;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `visual-ref-card${isSel ? ' is-selected' : ''}`;
+    btn.innerHTML = `
+      <div class="visual-ref-preview">${item.svg}</div>
+      <div class="flex items-center justify-between gap-1">
+        <span class="text-[11px] font-semibold text-slate-100 truncate">${escapeHtml(item.name)}</span>
+        ${isSel ? '<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span>' : ''}
+      </div>
+      <p class="text-[10px] text-slate-400 mt-0.5 leading-snug">${escapeHtml(item.desc)}</p>
+    `;
+    btn.addEventListener('click', () => {
+      onSelect(item.id);
+      saveStudioConfig();
+      renderBlueprintSummaryStrip();
+      renderVisualGallery(container, items, item.id, onSelect);
+    });
+    container.appendChild(btn);
+  });
+}
+
+function renderMultiToggleGrid(container, items, selectedList, countEl, onToggle, currentType = null) {
+  container.innerHTML = '';
+  if (countEl) countEl.textContent = `${selectedList.length} selected`;
+
+  items.forEach((item) => {
+    const isSel = selectedList.includes(item.id);
+    const isRecommended = currentType && Array.isArray(item.modes) && item.modes.includes(currentType);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `bp-toggle-card${isSel ? ' is-selected' : ''}`;
+    btn.innerHTML = `
+      <span class="mt-0.5 w-4 h-4 rounded border flex items-center justify-center shrink-0 ${isSel ? 'bg-indigo-600 border-indigo-400 text-white' : 'bg-slate-900 border-slate-700 text-transparent'}">
+        <svg viewBox="0 0 12 12" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+      </span>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[11px] font-semibold text-slate-100">${escapeHtml(item.label)}</span>
+          ${isRecommended ? '<span class="px-1 py-0.2 rounded text-[9px] font-mono-code bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Fit</span>' : ''}
+        </div>
+        <p class="text-[10px] text-slate-400 mt-0.5 leading-snug">${escapeHtml(item.desc)}</p>
+      </div>
+    `;
+    btn.addEventListener('click', () => {
+      onToggle(item.id);
+      saveStudioConfig();
+      renderBlueprintSummaryStrip();
+      renderMultiToggleGrid(container, items, selectedList, countEl, onToggle, currentType);
+    });
+    container.appendChild(btn);
+  });
+}
+
+function toggleArrayItem(arr, id) {
+  const idx = arr.indexOf(id);
+  if (idx === -1) arr.push(id);
+  else arr.splice(idx, 1);
+}
+
+function renderBlueprintModalContents() {
+  const cfg = state.studioConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+
+  el.bpModalTypeBadge.textContent = mode.label.toUpperCase();
+  el.bpTargetPlatform.value = cfg.targetPlatform;
+  el.bpDataPersistence.value = cfg.dataPersistence;
+  el.bpSensoryAudio.value = cfg.sensoryAudio;
+  el.bpA11yMotion.value = cfg.a11yMotion;
+  el.bpTargetAudience.value = cfg.targetAudience || '';
+  el.bpExtraConstraints.value = cfg.extraConstraints || '';
+
+  el.dynamicEssentialsTitle.textContent = `${mode.label} — Mode-Specific Essentials`;
+  el.dynamicEssentialsSubtitle.textContent = mode.roleLens;
+  el.dynamicEssentialsBadge.textContent = `${cfg.essentials.length}/${mode.categoryEssentials.length} Active`;
+
+  renderMultiToggleGrid(
+    el.dynamicCategoryEssentials,
+    mode.categoryEssentials,
+    cfg.essentials,
+    null,
+    (id) => {
+      toggleArrayItem(cfg.essentials, id);
+      el.dynamicEssentialsBadge.textContent = `${cfg.essentials.length}/${mode.categoryEssentials.length} Active`;
+    }
+  );
+
+  renderVisualGallery(el.interfaceGallery, STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign, (id) => {
+    cfg.interfaceDesign = id;
+  });
+  renderVisualGallery(el.designStyleGallery, STUDIO_CATALOG.designStyles, cfg.designStyle, (id) => {
+    cfg.designStyle = id;
+  });
+  renderVisualGallery(el.elementStyleGallery, STUDIO_CATALOG.elementStyles, cfg.elementStyle, (id) => {
+    cfg.elementStyle = id;
+  });
+  renderVisualGallery(el.lightingStyleGallery, STUDIO_CATALOG.lightingStyles, cfg.lightingStyle, (id) => {
+    cfg.lightingStyle = id;
+  });
+
+  renderMultiToggleGrid(el.html5OptionsGrid, STUDIO_CATALOG.html5Options, cfg.html5, el.html5SelectedCount, (id) => {
+    toggleArrayItem(cfg.html5, id);
+  });
+  renderMultiToggleGrid(el.css3OptionsGrid, STUDIO_CATALOG.css3Options, cfg.css3, el.css3SelectedCount, (id) => {
+    toggleArrayItem(cfg.css3, id);
+  });
+  renderMultiToggleGrid(el.jsArchOptionsGrid, STUDIO_CATALOG.jsArchOptions, cfg.jsArch, el.jsArchSelectedCount, (id) => {
+    toggleArrayItem(cfg.jsArch, id);
+  });
+  renderMultiToggleGrid(
+    el.jsLibsOptionsGrid,
+    STUDIO_CATALOG.jsLibsOptions,
+    cfg.jsLibs,
+    el.jsLibsSelectedCount,
+    (id) => {
+      toggleArrayItem(cfg.jsLibs, id);
+    },
+    cfg.projectType
+  );
+}
+
+function compileFullBlueprintSummaryText() {
+  const cfg = state.studioConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+  const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
+  const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
+  const elem = findCatalogItem(STUDIO_CATALOG.elementStyles, cfg.elementStyle);
+  const light = findCatalogItem(STUDIO_CATALOG.lightingStyles, cfg.lightingStyle);
+
+  const essLabels = mode.categoryEssentials
+    .filter((e) => cfg.essentials.includes(e.id))
+    .map((e) => e.label);
+  const htmlLabels = STUDIO_CATALOG.html5Options
+    .filter((h) => cfg.html5.includes(h.id))
+    .map((h) => h.label);
+  const cssLabels = STUDIO_CATALOG.css3Options
+    .filter((c) => cfg.css3.includes(c.id))
+    .map((c) => c.label);
+  const jsArchLabels = STUDIO_CATALOG.jsArchOptions
+    .filter((j) => cfg.jsArch.includes(j.id))
+    .map((j) => j.label);
+  const jsLibsSelected = STUDIO_CATALOG.jsLibsOptions
+    .filter((l) => cfg.jsLibs.includes(l.id));
+
+  const lines = [
+    `PROJECT TYPE: ${mode.label} — ${mode.roleLens}`,
+    `PLATFORM & PERSISTENCE: ${cfg.targetPlatform} | ${cfg.dataPersistence}`,
+    `SENSORY & MOTION: ${cfg.sensoryAudio} | ${cfg.a11yMotion}`,
+    `MODE ESSENTIALS: ${essLabels.length ? essLabels.join(', ') : 'Standard'}`,
+    `INTERFACE ARCHITECTURE: ${iface.name} (${iface.desc})`,
+    `DESIGN STYLE: ${style.name} (${style.desc})`,
+    `ELEMENT STYLE: ${elem.name} (${elem.desc})`,
+    `LIGHTING STYLE: ${light.name} (${light.desc})`,
+    `HTML5 CAPABILITIES: ${htmlLabels.length ? htmlLabels.join(', ') : 'Standard Semantic HTML5'}`,
+    `CSS3 CAPABILITIES: ${cssLabels.length ? cssLabels.join(', ') : 'Modern Responsive CSS3'}`,
+    `JS ARCHITECTURE: ${jsArchLabels.length ? jsArchLabels.join(', ') : 'Clean Modular ES6+'}`,
+    `LIBRARIES: ${jsLibsSelected.length ? jsLibsSelected.map((l) => `${l.label} (${l.cdn})`).join(' | ') : 'Zero external dependencies (100% Vanilla HTML/CSS/JS)'}`
+  ];
+
+  if (cfg.targetAudience && cfg.targetAudience.trim()) {
+    lines.push(`TARGET AUDIENCE: ${cfg.targetAudience.trim()}`);
+  }
+  if (cfg.extraConstraints && cfg.extraConstraints.trim()) {
+    lines.push(`NON-NEGOTIABLE CONSTRAINTS: ${cfg.extraConstraints.trim()}`);
+  }
+
+  return lines.join('\n');
+}
+
+function compileDynamicStepBlueprint(stepObj) {
+  const cfg = state.studioConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+  const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
+  const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
+  const elem = findCatalogItem(STUDIO_CATALOG.elementStyles, cfg.elementStyle);
+  const light = findCatalogItem(STUDIO_CATALOG.lightingStyles, cfg.lightingStyle);
+  const jsLibsSelected = STUDIO_CATALOG.jsLibsOptions.filter((l) => cfg.jsLibs.includes(l.id));
+
+  const common = [
+    `- Mode: ${mode.label} (${mode.roleLens})`,
+    `- Platform/Persistence/Audio/A11y: ${cfg.targetPlatform} | ${cfg.dataPersistence} | ${cfg.sensoryAudio} | ${cfg.a11yMotion}`
+  ];
+  if (cfg.targetAudience?.trim()) common.push(`- Target Audience: ${cfg.targetAudience.trim()}`);
+  if (cfg.extraConstraints?.trim()) common.push(`- Hard Constraints: ${cfg.extraConstraints.trim()}`);
+
+  const essLabels = mode.categoryEssentials.filter((e) => cfg.essentials.includes(e.id)).map((e) => `${e.label} (${e.desc})`);
+  if (stepObj.stage <= 2 || stepObj.num === 41) {
+    common.push(`- Active Mode Essentials: ${essLabels.join('; ') || 'Standard'}`);
+  }
+
+  if (stepObj.stage === 2 || stepObj.stage === 3 || stepObj.stage === 5) {
+    const htmlLabels = STUDIO_CATALOG.html5Options.filter((h) => cfg.html5.includes(h.id)).map((h) => h.label);
+    const cssLabels = STUDIO_CATALOG.css3Options.filter((c) => cfg.css3.includes(c.id)).map((c) => c.label);
+    const jsArchLabels = STUDIO_CATALOG.jsArchOptions.filter((j) => cfg.jsArch.includes(j.id)).map((j) => j.label);
+    common.push(`- HTML5 Stack: ${htmlLabels.join(', ') || 'Standard HTML5'}`);
+    common.push(`- CSS3 Stack: ${cssLabels.join(', ') || 'Standard CSS3'}`);
+    common.push(`- JS Architecture: ${jsArchLabels.join(', ') || 'Modular Vanilla ES6+'}`);
+    if (jsLibsSelected.length > 0) {
+      common.push(`- Selected CDN Libraries (MUST be wired cleanly): ${jsLibsSelected.map((l) => `${l.label} => ${l.cdn}`).join(' | ')}`);
+    } else {
+      common.push(`- Libraries: NONE (Enforce 100% zero-dependency Vanilla HTML5/CSS3/ES6+)`);
+    }
+  }
+
+  if (stepObj.stage >= 3 || stepObj.num === 16) {
+    common.push(`- Interface Architecture: ${iface.name} — ${iface.desc}`);
+    common.push(`- Design Style: ${style.name} — ${style.desc}`);
+    common.push(`- Element Style: ${elem.name} — ${elem.desc}`);
+    common.push(`- Lighting Style: ${light.name} — ${light.desc}`);
+  }
+
+  return common.join('\n');
+}
+
+// =========================================================================
+// KEY POOL, RATE-LIMITS & BACKGROUND KEEP-ALIVE
+// =========================================================================
 function maskApiKey(key) {
   if (!key || key.length < 10) return '••••';
   return `${key.slice(0, 6)}••••${key.slice(-4)}`;
@@ -631,9 +1453,6 @@ function getTimingMetrics() {
   };
 }
 
-// =========================================================================
-// MULTI-KEY POOL & LONG-HORIZON RATE-LIMIT MANAGEMENT
-// =========================================================================
 function refreshExpiredCooldowns() {
   const now = Date.now();
   let changed = false;
@@ -1071,9 +1890,6 @@ function markKeyRateLimited(keyObj, keyIdx, response, errJson, errDetail) {
   return { waitMs, reason };
 }
 
-// =========================================================================
-// BACKGROUND PERSISTENCE, WORKER HEARTBEAT, BATTERY, NETWORK & LOCK SCREEN
-// =========================================================================
 function onHeartbeatTick() {
   state.heartbeatTickCount += 1;
   const changed = refreshExpiredCooldowns();
@@ -1192,7 +2008,6 @@ function createSilentWavBlobUrl() {
   view.setUint16(34, 8, true);
   writeStr(36, 'data');
   view.setUint32(40, numSamples, true);
-  // Ultra-low sub-audible dither (128/129) prevents mobile OSes from suspending pure zero-amplitude silence
   for (let i = 44; i < 44 + numSamples; i++) {
     view.setUint8(i, i % 2 === 0 ? 128 : 129);
   }
@@ -1237,12 +2052,8 @@ function startBackgroundAudioKeepAlive() {
       audio.loop = true;
       audio.volume = 0.005;
       audio.setAttribute('playsinline', '');
-      audio.addEventListener('pause', () => {
-        updateKeepAliveBadges();
-      });
-      audio.addEventListener('play', () => {
-        updateKeepAliveBadges();
-      });
+      audio.addEventListener('pause', updateKeepAliveBadges);
+      audio.addEventListener('play', updateKeepAliveBadges);
       state.bgAudioEl = audio;
     }
     if (state.bgAudioEl.paused) {
@@ -1843,7 +2654,6 @@ async function registerServiceWorkerAndPwa() {
     }
   });
 
-  // Unlock background audio & wake lock on any user touch if auto-resumed without initial gesture
   const unlockOnGesture = () => {
     if (state.isRunning && state.bgKeepAliveEnabled) {
       if (!state.bgAudioEl || state.bgAudioEl.paused) {
@@ -1873,7 +2683,6 @@ function stripMarkdownCodeFences(rawText) {
       return extracted;
     }
   }
-  // Handle truncated/unclosed leading markdown fence (e.g. ```javascript\n...)
   if (/^```[a-zA-Z0-9_-]*\s*\r?\n/.test(text)) {
     text = text.replace(/^```[a-zA-Z0-9_-]*\s*\r?\n/, '');
     text = text.replace(/\r?\n```\s*$/, '');
@@ -2042,9 +2851,9 @@ function renderChecklist(activeStepNum = 0, retryingStep = false) {
       <span class="shrink-0 w-6 h-6 rounded-md bg-slate-900 border border-slate-700/80 flex items-center justify-center text-[11px] font-mono-code font-semibold ${doneInfo ? 'text-emerald-300 border-emerald-500/40' : isActive ? 'text-indigo-300 border-indigo-500/50' : 'text-slate-400'}">${step.num}</span>
       <div class="min-w-0">
         <div class="flex items-center gap-1.5 flex-wrap">
-          <span class="px-1.5 py-0.5 rounded text-[10px] font-medium border ${stageColors[step.stage]}">${step.stageName}</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-medium border ${stageColors[step.stage]}">${escapeHtml(step.section)}</span>
           ${fileTag}
-          <span class="text-xs font-semibold text-slate-200">${escapeHtml(step.title)}</span>
+          <span class="text-xs font-semibold text-slate-200">${escapeHtml(step.role)}</span>
         </div>
         <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">${escapeHtml(step.directive)}</p>
       </div>
@@ -2159,7 +2968,7 @@ function buildCombinedPreviewHtml({ includePreviewBridge = true } = {}) {
   const rawJs = stripMarkdownCodeFences(state.jsCode || '');
 
   if (!rawHtml && !rawCss && !rawJs) {
-    return '<!DOCTYPE html><html><body style="font-family:sans-serif;background:#0f172a;color:#94a3b8;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:24px;"><div><h2 style="color:#e2e8f0;margin-bottom:8px;">Live Preview Ready</h2><p style="font-size:14px;">Run the 50-point pipeline (or paste code into index.html, style.css, and script.js tabs) to launch the app here.</p></div></body></html>';
+    return '<!DOCTYPE html><html><body style="font-family:sans-serif;background:#0f172a;color:#94a3b8;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:24px;"><div><h2 style="color:#e2e8f0;margin-bottom:8px;">Live Preview Ready</h2><p style="font-size:14px;">Configure your Blueprint & run the 50-point pipeline (or paste code into index.html, style.css, and script.js tabs) to launch the app here.</p></div></body></html>';
   }
 
   const useModule = isEsModuleScript(rawJs, rawHtml);
@@ -2436,12 +3245,12 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
     updateProgressUI(stepObj.num, false);
     updateKeyPoolUI();
 
-    const stepMsg = `Step ${stepObj.num}/50 (${stepObj.stageName}): ${stepObj.title}`;
+    const stepMsg = `Step ${stepObj.num}/50 (${stepObj.stageName}): ${stepObj.role}`;
     el.pipelineStatusText.textContent = `${stepMsg} [${keyObj.label}]...`;
     updateLiveNotificationBar({
       mode: 'running',
       title: `Step ${stepObj.num}/50 • ${stepObj.stageName}`,
-      detail: `${stepObj.title} (${keyObj.label})`,
+      detail: `${stepObj.role} (${keyObj.label})`,
       stepNum: stepObj.num
     });
 
@@ -2504,10 +3313,10 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
 
         if (!text) {
           if (finishReason === 'SAFETY' || finishReason === 'RECITATION' || finishReason === 'PROHIBITED_CONTENT' || finishReason === 'BLOCKLIST') {
-            throw new Error(`Generation blocked (${finishReason}) on Step ${stepObj.num} (${stepObj.title}).`);
+            throw new Error(`Generation blocked (${finishReason}) on Step ${stepObj.num} (${stepObj.role}).`);
           }
           throw Object.assign(
-            new Error(`Empty output on Step ${stepObj.num} (${stepObj.title})${finishReason ? ` [finishReason: ${finishReason}]` : ''}`),
+            new Error(`Empty output on Step ${stepObj.num} (${stepObj.role})${finishReason ? ` [finishReason: ${finishReason}]` : ''}`),
             { retryable: true }
           );
         }
@@ -2636,6 +3445,9 @@ async function callPrimaryModelRespectful(systemPrompt, userPrompt, stepObj) {
 
 function buildStepPrompts(stepObj) {
   const isCodeStep = Boolean(stepObj.targetFile);
+  const dynamicBlueprint = compileDynamicStepBlueprint(stepObj);
+  const cfg = state.studioConfig;
+  const hasLibs = cfg.jsLibs && cfg.jsLibs.length > 0;
 
   if (isCodeStep) {
     const fileMap = {
@@ -2646,43 +3458,50 @@ function buildStepPrompts(stepObj) {
     const targetFilename = fileMap[stepObj.targetFile];
 
     const systemPrompt =
-      `You are executing Step ${stepObj.num} of 50 (Stage ${stepObj.stage} — ${stepObj.stageName}: ${stepObj.title}) in an elite Web App Architecture Pipeline.\n` +
-      `Your sole task is to author the complete, most advanced, production-grade ${targetFilename} file.\n` +
-      `Non-Negotiable Rules:\n` +
-      `1. Honor EVERY specification, locked ID, CSS class, data-* attribute, color/texture/lighting token, accessibility requirement, and functional requirement in notes.txt.\n` +
+      `You are the ${stepObj.role} executing Step ${stepObj.num} of 50 (Stage ${stepObj.stage}: ${stepObj.stageName} | ${stepObj.section}) in a Dynamic 50-Point Engineering Machine.\n` +
+      `Your sole responsibility is to synthesize the complete, production-grade ${targetFilename} file.\n` +
+      `Non-Negotiable Machine Rules:\n` +
+      `1. Honor EVERY specification, locked ID, CSS class, data-* attribute, visual/lighting style token, HTML5/CSS3/JS selection, and functional requirement in the Dynamic Blueprint and notes.txt.\n` +
       `2. Output ONLY raw ${targetFilename} code—zero markdown prose, zero placeholders, zero "// ... rest of code", zero omitted handlers or styles.\n` +
-      `3. Guarantee 100% standalone browser execution with zero external runtime dependencies.`;
+      `3. ${hasLibs ? 'Include and cleanly integrate ONLY the selected CDN libraries specified in the Blueprint.' : 'Guarantee 100% standalone zero-dependency Vanilla browser execution.'}`;
 
     const userPrompt =
-      `TARGET WEB APP REQUEST:\n${state.userPrompt}\n\n` +
-      `CURRENT STEP (${stepObj.num}/50): ${stepObj.title}\n` +
-      `DIRECTIVE: ${stepObj.directive}\n\n` +
+      `INITIAL USER PROMPT:\n${state.userPrompt}\n\n` +
+      `ACTIVE DYNAMIC BLUEPRINT FOR THIS STEP:\n${dynamicBlueprint}\n\n` +
+      `YOUR ROLE IN THE MACHINE (Step ${stepObj.num}/50 — ${stepObj.role}):\n` +
+      `- Upstream Inputs: ${stepObj.upstreamInputs}\n` +
+      `- Downstream Target: ${stepObj.downstreamTarget}\n` +
+      `- Directive: ${stepObj.directive}\n\n` +
       `CUMULATIVE notes.txt (Steps 1 to ${stepObj.num - 1}):\n${state.notesText}`;
 
     return { systemPrompt, userPrompt };
   }
 
   const stageGuidance = {
-    1: 'Stage 1 (Research): Uncover concrete problem/desire truths, user contexts, competitor/workaround gaps, mobile & accessibility expectations, and local-only zero-backend trust factors. Avoid generic platitudes.',
-    2: 'Stage 2 (Reasoning): Critically synthesize Stage 1 research in notes.txt to lock MVP scope, shortest user journeys, intentional trade-offs, edge cases, and measurable success criteria for a 3-file zero-backend app.',
-    3: 'Stage 3 (Planning): Produce exact 3-file engineering blueprints—script.js module sections, central state schema, mobile-ready index.html skeleton, mobile-first style.css tokens, pointer/touch parity, event delegation, and localStorage/RAF safety.',
-    4: 'Stage 4 (Design): Deliver rich, concrete, implementable CSS/SVG/Canvas/UX specifications—60-30-10 color tokens, clamp() typography, 4px/8px mobile thumb-zone spacing, surface textures/grain, inner lighting, cubic-bezier motion, tactile states, and living celebrations.',
-    5: 'Stage 5 (Build & Code): Complete the pre-build audit, lock exact DOM/CSS/JS contracts, and generate the full, zero-backend, zero-dependency index.html, style.css, and script.js files.'
+    1: 'Stage 1 (Discovery): Uncover deep domain truths, user/player psychology, competitor/workaround gaps, mobile/a11y ergonomics, and local-only trust factors tailored to the exact Project Type and Prompt.',
+    2: 'Stage 2 (Systems): Synthesize Stage 1 into hard engineering decisions—MVP scope, shortest path to value, intentional trade-offs, stress/edge cases, exact HTML5/CSS3/JS stack integration, and measurable benchmarks.',
+    3: 'Stage 3 (Blueprint): Produce exact 3-file contracts—script.js module map, central state/FSM schema, mobile-ready index.html skeleton, CSS3 token/layout rules, pointer/keyboard parity, event delegation, and storage/RAF safety.',
+    4: 'Stage 4 (Visual Craft): Translate the selected Interface Design, Design Style, Element Style, and Lighting Style into concrete CSS tokens, clamp() typography, textures, specular/rim/glow lighting, cubic-bezier motion, and custom SVG/Canvas craft.',
+    5: 'Stage 5 (Build & Code): Execute the pre-build audit, lock canonical DOM/CSS/JS contracts with 0% selector mismatch, and synthesize index.html, style.css, and script.js.'
   };
 
   const systemPrompt =
-    `You are executing Step ${stepObj.num} of 50 (Stage ${stepObj.stage} — ${stepObj.stageName}: ${stepObj.title}) in an elite 50-Point Web App Engineering Pipeline.\n` +
+    `You are the ${stepObj.role} executing Step ${stepObj.num} of 50 (Stage ${stepObj.stage}: ${stepObj.stageName} | ${stepObj.section}) in a Dynamic 50-Point Engineering Machine.\n` +
     `${stageGuidance[stepObj.stage]}\n` +
-    `Execution Rules:\n` +
+    `Machine Execution Rules:\n` +
     `- Read and build directly upon ALL prior decisions in notes.txt without contradicting locked specs.\n` +
-    `- Use dense, structured, high-signal technical bullet points and exact specifications (zero conversational filler).\n` +
-    `- Keep every decision strictly 100% client-side with NO backend, delivered across three standalone files (index.html, style.css, script.js) with zero external runtime dependencies.\n` +
-    `- Do NOT write full HTML/CSS/JS files yet (code generation occurs exclusively in Steps 48–50).`;
+    `- Actively weave the Initial Prompt and Dynamic Blueprint selections into concrete, app-specific specifications (never generic advice).\n` +
+    `- Use dense, structured, high-signal technical bullet points (zero conversational filler).\n` +
+    `- Keep execution 100% client-side with NO backend, delivered across index.html, style.css, and script.js.\n` +
+    `- Do NOT write full HTML/CSS/JS files yet (code synthesis occurs exclusively in Steps 48–50).`;
 
   const userPrompt =
-    `TARGET WEB APP REQUEST:\n${state.userPrompt}\n\n` +
-    `CURRENT STEP (${stepObj.num}/50): ${stepObj.title}\n` +
-    `DIRECTIVE: ${stepObj.directive}\n\n` +
+    `INITIAL USER PROMPT:\n${state.userPrompt}\n\n` +
+    `ACTIVE DYNAMIC BLUEPRINT FOR THIS STEP:\n${dynamicBlueprint}\n\n` +
+    `YOUR ROLE IN THE MACHINE (Step ${stepObj.num}/50 — ${stepObj.role}):\n` +
+    `- Upstream Inputs: ${stepObj.upstreamInputs}\n` +
+    `- Downstream Target: ${stepObj.downstreamTarget}\n` +
+    `- Directive: ${stepObj.directive}\n\n` +
     `CUMULATIVE notes.txt SO FAR:\n${state.notesText || '(Empty — this is Step 1)'}`;
 
   return { systemPrompt, userPrompt };
@@ -2747,12 +3566,15 @@ async function runPipeline(startFresh = true) {
     state.runStartedAt = Date.now();
 
     const ts = new Date().toISOString();
+    const bpSummary = compileFullBlueprintSummaryText();
     await appendToNotes(
       `========================================================================\n` +
-      `50-POINT WEB APP BUILD LEDGER (${ts})\n` +
+      `50-POINT DYNAMIC WEB APP STUDIO LEDGER (${ts})\n` +
       `MODEL: ${state.model} | THINKING: ${state.thinkingLevel}\n` +
       `========================================================================\n` +
-      `USER PROMPT:\n${state.userPrompt}\n` +
+      `INITIAL USER PROMPT:\n${state.userPrompt}\n` +
+      `========================================================================\n` +
+      `DYNAMIC STUDIO BLUEPRINT:\n${bpSummary}\n` +
       `========================================================================\n`
     );
     updateEditorsAndBadges();
@@ -2782,13 +3604,13 @@ async function runPipeline(startFresh = true) {
         const step = PIPELINE_STEPS[idx];
         const stepStartTs = Date.now();
 
-        el.pipelineStatusText.textContent = `Step ${step.num}/50 (${step.stageName}): ${step.title}...`;
+        el.pipelineStatusText.textContent = `Step ${step.num}/50 (${step.stageName}): ${step.role}...`;
         updateProgressUI(step.num, false);
         renderChecklist(step.num, false);
         updateLiveNotificationBar({
           mode: 'running',
           title: `Step ${step.num}/50 • ${step.stageName}`,
-          detail: step.title,
+          detail: step.role,
           stepNum: step.num,
           forceOs: idx === state.nextStepIndex
         });
@@ -2813,7 +3635,7 @@ async function runPipeline(startFresh = true) {
         }
 
         await appendToNotes(
-          `\n--- [STEP ${step.num}/50 | ${step.stageName.toUpperCase()}: ${step.title}] ---\n` +
+          `\n--- [STEP ${step.num}/50 | ${step.stageName.toUpperCase()} (${step.section}): ${step.role}] ---\n` +
           `${processedOutput}\n`
         );
 
@@ -3066,6 +3888,61 @@ el.clearPreviewErrorsBtn.addEventListener('click', () => {
 });
 
 el.dismissErrorBannerBtn.addEventListener('click', hideErrorBanner);
+
+// Project Type & Studio Blueprint Configurator Listeners
+document.querySelectorAll('#projectTypeSelector .proj-type-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    if (state.isRunning) {
+      showToast('Pause the pipeline before changing Project Type.', 'warn');
+      return;
+    }
+    setProjectType(btn.dataset.type, true);
+    showToast(`Switched mode to ${STUDIO_CATALOG.projectTypes[btn.dataset.type].label} with tailored defaults.`, 'info');
+  });
+});
+
+el.openBlueprintModalBtn.addEventListener('click', () => {
+  renderBlueprintModalContents();
+  switchBlueprintTab(state.activeBpTab);
+  el.blueprintModal.classList.remove('hidden');
+  refreshIcons();
+});
+
+el.closeBlueprintModalBtn.addEventListener('click', () => el.blueprintModal.classList.add('hidden'));
+el.doneBlueprintModalBtn.addEventListener('click', () => el.blueprintModal.classList.add('hidden'));
+
+el.applyRecommendedPresetBtn.addEventListener('click', () => {
+  setProjectType(state.studioConfig.projectType, true);
+  renderBlueprintModalContents();
+  showToast('Applied recommended stack & visual defaults for this mode.', 'success');
+});
+
+document.querySelectorAll('#blueprintTabs .bp-tab-btn').forEach((btn) => {
+  btn.addEventListener('click', () => switchBlueprintTab(btn.dataset.bpTab));
+});
+
+[
+  [el.bpTargetPlatform, 'targetPlatform'],
+  [el.bpDataPersistence, 'dataPersistence'],
+  [el.bpSensoryAudio, 'sensoryAudio'],
+  [el.bpA11yMotion, 'a11yMotion']
+].forEach(([selectEl, key]) => {
+  selectEl.addEventListener('change', (e) => {
+    state.studioConfig[key] = e.target.value;
+    saveStudioConfig();
+    renderBlueprintSummaryStrip();
+  });
+});
+
+[
+  [el.bpTargetAudience, 'targetAudience'],
+  [el.bpExtraConstraints, 'extraConstraints']
+].forEach(([inputEl, key]) => {
+  inputEl.addEventListener('input', (e) => {
+    state.studioConfig[key] = e.target.value;
+    saveStudioConfig();
+  });
+});
 
 function handleQuickAddKey() {
   const raw = el.apiKeyInput.value.trim();
@@ -3341,16 +4218,8 @@ el.resetRunBtn.addEventListener('click', () => {
   updateControlButtons();
   updateLiveNotificationBar({ mode: 'hidden' });
   clearOsProgressNotification();
-  el.pipelineStatusText.textContent = 'Idle — Ready for Web App Prompt';
+  el.pipelineStatusText.textContent = 'Idle — Configure Blueprint & Prompt';
   showToast('Workspace reset.', 'info');
-});
-
-document.querySelectorAll('.sample-prompt-btn').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    if (state.isRunning) return;
-    el.promptInput.value = btn.dataset.prompt || '';
-    el.promptInput.focus();
-  });
 });
 
 document.querySelectorAll('#checklistFilterBar .filter-btn').forEach((btn) => {
@@ -3488,7 +4357,7 @@ function setPromptCollapsed(collapsed) {
     el.buildForm.classList.add('hidden');
     el.promptCollapsedBar.classList.remove('hidden');
     el.promptCollapsedBar.classList.add('flex');
-    const preview = (el.promptInput.value || state.userPrompt || 'Edit Web App Prompt...').trim();
+    const preview = (el.promptInput.value || state.userPrompt || 'Edit Web App Prompt & Blueprint...').trim();
     el.collapsedPromptPreview.textContent = preview;
   } else {
     el.promptCollapsedBar.classList.add('hidden');
@@ -3549,6 +4418,16 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
   registerServiceWorkerAndPwa();
   initBatteryMonitor();
   initNetworkMonitor();
+
+  try {
+    const savedCfg = JSON.parse(safeGet('wbs_studio_config', 'null'));
+    if (savedCfg && savedCfg.projectType && STUDIO_CATALOG.projectTypes[savedCfg.projectType]) {
+      state.studioConfig = {
+        ...createDefaultStudioConfig(savedCfg.projectType),
+        ...savedCfg
+      };
+    }
+  } catch (_) {}
 
   try {
     const savedSettings = JSON.parse(safeGet('wbs_settings', 'null'));
@@ -3612,6 +4491,8 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
     }).catch(() => {});
   }
 
+  renderProjectTypeUI();
+  renderBlueprintSummaryStrip();
   hydrateStepOutputsFromNotes();
   updateEditorsAndBadges();
   updateKeyPoolUI();
@@ -3653,7 +4534,6 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
     });
   }
 
-  // Fallback interval in case Web Worker is unavailable
   if (!state.timerWorker) {
     setInterval(onHeartbeatTick, 1000);
   }

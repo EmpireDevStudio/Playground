@@ -100,3 +100,63 @@ textarea.tab-panel {
 #mobilePersistenceBanner {
   transition: background-color 0.25s ease, border-color 0.25s ease;
 }
+
+/* Visual Reference Cards & Toggle Chips in Studio Blueprint Configurator */
+.visual-ref-card {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  background: #090d14;
+  padding: 0.5rem;
+  transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+}
+
+.visual-ref-card:hover {
+  border-color: rgba(99, 102, 241, 0.55);
+  background: #0d1422;
+}
+
+.visual-ref-card:active {
+  transform: scale(0.98);
+}
+
+.visual-ref-card.is-selected {
+  border-color: rgba(34, 211, 238, 0.85);
+  background: rgba(14, 116, 144, 0.16);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.35), 0 6px 18px -6px rgba(34, 211, 238, 0.25);
+}
+
+.visual-ref-preview {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(51, 65, 85, 0.55);
+  background: #05080f;
+  margin-bottom: 0.45rem;
+}
+
+.bp-toggle-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  text-align: left;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  background: #090d14;
+  padding: 0.55rem 0.65rem;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+  cursor: pointer;
+}
+
+.bp-toggle-card:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.bp-toggle-card.is-selected {
+  border-color: rgba(99, 102, 241, 0.75);
+  background: rgba(79, 70, 229, 0.14);
+}
