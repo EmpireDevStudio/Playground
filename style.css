@@ -69,6 +69,21 @@ body {
   animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+@keyframes subMenuReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submenu-reveal {
+  animation: subMenuReveal 0.22s ease-out forwards;
+}
+
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
@@ -158,4 +173,118 @@ textarea.tab-panel {
 .bp-toggle-card.is-selected {
   border-color: rgba(99, 102, 241, 0.75);
   background: rgba(79, 70, 229, 0.14);
+}
+
+/* Prompt Guider Journey Cards & Interactive Specimens */
+.guider-option-card {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(30, 41, 59, 0.95);
+  background: #090d14;
+  padding: 0.75rem;
+  transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.14s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.guider-option-card:hover {
+  border-color: rgba(99, 102, 241, 0.6);
+  background: #0e1524;
+  transform: translateY(-1px);
+}
+
+.guider-option-card:active {
+  transform: scale(0.99);
+}
+
+.guider-option-card.is-selected {
+  border-color: rgba(34, 211, 238, 0.9);
+  background: rgba(14, 116, 144, 0.18);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.4), 0 10px 24px -10px rgba(34, 211, 238, 0.3);
+}
+
+.guider-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  background: #090d14;
+  color: #94a3b8;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.guider-step-pill:hover {
+  color: #e2e8f0;
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.guider-step-pill.is-current {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.7);
+  color: #e0e7ff;
+}
+
+.guider-step-pill.is-done {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+
+.guider-step-pill.is-branch {
+  border-style: dashed;
+}
+
+.live-specimen-stage {
+  border-radius: 0.85rem;
+  padding: 1rem;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.live-specimen-btn {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  cursor: pointer;
+}
+
+.live-specimen-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.live-specimen-btn:active {
+  transform: scale(0.96);
+}
+
+@keyframes motionDemoSlide {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(64px);
+  }
+}
+
+.motion-demo-ball.is-fluid {
+  animation: motionDemoSlide 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.motion-demo-ball.is-120 {
+  animation: motionDemoSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.motion-demo-ball.is-eco {
+  animation: motionDemoSlide 2.2s steps(12, end) infinite;
+}
+
+.motion-demo-ball.is-calm {
+  transform: translateX(32px);
 }

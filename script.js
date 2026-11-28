@@ -1,12 +1,15 @@
 // =========================================================================
-// DYNAMIC STUDIO CATALOG: PLAIN-LANGUAGE MODES, VISUALS & TECH STACK
+// DYNAMIC STUDIO CATALOG: PLAIN-LANGUAGE MODES, VISUALS, SUB-MENUS & TECH
 // =========================================================================
 const STUDIO_CATALOG = {
   projectTypes: {
     app: {
       id: 'app',
       label: 'Web App',
+      icon: 'layout-dashboard',
+      shortTag: 'Everyday Interactive App',
       roleLens: 'An interactive everyday app with clear screens, saved progress, helpful onboarding, and smooth workflows on any device.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="10" y="10" width="140" height="14" rx="4" fill="#131c2e" stroke="#4f46e5" stroke-opacity=".6"/><rect x="10" y="29" width="42" height="51" rx="5" fill="#111827" stroke="#334155"/><rect x="58" y="29" width="92" height="24" rx="5" fill="#131c2e" stroke="#334155"/><rect x="58" y="57" width="44" height="23" rx="5" fill="#0f2933" stroke="#22d3ee" stroke-opacity=".5"/><rect x="106" y="57" width="44" height="23" rx="5" fill="#131c2e" stroke="#334155"/></svg>`,
       samplePrompts: [
         { label: 'Kanban', prompt: 'Build an interactive Kanban & Sprint Planner app with drag-and-drop columns, priority tags, work-in-progress limits, instant search/filter, keyboard shortcuts, auto-save, and JSON backup export.' },
         { label: 'Cashflow', prompt: 'Build a Financial Expense & Cashflow Analyzer app with category budgets, recurring entries, visual charts, CSV export, and live balance projections.' },
@@ -46,7 +49,10 @@ const STUDIO_CATALOG = {
     tool: {
       id: 'tool',
       label: 'Utility / Tool',
+      icon: 'wrench',
+      shortTag: 'Fast Precision Workbench',
       roleLens: 'A fast, accurate workbench tool focused on instant live results, zero friction, batch handling, and one-click copy/export.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="8" y="8" width="52" height="74" rx="5" fill="#0f172a" stroke="#0ea5e9" stroke-opacity=".55"/><rect x="14" y="16" width="40" height="8" rx="2" fill="#1e293b"/><rect x="14" y="30" width="40" height="6" rx="3" fill="#22d3ee" fill-opacity=".6"/><rect x="14" y="42" width="28" height="6" rx="3" fill="#334155"/><rect x="66" y="8" width="86" height="74" rx="5" fill="#0b1220" stroke="#334155"/><path d="M76 64 L96 40 L114 52 L140 24" fill="none" stroke="#34d399" stroke-width="2.5"/></svg>`,
       samplePrompts: [
         { label: 'CSS Lab', prompt: 'Build a live CSS3 Gradient, Shadow & Glassmorphism Lab tool with multi-stop controls, real-time preview card, contrast checker, presets, and one-click CSS copy.' },
         { label: 'JSON Forge', prompt: 'Build a client-side JSON/CSV Transformer & Diff Inspector tool with validation, tree explorer, path filtering, and instant download.' },
@@ -86,7 +92,10 @@ const STUDIO_CATALOG = {
     game: {
       id: 'game',
       label: 'Game',
+      icon: 'gamepad-2',
+      shortTag: 'Playable Browser Game',
       roleLens: 'A smooth, responsive browser game with an addictive core loop, crisp controls on keyboard & touch, juicy feedback, and high replayability.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#050612"/><circle cx="80" cy="46" r="24" fill="none" stroke="#a855f7" stroke-opacity=".45" stroke-dasharray="4 3"/><polygon points="80,30 92,54 80,48 68,54" fill="#22d3ee"/><circle cx="42" cy="30" r="5" fill="#f43f5e"/><circle cx="122" cy="60" r="6" fill="#f59e0b"/><rect x="8" y="8" width="42" height="10" rx="5" fill="#1e1035" stroke="#a855f7" stroke-opacity=".6"/><rect x="114" y="8" width="38" height="10" rx="5" fill="#1e1035" stroke="#22d3ee" stroke-opacity=".6"/></svg>`,
       samplePrompts: [
         { label: 'Neon Drift', prompt: 'Build an arcade Neon Vector Space Dodge & Combo Wave game on Canvas with mouse/touch/keyboard controls, enemy waves, particle explosions, synth SFX, and local high-score board.' },
         { label: 'Hex Tactics', prompt: 'Build a turn-based Tactical Hex Grid Puzzle game with procedural boards, unit abilities, move previews, undo move, progressive stages, and synthesized sound effects.' },
@@ -126,7 +135,10 @@ const STUDIO_CATALOG = {
     experimental: {
       id: 'experimental',
       label: 'Creative / Sandbox',
+      icon: 'flask-conical',
+      shortTag: 'Generative Art & Play',
       roleLens: 'An expressive creative playground blending generative visuals, live physics or sound, and tactile controls anyone can explore.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#060a14"/><path d="M12 64 Q45 14 82 48 T148 26" fill="none" stroke="#22d3ee" stroke-width="2.5"/><path d="M12 72 Q55 32 95 60 T148 40" fill="none" stroke="#6366f1" stroke-width="2" stroke-opacity=".7"/><circle cx="82" cy="48" r="6" fill="#34d399"/><rect x="38" y="70" width="84" height="12" rx="6" fill="#111827" stroke="#334155"/></svg>`,
       samplePrompts: [
         { label: 'Boid Field', prompt: 'Build an interactive Generative Flow-Field & Boids Ecosystem simulator with pointer attractor/repulsor brushes, color palette mutator, live parameter HUD, and PNG snapshot export.' },
         { label: 'Modular Synth', prompt: 'Build a Visual Node-Based Ambient Drone & Sequencer playground where dragging glowing orbs shapes oscillators, filters, and canvas ripples.' },
@@ -161,6 +173,388 @@ const STUDIO_CATALOG = {
         jsArch: ['central-state', 'delta-raf-loop', 'web-audio-synth', 'pointer-gesture-lock'],
         jsLibs: [],
         essentials: ['procedural-seed', 'param-hud', 'canvas-shader', 'snapshot-export', 'gallery-presets']
+      }
+    },
+    free: {
+      id: 'free',
+      label: 'Free Create',
+      icon: 'sparkles',
+      shortTag: 'Open Hybrid Vision',
+      roleLens: 'A boundary-free custom creation blending any mix of interactive storytelling, playful tools, mini-games, or bespoke experiments.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#080b14"/><circle cx="52" cy="45" r="20" fill="#6366f1" fill-opacity=".22" stroke="#6366f1"/><circle cx="104" cy="45" r="20" fill="#34d399" fill-opacity=".2" stroke="#34d399"/><rect x="64" y="31" width="32" height="28" rx="6" fill="#0f172a" stroke="#22d3ee"/><circle cx="80" cy="45" r="4" fill="#f59e0b"/></svg>`,
+      samplePrompts: [
+        { label: 'Hybrid World', prompt: 'Build an interactive Solar System Learning Playground that blends a real-time orbital simulator, clickable planet field notes, and a quick orbital-slingshot mini-challenge.' },
+        { label: 'Story Forge', prompt: 'Build an interactive Branching Story & Atmosphere Studio where readers make choices, hear reactive Web Audio soundscapes, and inspect a live story map.' },
+        { label: 'Habit RPG', prompt: 'Build a Cozy Daily Habit & Garden Companion where checking off real tasks grows procedural SVG plants and earns gentle chimes.' }
+      ],
+      categoryEssentials: [
+        { id: 'hybrid-blend', label: 'Seamless Hybrid Flow', desc: 'Blends utility, play, and storytelling smoothly without jarring mode switches.' },
+        { id: 'custom-metaphor', label: 'Original Spatial Metaphor', desc: 'Feels bespoke to your idea rather than looking like a standard SaaS template.' },
+        { id: 'discoverable-magic', label: 'Delightful Hidden Surprises', desc: 'Rewards curiosity with tactile micro-animations, easter eggs, or live reactions.' },
+        { id: 'portable-state', label: 'Easy Save & Share', desc: 'Saves progress locally and lets users export or reset cleanly anytime.' },
+        { id: 'adaptive-hud', label: 'Calm, Focused Controls', desc: 'Keeps the main stage front-and-center while tucking extras into clean drawers.' },
+        { id: 'multi-sensory', label: 'Optional Sound & Motion', desc: 'Gentle synthesized audio and smooth motion with instant mute/calm toggles.' }
+      ],
+      defaults: {
+        targetPlatform: 'responsive-parity',
+        dataPersistence: 'localstorage-json',
+        complexity: 'balanced-complete',
+        navStyle: 'floating-dock',
+        starterExp: 'realistic-demo',
+        sensoryAudio: 'web-audio-subtle',
+        a11yMotion: 'wcag-aa-fluid',
+        interfaceDesign: 'bento-grid',
+        designStyle: 'glassmorphism',
+        colorMood: 'indigo-slate',
+        typographyStyle: 'friendly-rounded',
+        elementStyle: 'pill-tactile',
+        lightingStyle: 'ambient-aura',
+        html5: ['semantic-landmarks', 'dialog-popover', 'inline-svg', 'canvas-surface', 'viewport-safe-area', 'file-blob-io'],
+        css3: ['oklch-tokens', 'container-queries', 'has-selector', 'view-transitions', 'fluid-clamp-tabular', 'reduced-motion'],
+        jsArch: ['central-state', 'event-delegation', 'web-audio-synth', 'pointer-gesture-lock'],
+        jsLibs: [],
+        essentials: ['hybrid-blend', 'custom-metaphor', 'discoverable-magic', 'portable-state', 'adaptive-hud']
+      }
+    }
+  },
+
+  // Visual Reference Galleries for Platform, Complexity, Nav, Starter Exp
+  platformOptions: [
+    {
+      id: 'responsive-parity',
+      name: 'Both Phone & Computer',
+      desc: 'Adapts fluidly from a 320px phone screen up to a wide desktop monitor.',
+      bestFor: 'Almost any public web app, tracker, or shareable tool.',
+      tradeoff: 'Avoids ultra-dense 5-column desktop-only layouts so mobile stays comfortable.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="14" y="16" width="84" height="58" rx="5" fill="#111827" stroke="#6366f1" stroke-opacity=".7"/><rect x="20" y="24" width="72" height="10" rx="2" fill="#1e293b"/><rect x="20" y="38" width="34" height="28" rx="3" fill="#172542"/><rect x="58" y="38" width="34" height="28" rx="3" fill="#1e293b"/><rect x="110" y="22" width="34" height="52" rx="6" fill="#0f172a" stroke="#22d3ee" stroke-opacity=".8"/><rect x="116" y="30" width="22" height="16" rx="2" fill="#172542"/><rect x="116" y="50" width="22" height="16" rx="2" fill="#1e293b"/></svg>`
+    },
+    {
+      id: 'mobile-first-thumb',
+      name: 'Phone First (Thumb-Friendly)',
+      desc: 'Primary buttons sit at the bottom within easy one-handed thumb reach.',
+      bestFor: 'On-the-go trackers, quick daily check-ins, mobile-first games.',
+      tradeoff: 'Desktop view centers neatly like a focused mobile-style column.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="54" y="8" width="52" height="74" rx="9" fill="#111827" stroke="#22d3ee" stroke-opacity=".75"/><rect x="61" y="16" width="38" height="36" rx="4" fill="#1e293b"/><rect x="61" y="58" width="38" height="14" rx="7" fill="#6366f1"/><circle cx="80" cy="65" r="14" fill="#22d3ee" fill-opacity=".15"/></svg>`
+    },
+    {
+      id: 'desktop-pro',
+      name: 'Computer Power Workspace',
+      desc: 'Side-by-side panels, rich keyboard shortcuts, and dense data visibility.',
+      bestFor: 'Editors, calculators, analytics dashboards, developer/design tools.',
+      tradeoff: 'Panels stack on phones, so mobile requires a little more scrolling.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="10" y="10" width="140" height="70" rx="5" fill="#0f172a" stroke="#475569"/><rect x="16" y="16" width="34" height="58" rx="3" fill="#1e293b"/><rect x="55" y="16" width="56" height="58" rx="3" fill="#131c2e" stroke="#6366f1" stroke-opacity=".5"/><rect x="116" y="16" width="28" height="58" rx="3" fill="#1e293b"/></svg>`
+    },
+    {
+      id: 'fullscreen-arcade',
+      name: 'Full-Screen Stage',
+      desc: 'Edge-to-edge canvas with zero page scrolling and compact corner HUD.',
+      bestFor: 'Games, particle sandboxes, drawing/music studios, immersive worlds.',
+      tradeoff: 'Minimal room for long paragraphs of text—visuals lead the experience.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#04070e"/><rect x="4" y="4" width="152" height="82" rx="4" fill="#090d1a" stroke="#22d3ee" stroke-opacity=".5"/><circle cx="80" cy="45" r="20" fill="#6366f1" fill-opacity=".3" stroke="#22d3ee"/><rect x="10" y="10" width="32" height="9" rx="4" fill="#1e293b"/><rect x="118" y="10" width="32" height="9" rx="4" fill="#1e293b"/></svg>`
+    }
+  ],
+
+  complexityOptions: [
+    {
+      id: 'focused-minimal',
+      name: 'Focused & Simple',
+      desc: 'Does one core thing effortlessly well with zero clutter or extra menus.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="34" y="18" width="92" height="54" rx="8" fill="#111827" stroke="#34d399" stroke-opacity=".6"/><rect x="46" y="30" width="68" height="12" rx="4" fill="#1e293b"/><rect x="56" y="48" width="48" height="14" rx="6" fill="#34d399" fill-opacity=".8"/></svg>`
+    },
+    {
+      id: 'balanced-complete',
+      name: 'Balanced & Complete',
+      desc: 'Polished everyday features, helpful filters, and clean secondary drawers.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="14" y="14" width="84" height="62" rx="6" fill="#111827" stroke="#6366f1" stroke-opacity=".7"/><rect x="104" y="14" width="42" height="29" rx="5" fill="#131c2e" stroke="#334155"/><rect x="104" y="47" width="42" height="29" rx="5" fill="#131c2e" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'powerhouse-deep',
+      name: 'Deep Powerhouse',
+      desc: 'Rich controls, analytics, presets, shortcuts, and deep customization.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="8" y="10" width="36" height="70" rx="4" fill="#111827" stroke="#334155"/><rect x="49" y="10" width="66" height="44" rx="4" fill="#131c2e" stroke="#22d3ee" stroke-opacity=".6"/><rect x="49" y="58" width="66" height="22" rx="4" fill="#111827" stroke="#334155"/><rect x="120" y="10" width="32" height="70" rx="4" fill="#111827" stroke="#334155"/></svg>`
+    }
+  ],
+
+  navStyleOptions: [
+    {
+      id: 'single-screen',
+      name: 'Single Screen',
+      desc: 'Everything lives on one clear screen with zero page switching.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="14" y="12" width="132" height="66" rx="6" fill="#111827" stroke="#6366f1" stroke-opacity=".65"/><rect x="24" y="22" width="112" height="46" rx="4" fill="#1e293b"/></svg>`
+    },
+    {
+      id: 'tabbed-views',
+      name: 'Clean Tabs / Views',
+      desc: 'Organized top or bottom tabs keep each screen spacious and focused.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="12" y="10" width="34" height="10" rx="3" fill="#6366f1"/><rect x="50" y="10" width="34" height="10" rx="3" fill="#1e293b"/><rect x="88" y="10" width="34" height="10" rx="3" fill="#1e293b"/><rect x="12" y="24" width="136" height="54" rx="5" fill="#111827" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'guided-steps',
+      name: 'Step-by-Step Flow',
+      desc: 'Guides users cleanly from Step 1 -> Step 2 -> Final Result.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><circle cx="40" cy="22" r="7" fill="#34d399"/><line x1="47" y1="22" x2="73" y2="22" stroke="#475569" stroke-width="2"/><circle cx="80" cy="22" r="7" fill="#6366f1"/><line x1="87" y1="22" x2="113" y2="22" stroke="#334155" stroke-width="2"/><circle cx="120" cy="22" r="7" fill="#1e293b" stroke="#475569"/><rect x="24" y="36" width="112" height="40" rx="6" fill="#111827" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'floating-dock',
+      name: 'Floating Dock / HUD',
+      desc: 'A sleek floating pill toolbar hovering over an open canvas.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#060a12"/><rect x="12" y="10" width="136" height="70" rx="6" fill="#0b1220" stroke="#1e293b"/><rect x="38" y="62" width="84" height="12" rx="6" fill="#111827" stroke="#22d3ee" stroke-opacity=".75"/></svg>`
+    }
+  ],
+
+  starterExpOptions: [
+    {
+      id: 'realistic-demo',
+      name: 'Pre-Filled Realistic Examples',
+      desc: 'Opens with realistic sample items ready to click, edit, or clear in 1 tap.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="16" y="14" width="128" height="16" rx="4" fill="#131c2e" stroke="#34d399" stroke-opacity=".5"/><rect x="16" y="36" width="128" height="16" rx="4" fill="#131c2e" stroke="#334155"/><rect x="16" y="58" width="128" height="16" rx="4" fill="#131c2e" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'quick-tour',
+      name: 'Quick Interactive Hint',
+      desc: 'Shows a friendly 1-line dismissible tip pointing to the main action.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="16" y="12" width="128" height="16" rx="4" fill="#312e81" stroke="#6366f1"/><rect x="16" y="34" width="128" height="44" rx="5" fill="#111827" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'template-picker',
+      name: 'Starter Presets / Templates',
+      desc: 'Offers 3–4 curated starting presets users can load and remix.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="14" y="18" width="40" height="54" rx="5" fill="#131c2e" stroke="#22d3ee" stroke-opacity=".65"/><rect x="60" y="18" width="40" height="54" rx="5" fill="#131c2e" stroke="#334155"/><rect x="106" y="18" width="40" height="54" rx="5" fill="#131c2e" stroke="#334155"/></svg>`
+    },
+    {
+      id: 'clean-blank',
+      name: 'Clean Blank Canvas',
+      desc: 'Starts completely empty with an inviting centered "Create First" button.',
+      svg: `<svg viewBox="0 0 160 90" class="w-full h-full"><rect width="160" height="90" fill="#070b14"/><rect x="14" y="12" width="132" height="66" rx="6" fill="#0b101b" stroke="#1e293b" stroke-dasharray="4 3"/><rect x="52" y="38" width="56" height="14" rx="7" fill="#6366f1"/></svg>`
+    }
+  ],
+
+  // Conditional Sub-Menus Catalog
+  subMenus: {
+    modeDeepDive: {
+      app: {
+        title: 'Web App Workflow & Structure',
+        subtitle: 'Fine-tune how your app organizes information and empowers users.',
+        fields: [
+          {
+            key: 'appPrimaryView', label: 'Primary Way Data Is Shown',
+            options: [
+              { id: 'cards-board', label: 'Cards & Columns (Visual & tactile)' },
+              { id: 'data-table', label: 'Sortable Table / List (Fast scanning)' },
+              { id: 'timeline-cal', label: 'Timeline / Calendar (Time-based)' },
+              { id: 'doc-canvas', label: 'Focused Editor / Sheet (Writing & creation)' }
+            ]
+          },
+          {
+            key: 'appPowerFeature', label: 'Signature Power Boost',
+            options: [
+              { id: 'cmd-palette', label: 'Quick Command Bar (Ctrl+K)' },
+              { id: 'bulk-actions', label: 'Multi-Select & Bulk Actions' },
+              { id: 'smart-tags', label: 'Color Tags & Smart Folders' },
+              { id: 'live-analytics', label: 'Live Progress Charts & Insights' }
+            ]
+          }
+        ]
+      },
+      tool: {
+        title: 'Utility / Tool Input & Output Engine',
+        subtitle: 'Shape how users feed data in and get crisp results back out.',
+        fields: [
+          {
+            key: 'toolInputMode', label: 'Primary Input Style',
+            options: [
+              { id: 'sliders-knobs', label: 'Live Sliders, Toggles & Steppers' },
+              { id: 'code-text-editor', label: 'Raw Text / Code / Data Editor' },
+              { id: 'file-dropzone', label: 'Drag & Drop File Processor' },
+              { id: 'structured-form', label: 'Clean Structured Form Fields' }
+            ]
+          },
+          {
+            key: 'toolOutputMode', label: 'Primary Output Result',
+            options: [
+              { id: 'live-preview-card', label: 'Real-Time Visual Preview' },
+              { id: 'table-diff', label: 'Structured Table / Side-by-Side Diff' },
+              { id: 'copyable-snippet', label: '1-Click Copyable Code / Text' },
+              { id: 'download-asset', label: 'Downloadable File / Image' }
+            ]
+          }
+        ]
+      },
+      game: {
+        title: 'Game Mechanics, Pacing & Feel',
+        subtitle: 'Dial in the exact gameplay genre, session rhythm, and player controls.',
+        fields: [
+          {
+            key: 'gameGenre', label: 'Core Gameplay Style',
+            options: [
+              { id: 'arcade-action', label: 'Fast Arcade / Dodge / Shooter' },
+              { id: 'puzzle-grid', label: 'Brainy Puzzle / Tile / Grid' },
+              { id: 'turn-strategy', label: 'Turn-Based Tactics / Cards' },
+              { id: 'rhythm-timing', label: 'Precision Rhythm / Timing' },
+              { id: 'physics-sandbox', label: 'Physics / Gravity / Bounce' }
+            ]
+          },
+          {
+            key: 'gamePacing', label: 'Session & Progression Structure',
+            options: [
+              { id: 'endless-highscore', label: 'Endless Escalating High-Score' },
+              { id: 'level-campaign', label: 'Progressive Stages / Levels' },
+              { id: 'quick-60s', label: 'Quick 60-Second Blitz Rounds' }
+            ]
+          },
+          {
+            key: 'gameJuice', label: 'Game Feel & Juice Intensity',
+            options: [
+              { id: 'max-juice', label: 'High Juice (Particles, screen shake, popups)' },
+              { id: 'crisp-tactile', label: 'Crisp & Tactile (Clean flashes & chimes)' },
+              { id: 'calm-zen', label: 'Calm & Zen (Gentle fades, zero shake)' }
+            ]
+          }
+        ]
+      },
+      experimental: {
+        title: 'Creative Sandbox Medium & Play',
+        subtitle: 'Define what kind of expressive playground this is and how people play with it.',
+        fields: [
+          {
+            key: 'expMedium', label: 'Primary Creative Medium',
+            options: [
+              { id: '2d-particles', label: '2D Particle / Flow-Field Canvas' },
+              { id: '3d-webgl', label: 'Interactive 3D Scene / Sculpting' },
+              { id: 'audio-synth', label: 'Visual Music Synth & Sequencer' },
+              { id: 'kinetic-type', label: 'Kinetic Typography & Poster Art' }
+            ]
+          },
+          {
+            key: 'expInteraction', label: 'How Users Manipulate It',
+            options: [
+              { id: 'direct-brush', label: 'Direct Pointer Brush / Paint / Attract' },
+              { id: 'physics-fling', label: 'Grab, Drag & Fling Objects' },
+              { id: 'sliders-seed', label: 'Live Parameter Sliders + Randomize Seed' }
+            ]
+          }
+        ]
+      },
+      free: {
+        title: 'Free Create — Hybrid Vision Mixer',
+        subtitle: 'Blend different disciplines together into something completely original.',
+        fields: [
+          {
+            key: 'freeBlend', label: 'What Worlds Are You Blending?',
+            options: [
+              { id: 'app-game-blend', label: 'Gamified App (Tasks/habits meet RPG/garden)' },
+              { id: 'tool-art-blend', label: 'Playful Toy-Tool (Utility with generative visuals)' },
+              { id: 'story-interactive', label: 'Interactive Story / Living World' },
+              { id: 'total-wildcard', label: 'Pure Unconventional Experiment' }
+            ]
+          },
+          {
+            key: 'freeStructure', label: 'Overall Spatial Metaphor',
+            options: [
+              { id: 'spatial-desk', label: 'Tactile Desk / Workbench Metaphor' },
+              { id: 'stage-performer', label: 'Living Stage / World Metaphor' },
+              { id: 'notebook-lab', label: 'Interactive Field Notebook Metaphor' }
+            ]
+          }
+        ]
+      }
+    },
+
+    audioEngine: {
+      title: 'Sound Engine Tuning (Unlocked by Built-In Audio)',
+      subtitle: 'Click "Test Sound" on any character to hear how your app will sound.',
+      characters: [
+        { id: 'warm-marimba', label: 'Warm Marimba / Sine', desc: 'Gentle, woody, pleasant tones ideal for daily apps & calm games.' },
+        { id: 'retro-8bit', label: 'Crisp Retro 8-Bit', desc: 'Nostalgic square/triangle chiptune bleeps & power-up arpeggios.' },
+        { id: 'scifi-fm', label: 'Futuristic Sci-Fi FM', desc: 'Glassy harmonic chimes and sleek telemetry sweeps.' },
+        { id: 'soft-mech', label: 'Soft Mechanical Clicks', desc: 'Ultra-subtle tactile switch clicks with minimal tonal pitch.' }
+      ],
+      triggers: [
+        { id: 'milestones-only', label: 'Key Actions & Wins Only (Calm)' },
+        { id: 'all-taps', label: 'Every Button Tap & Slider Tick (Tactile)' },
+        { id: 'ambient-events', label: 'Optional Ambient Drone + Events' }
+      ]
+    },
+
+    persistenceBackup: {
+      title: 'Save & Backup Fine-Tuning (Unlocked by Auto-Save)',
+      fields: [
+        {
+          key: 'saveIndicator', label: 'Save Status Visibility',
+          options: [
+            { id: 'subtle-pill', label: 'Subtle "Saved" Micro-Badge' },
+            { id: 'silent-auto', label: 'Silent Instant Auto-Save' }
+          ]
+        },
+        {
+          key: 'backupFormat', label: 'User Backup & Reset Controls',
+          options: [
+            { id: 'json-file', label: 'Download & Restore JSON File' },
+            { id: 'csv-export', label: 'Export Spreadsheet (CSV)' },
+            { id: 'both-formats', label: 'Both JSON Backup + CSV Export' }
+          ]
+        }
+      ]
+    },
+
+    visualFinish: {
+      title: 'Surface Finish & Atmosphere Tuning',
+      cornerRadius: [
+        { id: 'sharp', label: 'Crisp & Sharp (4px)' },
+        { id: 'balanced', label: 'Modern Rounded (12px)' },
+        { id: 'pillowy', label: 'Soft & Pillowy (20px)' }
+      ],
+      density: [
+        { id: 'spacious', label: 'Airy & Spacious' },
+        { id: 'balanced', label: 'Balanced' },
+        { id: 'compact', label: 'Compact & Dense' }
+      ],
+      texture: [
+        { id: 'clean-solid', label: 'Clean Solid Canvas' },
+        { id: 'dot-grid', label: 'Subtle Blueprint Dot Grid' },
+        { id: 'gradient-mesh', label: 'Soft Ambient Gradient Mesh' }
+      ]
+    },
+
+    libraryTuning: {
+      threejs: {
+        title: '3D Scene & Camera Setup (Unlocked by Three.js)',
+        camera: [
+          { id: 'orbit', label: 'Orbit & Zoom (Mouse/Touch drag)' },
+          { id: 'isometric', label: 'Fixed Isometric Diorama' },
+          { id: 'first-person', label: 'First-Person / Fly Camera' }
+        ],
+        lighting: [
+          { id: 'studio-3pt', label: 'Clean 3-Point Studio Light' },
+          { id: 'neon-cyber', label: 'Moody Neon Rim Lights' },
+          { id: 'daylight-sky', label: 'Bright Daylight Hemisphere' }
+        ]
+      },
+      charts: {
+        title: 'Data Visualization Setup (Unlocked by Chart.js / D3)',
+        chartType: [
+          { id: 'line-area', label: 'Smooth Line & Area Trends' },
+          { id: 'bar-compare', label: 'Grouped / Stacked Bars' },
+          { id: 'donut-gauge', label: 'Donut Breakdown & Gauges' },
+          { id: 'network-graph', label: 'Interactive Nodes / Custom SVG' }
+        ],
+        interactivity: [
+          { id: 'hover-tooltips', label: 'Rich Hover Tooltips' },
+          { id: 'click-filter', label: 'Click Chart Segment to Filter' },
+          { id: 'live-stream', label: 'Smooth Live-Updating Series' }
+        ]
+      },
+      matterjs: {
+        title: '2D Physics World Rules (Unlocked by Matter.js)',
+        gravity: [
+          { id: 'earth-down', label: 'Standard Downward Gravity' },
+          { id: 'zero-g', label: 'Zero-Gravity Floating Space' },
+          { id: 'toggleable', label: 'User-Toggleable Gravity Slider' }
+        ],
+        bounds: [
+          { id: 'solid-walls', label: 'Bouncy Solid Screen Walls' },
+          { id: 'open-abyss', label: 'Open Floor / Endless Drop' }
+        ]
       }
     }
   },
@@ -265,10 +659,10 @@ const STUDIO_CATALOG = {
   ],
 
   typographyStyles: [
-    { id: 'clean-modern', name: 'Clean Modern', desc: 'Crisp everyday sans-serif (Inter / system) for instant clarity.' },
-    { id: 'tech-mono', name: 'Technical & Precision', desc: 'Clean UI sans paired with monospace numbers & telemetry.' },
-    { id: 'editorial-serif', name: 'Editorial Magazine', desc: 'Refined serif headlines paired with comfortable reading text.' },
-    { id: 'friendly-rounded', name: 'Warm & Friendly', desc: 'Approachable rounded headings with relaxed, inviting spacing.' }
+    { id: 'clean-modern', name: 'Clean Modern', desc: 'Crisp everyday sans-serif (Inter / system) for instant clarity.', sampleFont: "'Inter', sans-serif" },
+    { id: 'tech-mono', name: 'Technical & Precision', desc: 'Clean UI sans paired with monospace numbers & telemetry.', sampleFont: "'JetBrains Mono', monospace" },
+    { id: 'editorial-serif', name: 'Editorial Magazine', desc: 'Refined serif headlines paired with comfortable reading text.', sampleFont: "Georgia, 'Times New Roman', serif" },
+    { id: 'friendly-rounded', name: 'Warm & Friendly', desc: 'Approachable rounded headings with relaxed, inviting spacing.', sampleFont: "ui-rounded, 'SF Pro Rounded', 'Inter', sans-serif" }
   ],
 
   elementStyles: [
@@ -387,17 +781,17 @@ const STUDIO_CATALOG = {
   ],
 
   jsLibsOptions: [
-    { id: 'threejs', label: '3D Worlds & Lighting (Three.js)', modes: ['game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.min.js"></script>', desc: 'Real-time 3D scenes, cameras, meshes, and shadows.' },
-    { id: 'pixijs', label: 'Ultra-Fast 2D Sprites (PixiJS)', modes: ['game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.6.6/dist/pixi.min.js"></script>', desc: 'Hardware-accelerated 2D graphics and thousands of particles.' },
-    { id: 'matterjs', label: '2D Physics & Gravity (Matter.js)', modes: ['game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>', desc: 'Bouncing bodies, collisions, ropes, and realistic gravity.' },
-    { id: 'gsap', label: 'Pro Motion Timelines (GSAP)', modes: ['app', 'game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>', desc: 'Silky choreographed animations and UI entrances.' },
-    { id: 'chartjs', label: 'Charts & Analytics (Chart.js)', modes: ['app', 'tool'], cdn: '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>', desc: 'Clean interactive bar, line, pie, and radar charts.' },
-    { id: 'konva', label: 'Interactive Canvas Shapes (Konva)', modes: ['tool', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/konva@9.3.18/konva.min.js"></script>', desc: 'Drag, resize, and layer shapes on a 2D canvas.' },
-    { id: 'tonejs', label: 'Music & Beat Synth (Tone.js)', modes: ['game', 'experimental', 'tool'], cdn: '<script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>', desc: 'Musical instruments, sequencers, and audio effects.' },
-    { id: 'd3', label: 'Custom Data Diagrams (D3.js)', modes: ['tool', 'app', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>', desc: 'Custom graphs, networks, and interactive data visuals.' },
-    { id: 'confetti', label: 'Celebration Confetti', modes: ['app', 'game'], cdn: '<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>', desc: 'Fun particle bursts when users complete goals or win.' },
-    { id: 'lucide', label: 'Crisp Icon Pack (Lucide)', modes: ['app', 'tool', 'game', 'experimental'], cdn: '<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>', desc: 'Consistent, clean vector icons across all buttons.' },
-    { id: 'tailwind', label: 'Utility Styling (Tailwind CSS)', modes: ['app', 'tool'], cdn: '<script src="https://cdn.tailwindcss.com/3.4.17"></script>', desc: 'Rapid utility classes alongside custom style.css.' }
+    { id: 'threejs', label: '3D Worlds & Lighting (Three.js)', modes: ['game', 'experimental', 'free'], cdn: '<script src="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.min.js"><\/script>', desc: 'Real-time 3D scenes, cameras, meshes, and shadows.' },
+    { id: 'pixijs', label: 'Ultra-Fast 2D Sprites (PixiJS)', modes: ['game', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.6.6/dist/pixi.min.js"><\/script>', desc: 'Hardware-accelerated 2D graphics and thousands of particles.' },
+    { id: 'matterjs', label: '2D Physics & Gravity (Matter.js)', modes: ['game', 'experimental', 'free'], cdn: '<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"><\/script>', desc: 'Bouncing bodies, collisions, ropes, and realistic gravity.' },
+    { id: 'gsap', label: 'Pro Motion Timelines (GSAP)', modes: ['app', 'game', 'experimental', 'free'], cdn: '<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"><\/script>', desc: 'Silky choreographed animations and UI entrances.' },
+    { id: 'chartjs', label: 'Charts & Analytics (Chart.js)', modes: ['app', 'tool', 'free'], cdn: '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"><\/script>', desc: 'Clean interactive bar, line, pie, and radar charts.' },
+    { id: 'konva', label: 'Interactive Canvas Shapes (Konva)', modes: ['tool', 'experimental'], cdn: '<script src="https://cdn.jsdelivr.net/npm/konva@9.3.18/konva.min.js"><\/script>', desc: 'Drag, resize, and layer shapes on a 2D canvas.' },
+    { id: 'tonejs', label: 'Music & Beat Synth (Tone.js)', modes: ['game', 'experimental', 'tool', 'free'], cdn: '<script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"><\/script>', desc: 'Musical instruments, sequencers, and audio effects.' },
+    { id: 'd3', label: 'Custom Data Diagrams (D3.js)', modes: ['tool', 'app', 'experimental', 'free'], cdn: '<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"><\/script>', desc: 'Custom graphs, networks, and interactive data visuals.' },
+    { id: 'confetti', label: 'Celebration Confetti', modes: ['app', 'game', 'free'], cdn: '<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"><\/script>', desc: 'Fun particle bursts when users complete goals or win.' },
+    { id: 'lucide', label: 'Crisp Icon Pack (Lucide)', modes: ['app', 'tool', 'game', 'experimental', 'free'], cdn: '<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"><\/script>', desc: 'Consistent, clean vector icons across all buttons.' },
+    { id: 'tailwind', label: 'Utility Styling (Tailwind CSS)', modes: ['app', 'tool', 'free'], cdn: '<script src="https://cdn.tailwindcss.com/3.4.17"><\/script>', desc: 'Rapid utility classes alongside custom style.css.' }
   ]
 };
 
@@ -1068,6 +1462,7 @@ const PIPELINE_STEPS = [
     directive: 'Output ONLY valid, complete script.js code—no markdown fences, no commentary, zero TODOs, zero stubs, zero truncated functions.'
   }
 ];
+
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 function createDefaultStudioConfig(type = 'app') {
@@ -1095,7 +1490,39 @@ function createDefaultStudioConfig(type = 'app') {
     css3: [...d.css3],
     jsArch: [...d.jsArch],
     jsLibs: [...d.jsLibs],
-    essentials: [...d.essentials]
+    essentials: [...d.essentials],
+    // Conditional & Expanded Sub-Menu Settings
+    subConfig: {
+      // Mode deep-dives
+      appPrimaryView: 'cards-board',
+      appPowerFeature: 'cmd-palette',
+      toolInputMode: 'sliders-knobs',
+      toolOutputMode: 'live-preview-card',
+      gameGenre: 'arcade-action',
+      gamePacing: 'endless-highscore',
+      gameJuice: 'max-juice',
+      expMedium: '2d-particles',
+      expInteraction: 'direct-brush',
+      freeBlend: 'app-game-blend',
+      freeStructure: 'spatial-desk',
+      // Audio sub-menu
+      audioCharacter: type === 'game' ? 'retro-8bit' : 'warm-marimba',
+      audioTriggers: 'milestones-only',
+      // Persistence sub-menu
+      saveIndicator: 'subtle-pill',
+      backupFormat: type === 'tool' ? 'both-formats' : 'json-file',
+      // Visual finish sub-menu
+      cornerRadius: 'balanced',
+      visualDensity: 'balanced',
+      bgTexture: type === 'experimental' ? 'gradient-mesh' : 'clean-solid',
+      // Library sub-menus
+      threeCamera: 'orbit',
+      threeLighting: 'studio-3pt',
+      chartType: 'line-area',
+      chartInteractivity: 'hover-tooltips',
+      matterGravity: 'earth-down',
+      matterBounds: 'solid-walls'
+    }
   };
 }
 
@@ -1115,6 +1542,7 @@ const state = {
   storagePersisted: false,
   studioConfig: createDefaultStudioConfig('app'),
   activeBpTab: 'essentials',
+  guiderStepIndex: 0,
   desktopLayout: 'split',
   userPrompt: '',
   notesText: '',
@@ -1227,7 +1655,9 @@ const el = {
   projectTypeSelector: document.getElementById('projectTypeSelector'),
   dynamicSamplePrompts: document.getElementById('dynamicSamplePrompts'),
   blueprintSummaryChips: document.getElementById('blueprintSummaryChips'),
+  openPromptGuiderBtn: document.getElementById('openPromptGuiderBtn'),
   openBlueprintModalBtn: document.getElementById('openBlueprintModalBtn'),
+  switchFromMenuToGuiderBtn: document.getElementById('switchFromMenuToGuiderBtn'),
   blueprintModal: document.getElementById('blueprintModal'),
   bpModalTypeBadge: document.getElementById('bpModalTypeBadge'),
   closeBlueprintModalBtn: document.getElementById('closeBlueprintModalBtn'),
@@ -1243,6 +1673,12 @@ const el = {
   bpTargetAudience: document.getElementById('bpTargetAudience'),
   bpExtraConstraints: document.getElementById('bpExtraConstraints'),
   bpAntiGoals: document.getElementById('bpAntiGoals'),
+  bpModeDeepDiveSection: document.getElementById('bpModeDeepDiveSection'),
+  bpAudioSubSection: document.getElementById('bpAudioSubSection'),
+  bpPersistenceSubSection: document.getElementById('bpPersistenceSubSection'),
+  bpLiveVisualSpecimen: document.getElementById('bpLiveVisualSpecimen'),
+  bpVisualFinishSection: document.getElementById('bpVisualFinishSection'),
+  bpLibsSubMenusContainer: document.getElementById('bpLibsSubMenusContainer'),
   dynamicEssentialsTitle: document.getElementById('dynamicEssentialsTitle'),
   dynamicEssentialsSubtitle: document.getElementById('dynamicEssentialsSubtitle'),
   dynamicEssentialsBadge: document.getElementById('dynamicEssentialsBadge'),
@@ -1261,6 +1697,29 @@ const el = {
   css3SelectedCount: document.getElementById('css3SelectedCount'),
   jsArchSelectedCount: document.getElementById('jsArchSelectedCount'),
   jsLibsSelectedCount: document.getElementById('jsLibsSelectedCount'),
+  // Prompt Guider Modal Elements
+  promptGuiderModal: document.getElementById('promptGuiderModal'),
+  closePromptGuiderBtn: document.getElementById('closePromptGuiderBtn'),
+  guiderOpenFullMenuBtn: document.getElementById('guiderOpenFullMenuBtn'),
+  guiderStepCounterBadge: document.getElementById('guiderStepCounterBadge'),
+  guiderModeBadge: document.getElementById('guiderModeBadge'),
+  guiderProgressBar: document.getElementById('guiderProgressBar'),
+  guiderStepPills: document.getElementById('guiderStepPills'),
+  guiderBranchBadge: document.getElementById('guiderBranchBadge'),
+  guiderBranchBadgeText: document.getElementById('guiderBranchBadgeText'),
+  guiderQuestionTitle: document.getElementById('guiderQuestionTitle'),
+  guiderQuestionSubtitle: document.getElementById('guiderQuestionSubtitle'),
+  guiderWhyBox: document.getElementById('guiderWhyBox'),
+  guiderWhyText: document.getElementById('guiderWhyText'),
+  guiderOptionsArea: document.getElementById('guiderOptionsArea'),
+  guiderInlineSubMenu: document.getElementById('guiderInlineSubMenu'),
+  guiderLiveSpecimen: document.getElementById('guiderLiveSpecimen'),
+  guiderVisionCount: document.getElementById('guiderVisionCount'),
+  guiderVisionSummary: document.getElementById('guiderVisionSummary'),
+  guiderBackBtn: document.getElementById('guiderBackBtn'),
+  guiderNextBtn: document.getElementById('guiderNextBtn'),
+  guiderNextBtnLabel: document.getElementById('guiderNextBtnLabel'),
+  guiderDraftPromptBtn: document.getElementById('guiderDraftPromptBtn'),
   startBuildBtn: document.getElementById('startBuildBtn'),
   pauseBtn: document.getElementById('pauseBtn'),
   resumeBtn: document.getElementById('resumeBtn'),
@@ -1445,7 +1904,141 @@ function escapeHtml(str) {
 }
 
 // =========================================================================
-// DESKTOP LAYOUT SWITCHER (MORE SCREEN REAL ESTATE)
+// INTERACTIVE WEB AUDIO PREVIEWER (FOR PROMPT GUIDER & FULL MENU)
+// =========================================================================
+let previewAudioCtx = null;
+function playPreviewTone(character) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    if (!previewAudioCtx) previewAudioCtx = new AudioCtx();
+    if (previewAudioCtx.state === 'suspended') previewAudioCtx.resume();
+
+    const now = previewAudioCtx.currentTime;
+    const playNote = (freq, type, startOffset, dur, vol = 0.08) => {
+      const osc = previewAudioCtx.createOscillator();
+      const gain = previewAudioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now + startOffset);
+      gain.gain.setValueAtTime(0.0001, now + startOffset);
+      gain.gain.exponentialRampToValueAtTime(vol, now + startOffset + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + startOffset + dur);
+      osc.connect(gain);
+      gain.connect(previewAudioCtx.destination);
+      osc.start(now + startOffset);
+      osc.stop(now + startOffset + dur + 0.02);
+    };
+
+    if (character === 'retro-8bit') {
+      playNote(523.25, 'square', 0, 0.08, 0.05);
+      playNote(659.25, 'square', 0.08, 0.08, 0.05);
+      playNote(783.99, 'square', 0.16, 0.14, 0.05);
+    } else if (character === 'scifi-fm') {
+      playNote(440, 'triangle', 0, 0.14, 0.07);
+      playNote(880, 'sine', 0.06, 0.2, 0.06);
+    } else if (character === 'soft-mech') {
+      playNote(180, 'triangle', 0, 0.035, 0.08);
+      playNote(320, 'sine', 0.02, 0.025, 0.04);
+    } else {
+      // warm-marimba default
+      playNote(523.25, 'sine', 0, 0.18, 0.08);
+      playNote(659.25, 'sine', 0.07, 0.22, 0.07);
+    }
+  } catch (_) {}
+}
+
+// =========================================================================
+// LIVE INTERACTIVE VISUAL SPECIMEN RENDERER
+// =========================================================================
+function renderLiveVisualSpecimen(containerEl) {
+  if (!containerEl) return;
+  const cfg = state.studioConfig;
+  const sub = cfg.subConfig || {};
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+  const mood = findCatalogItem(STUDIO_CATALOG.colorMoods, cfg.colorMood);
+  const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
+  const typo = findCatalogItem(STUDIO_CATALOG.typographyStyles, cfg.typographyStyle);
+  const elem = findCatalogItem(STUDIO_CATALOG.elementStyles, cfg.elementStyle);
+  const light = findCatalogItem(STUDIO_CATALOG.lightingStyles, cfg.lightingStyle);
+  const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
+
+  const isLightMode = cfg.designStyle === 'swiss-minimal' || cfg.designStyle === 'warm-paper' || cfg.designStyle === 'neubrutalism' || cfg.colorMood === 'crisp-daylight' || cfg.lightingStyle === 'daylight-flat';
+  const bg = cfg.designStyle === 'neubrutalism' ? '#fef08a' : cfg.designStyle === 'warm-paper' ? '#f5efe6' : cfg.designStyle === 'retro-crt' ? '#041008' : isLightMode ? '#f8fafc' : mood.colors[0];
+  const cardBg = cfg.designStyle === 'glassmorphism' ? 'rgba(255,255,255,0.08)' : cfg.designStyle === 'neubrutalism' ? '#ffffff' : cfg.designStyle === 'warm-paper' ? '#fffcf7' : cfg.designStyle === 'retro-crt' ? '#071a0e' : isLightMode ? '#ffffff' : mood.colors[1];
+  const accent = cfg.designStyle === 'retro-crt' ? '#22c55e' : mood.colors[2];
+  const accent2 = cfg.designStyle === 'retro-crt' ? '#4ade80' : mood.colors[3];
+  const textPrimary = isLightMode ? '#0f172a' : '#f1f5f9';
+  const textMuted = isLightMode ? '#475569' : '#94a3b8';
+
+  const radiusMap = { sharp: '4px', balanced: '12px', pillowy: '20px' };
+  const radius = cfg.elementStyle === 'pill-tactile' ? '18px' : cfg.elementStyle === 'chamfered-scifi' ? '2px' : (radiusMap[sub.cornerRadius] || '12px');
+  const padMap = { spacious: '16px', balanced: '12px', compact: '8px' };
+  const pad = padMap[sub.visualDensity] || '12px';
+
+  let border = `1px solid ${isLightMode ? '#cbd5e1' : 'rgba(148,163,184,0.22)'}`;
+  let shadow = '0 8px 20px -8px rgba(0,0,0,0.45)';
+  if (cfg.designStyle === 'neubrutalism' || cfg.elementStyle === 'brutal-offset') {
+    border = '2px solid #000000';
+    shadow = '4px 4px 0px #000000';
+  } else if (cfg.lightingStyle === 'neon-bloom' || cfg.designStyle === 'cyberpunk-hud') {
+    border = `1px solid ${accent2}`;
+    shadow = `0 0 16px -3px ${accent2}66`;
+  } else if (cfg.lightingStyle === 'top-specular-rim') {
+    shadow = 'inset 0 1px 0 rgba(255,255,255,0.22), 0 10px 24px -10px rgba(0,0,0,0.6)';
+  } else if (cfg.lightingStyle === 'ambient-aura') {
+    shadow = `0 0 28px -6px ${accent}55`;
+  }
+
+  let bgPattern = '';
+  if (sub.bgTexture === 'dot-grid') {
+    bgPattern = `background-image: radial-gradient(${isLightMode ? 'rgba(15,23,42,0.12)' : 'rgba(255,255,255,0.12)'} 1px, transparent 1px); background-size: 14px 14px;`;
+  } else if (sub.bgTexture === 'gradient-mesh' || cfg.designStyle === 'glassmorphism') {
+    bgPattern = `background-image: radial-gradient(circle at 15% 20%, ${accent}33 0%, transparent 50%), radial-gradient(circle at 85% 80%, ${accent2}28 0%, transparent 50%);`;
+  }
+
+  const btnRadius = cfg.elementStyle === 'pill-tactile' ? '9999px' : radius;
+  const sampleTitle = cfg.projectType === 'game' ? 'Wave 04 • Score 2,450' : cfg.projectType === 'tool' ? 'Live Output • 98.4%' : cfg.projectType === 'experimental' ? 'Seed #409 • Flow' : 'Today’s Focus • 3/5';
+  const sampleAction = cfg.projectType === 'game' ? 'Boost' : cfg.projectType === 'tool' ? 'Copy Result' : cfg.projectType === 'experimental' ? 'Randomize' : 'Add Item';
+
+  containerEl.innerHTML = `
+    <div class="live-specimen-stage" style="background-color:${bg}; ${bgPattern}; border:1px solid rgba(51,65,85,0.6); font-family:${typo.sampleFont};">
+      <div style="background:${cardBg}; border:${border}; border-radius:${radius}; padding:${pad}; box-shadow:${shadow}; backdrop-filter:${cfg.designStyle === 'glassmorphism' ? 'blur(10px)' : 'none'};">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;">
+          <div style="min-width:0;">
+            <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:${accent2}; font-weight:700;">${escapeHtml(mode.label)} • ${escapeHtml(iface.name)}</div>
+            <div style="font-size:13px; font-weight:700; color:${textPrimary}; margin-top:2px; font-variant-numeric:tabular-nums;">${escapeHtml(sampleTitle)}</div>
+          </div>
+          <span style="font-size:10px; padding:2px 8px; border-radius:${btnRadius}; background:${accent}22; color:${isLightMode ? textPrimary : accent2}; border:1px solid ${accent}55; font-weight:600;">${escapeHtml(style.name.split(' ')[0])}</span>
+        </div>
+        <div style="font-size:11px; color:${textMuted}; line-height:1.4; margin-bottom:10px;">
+          ${escapeHtml(light.name)} lighting with ${escapeHtml(elem.name.toLowerCase())} controls.
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <button type="button" data-specimen-test="1" class="live-specimen-btn" style="background:${accent}; color:#ffffff; border:${cfg.designStyle === 'neubrutalism' ? '2px solid #000' : 'none'}; border-radius:${btnRadius}; padding:5px 12px; font-size:11px; font-weight:600; box-shadow:${cfg.designStyle === 'neubrutalism' ? '2px 2px 0 #000' : 'none'};">
+            ${escapeHtml(sampleAction)} (Tap)
+          </button>
+          <span style="font-size:10px; color:${textMuted};">${escapeHtml(mood.name)}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const testBtn = containerEl.querySelector('[data-specimen-test]');
+  if (testBtn) {
+    testBtn.addEventListener('click', () => {
+      if (cfg.sensoryAudio === 'web-audio-subtle' || cfg.sensoryAudio === 'web-audio-arcade') {
+        playPreviewTone(sub.audioCharacter || 'warm-marimba');
+      }
+      testBtn.textContent = 'Feels Great!';
+      setTimeout(() => {
+        testBtn.textContent = `${sampleAction} (Tap)`;
+      }, 700);
+    });
+  }
+}
+
+// =========================================================================
+// DESKTOP LAYOUT SWITCHER
 // =========================================================================
 function setDesktopLayout(mode) {
   state.desktopLayout = mode;
@@ -1471,7 +2064,7 @@ function setDesktopLayout(mode) {
 }
 
 // =========================================================================
-// STUDIO BLUEPRINT CONFIGURATOR UI & DYNAMIC CONTEXT WEAVER
+// STUDIO BLUEPRINT CONFIGURATOR UI & CONDITIONAL SUB-MENUS
 // =========================================================================
 function findCatalogItem(list, id) {
   return list.find((item) => item.id === id) || list[0];
@@ -1579,6 +2172,7 @@ function renderVisualGallery(container, items, selectedId, onSelect) {
       saveStudioConfig();
       renderBlueprintSummaryStrip();
       renderVisualGallery(container, items, item.id, onSelect);
+      renderLiveVisualSpecimen(el.bpLiveVisualSpecimen);
     });
     container.appendChild(btn);
   });
@@ -1612,6 +2206,7 @@ function renderMultiToggleGrid(container, items, selectedList, countEl, onToggle
       saveStudioConfig();
       renderBlueprintSummaryStrip();
       renderMultiToggleGrid(container, items, selectedList, countEl, onToggle, currentType);
+      renderConditionalLibsSubMenus(el.bpLibsSubMenusContainer);
     });
     container.appendChild(btn);
   });
@@ -1621,6 +2216,243 @@ function toggleArrayItem(arr, id) {
   const idx = arr.indexOf(id);
   if (idx === -1) arr.push(id);
   else arr.splice(idx, 1);
+}
+
+function renderModeDeepDiveSubMenu(container) {
+  if (!container) return;
+  const cfg = state.studioConfig;
+  const sub = cfg.subConfig;
+  const spec = STUDIO_CATALOG.subMenus.modeDeepDive[cfg.projectType] || STUDIO_CATALOG.subMenus.modeDeepDive.app;
+
+  container.innerHTML = `
+    <div class="flex items-center justify-between gap-2">
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-mono-code bg-cyan-500/20 text-cyan-200 border border-cyan-500/35 uppercase">Mode Sub-Menu</span>
+          <h4 class="text-xs font-semibold text-cyan-100">${escapeHtml(spec.title)}</h4>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-0.5">${escapeHtml(spec.subtitle)}</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${spec.fields.length >= 3 ? '3' : '2'} gap-3">
+      ${spec.fields.map((f) => `
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-200 mb-1">${escapeHtml(f.label)}</label>
+          <select data-subkey="${escapeHtml(f.key)}" class="sub-select w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 outline-none focus:border-cyan-500 text-xs">
+            ${f.options.map((o) => `<option value="${escapeHtml(o.id)}" ${sub[f.key] === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+          </select>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  container.querySelectorAll('.sub-select').forEach((sel) => {
+    sel.addEventListener('change', (e) => {
+      state.studioConfig.subConfig[sel.dataset.subkey] = e.target.value;
+      saveStudioConfig();
+    });
+  });
+}
+
+function renderConditionalAudioSubMenu(container) {
+  if (!container) return;
+  const cfg = state.studioConfig;
+  const sub = cfg.subConfig;
+  const isAudioActive = cfg.sensoryAudio === 'web-audio-subtle' || cfg.sensoryAudio === 'web-audio-arcade';
+  container.classList.toggle('hidden', !isAudioActive);
+  if (!isAudioActive) return;
+
+  const spec = STUDIO_CATALOG.subMenus.audioEngine;
+  container.innerHTML = `
+    <div class="flex items-center justify-between gap-2">
+      <span class="text-xs font-semibold text-fuchsia-200">${escapeHtml(spec.title)}</span>
+      <button type="button" data-play-current-tone="1" class="px-2 py-0.5 rounded bg-fuchsia-600/25 hover:bg-fuchsia-600/40 border border-fuchsia-400/40 text-fuchsia-100 text-[10px] font-semibold transition">
+        Test Sound
+      </button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <div>
+        <label class="block text-[11px] font-medium text-slate-300 mb-1">Synth Tone Character</label>
+        <select data-subkey="audioCharacter" class="sub-audio-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs outline-none focus:border-fuchsia-500">
+          ${spec.characters.map((c) => `<option value="${escapeHtml(c.id)}" ${sub.audioCharacter === c.id ? 'selected' : ''}>${escapeHtml(c.label)}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-[11px] font-medium text-slate-300 mb-1">When Sounds Play</label>
+        <select data-subkey="audioTriggers" class="sub-audio-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs outline-none focus:border-fuchsia-500">
+          ${spec.triggers.map((t) => `<option value="${escapeHtml(t.id)}" ${sub.audioTriggers === t.id ? 'selected' : ''}>${escapeHtml(t.label)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  `;
+
+  container.querySelectorAll('.sub-audio-sel').forEach((sel) => {
+    sel.addEventListener('change', (e) => {
+      state.studioConfig.subConfig[sel.dataset.subkey] = e.target.value;
+      saveStudioConfig();
+      if (sel.dataset.subkey === 'audioCharacter') playPreviewTone(e.target.value);
+    });
+  });
+  const testBtn = container.querySelector('[data-play-current-tone]');
+  if (testBtn) {
+    testBtn.addEventListener('click', () => playPreviewTone(state.studioConfig.subConfig.audioCharacter));
+  }
+}
+
+function renderConditionalPersistenceSubMenu(container) {
+  if (!container) return;
+  const cfg = state.studioConfig;
+  const sub = cfg.subConfig;
+  const isPersistActive = cfg.dataPersistence !== 'ephemeral';
+  container.classList.toggle('hidden', !isPersistActive);
+  if (!isPersistActive) return;
+
+  const spec = STUDIO_CATALOG.subMenus.persistenceBackup;
+  container.innerHTML = `
+    <div class="text-xs font-semibold text-emerald-200">${escapeHtml(spec.title)}</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      ${spec.fields.map((f) => `
+        <div>
+          <label class="block text-[11px] font-medium text-slate-300 mb-1">${escapeHtml(f.label)}</label>
+          <select data-subkey="${escapeHtml(f.key)}" class="sub-pers-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs outline-none focus:border-emerald-500">
+            ${f.options.map((o) => `<option value="${escapeHtml(o.id)}" ${sub[f.key] === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+          </select>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  container.querySelectorAll('.sub-pers-sel').forEach((sel) => {
+    sel.addEventListener('change', (e) => {
+      state.studioConfig.subConfig[sel.dataset.subkey] = e.target.value;
+      saveStudioConfig();
+    });
+  });
+}
+
+function renderVisualFinishSubMenu(container) {
+  if (!container) return;
+  const sub = state.studioConfig.subConfig;
+  const spec = STUDIO_CATALOG.subMenus.visualFinish;
+  container.innerHTML = `
+    <div class="flex items-center justify-between gap-2">
+      <h4 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">7. ${escapeHtml(spec.title)}</h4>
+      <span class="text-[11px] text-slate-400">Fine-tune surface feel</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Corner Roundness</label>
+        <select data-subkey="cornerRadius" class="sub-vis-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 text-xs outline-none focus:border-indigo-500">
+          ${spec.cornerRadius.map((o) => `<option value="${o.id}" ${sub.cornerRadius === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Spacing Density</label>
+        <select data-subkey="visualDensity" class="sub-vis-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 text-xs outline-none focus:border-indigo-500">
+          ${spec.density.map((o) => `<option value="${o.id}" ${sub.visualDensity === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-slate-300 mb-1">Background Texture</label>
+        <select data-subkey="bgTexture" class="sub-vis-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-2 text-slate-200 text-xs outline-none focus:border-indigo-500">
+          ${spec.texture.map((o) => `<option value="${o.id}" ${sub.bgTexture === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  `;
+
+  container.querySelectorAll('.sub-vis-sel').forEach((sel) => {
+    sel.addEventListener('change', (e) => {
+      state.studioConfig.subConfig[sel.dataset.subkey] = e.target.value;
+      saveStudioConfig();
+      renderLiveVisualSpecimen(el.bpLiveVisualSpecimen);
+      renderLiveVisualSpecimen(el.guiderLiveSpecimen);
+    });
+  });
+}
+
+function renderConditionalLibsSubMenus(container) {
+  if (!container) return;
+  const libs = state.studioConfig.jsLibs || [];
+  const sub = state.studioConfig.subConfig;
+  const blocks = [];
+
+  if (libs.includes('threejs')) {
+    const t = STUDIO_CATALOG.subMenus.libraryTuning.threejs;
+    blocks.push(`
+      <div class="rounded-xl border border-indigo-500/35 bg-indigo-950/15 p-3.5 space-y-2 submenu-reveal">
+        <div class="text-xs font-semibold text-indigo-200">${escapeHtml(t.title)}</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">Camera Control Style</label>
+            <select data-subkey="threeCamera" class="sub-lib-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              ${t.camera.map((o) => `<option value="${o.id}" ${sub.threeCamera === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">3D Scene Lighting Rig</label>
+            <select data-subkey="threeLighting" class="sub-lib-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              ${t.lighting.map((o) => `<option value="${o.id}" ${sub.threeLighting === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  if (libs.includes('chartjs') || libs.includes('d3')) {
+    const c = STUDIO_CATALOG.subMenus.libraryTuning.charts;
+    blocks.push(`
+      <div class="rounded-xl border border-cyan-500/35 bg-cyan-950/15 p-3.5 space-y-2 submenu-reveal">
+        <div class="text-xs font-semibold text-cyan-200">${escapeHtml(c.title)}</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">Primary Chart Style</label>
+            <select data-subkey="chartType" class="sub-lib-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              ${c.chartType.map((o) => `<option value="${o.id}" ${sub.chartType === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">Chart Interactivity</label>
+            <select data-subkey="chartInteractivity" class="sub-lib-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              ${c.interactivity.map((o) => `<option value="${o.id}" ${sub.chartInteractivity === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  if (libs.includes('matterjs')) {
+    const m = STUDIO_CATALOG.subMenus.libraryTuning.matterjs;
+    blocks.push(`
+      <div class="rounded-xl border border-emerald-500/35 bg-emerald-950/15 p-3.5 space-y-2 submenu-reveal">
+        <div class="text-xs font-semibold text-emerald-200">${escapeHtml(m.title)}</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">Gravity Mode</label>
+            <select data-subkey="matterGravity" class="sub-lib-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              ${m.gravity.map((o) => `<option value="${o.id}" ${sub.matterGravity === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-300 mb-1">World Boundaries</label>
+            <select data-subkey="matterBounds" class="sub-lib-sel w-full bg-[#0d131f] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+              ${m.bounds.map((o) => `<option value="${o.id}" ${sub.matterBounds === o.id ? 'selected' : ''}>${escapeHtml(o.label)}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  container.innerHTML = blocks.join('');
+  container.querySelectorAll('.sub-lib-sel').forEach((sel) => {
+    sel.addEventListener('change', (e) => {
+      state.studioConfig.subConfig[sel.dataset.subkey] = e.target.value;
+      saveStudioConfig();
+    });
+  });
 }
 
 function renderBlueprintModalContents() {
@@ -1639,6 +2471,10 @@ function renderBlueprintModalContents() {
   el.bpExtraConstraints.value = cfg.extraConstraints || '';
   el.bpAntiGoals.value = cfg.antiGoals || '';
 
+  renderModeDeepDiveSubMenu(el.bpModeDeepDiveSection);
+  renderConditionalAudioSubMenu(el.bpAudioSubSection);
+  renderConditionalPersistenceSubMenu(el.bpPersistenceSubSection);
+
   el.dynamicEssentialsTitle.textContent = `${mode.label} — Recommended Features`;
   el.dynamicEssentialsSubtitle.textContent = mode.roleLens;
   el.dynamicEssentialsBadge.textContent = `${cfg.essentials.length}/${mode.categoryEssentials.length} Active`;
@@ -1654,6 +2490,7 @@ function renderBlueprintModalContents() {
     }
   );
 
+  renderLiveVisualSpecimen(el.bpLiveVisualSpecimen);
   renderVisualGallery(el.interfaceGallery, STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign, (id) => {
     cfg.interfaceDesign = id;
   });
@@ -1672,6 +2509,7 @@ function renderBlueprintModalContents() {
   renderVisualGallery(el.lightingStyleGallery, STUDIO_CATALOG.lightingStyles, cfg.lightingStyle, (id) => {
     cfg.lightingStyle = id;
   });
+  renderVisualFinishSubMenu(el.bpVisualFinishSection);
 
   renderMultiToggleGrid(el.html5OptionsGrid, STUDIO_CATALOG.html5Options, cfg.html5, el.html5SelectedCount, (id) => {
     toggleArrayItem(cfg.html5, id);
@@ -1692,10 +2530,689 @@ function renderBlueprintModalContents() {
     },
     cfg.projectType
   );
+  renderConditionalLibsSubMenus(el.bpLibsSubMenusContainer);
+}
+
+// =========================================================================
+// INTERACTIVE ADAPTIVE PROMPT GUIDER (PAPERCLIP SELECTION JOURNEY)
+// =========================================================================
+function getGuiderJourneySteps() {
+  const cfg = state.studioConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+
+  const steps = [
+    { id: 'projectType', short: '1. Vision Type', isBranch: false },
+    { id: 'modeDeepDive', short: `2. ${mode.label} Deep-Dive`, isBranch: true },
+    { id: 'targetPlatform', short: '3. Device & Reach', isBranch: false },
+    { id: 'complexityAndNav', short: '4. Depth & Flow', isBranch: false },
+    { id: 'starterExp', short: '5. First 5 Seconds', isBranch: false },
+    { id: 'dataPersistence', short: '6. Saving & Backup', isBranch: false },
+    { id: 'sensoryAndMotion', short: '7. Sound & Motion', isBranch: false },
+    { id: 'visualLayoutAndStyle', short: '8. Layout & Style', isBranch: false },
+    { id: 'visualColorLightFinish', short: '9. Color & Lighting', isBranch: false },
+    { id: 'capabilitiesAndAddons', short: '10. Features & Add-Ons', isBranch: false },
+    { id: 'visionReview', short: '11. Vision Summary', isBranch: false }
+  ];
+  return steps;
+}
+
+function getAdaptiveWhyText(stepId) {
+  const cfg = state.studioConfig;
+  const t = cfg.projectType;
+  const p = cfg.targetPlatform;
+
+  const map = {
+    projectType: 'Choosing your core category sets smart defaults across all 50 engineering steps—from how buttons behave to how data is saved. You can still mix or customize anything later.',
+    modeDeepDive: {
+      app: 'Because you are building a Web App, deciding how your main information is displayed (cards, table, calendar, or editor) prevents cluttered screens and makes daily use effortless.',
+      tool: 'For a Utility / Tool, speed and clarity are everything. Defining how users feed data in and copy/export results keeps the workflow down to 1–2 clicks.',
+      game: 'In a Game, genre, session length, and "juice" (particles, screen shake, sound) determine whether players feel thrilled in the first 5 seconds or bored.',
+      experimental: 'For a Creative Sandbox, picking your medium (2D particles, 3D, synth, or kinetic type) and how users touch it shapes the entire playground feel.',
+      free: 'In Free Create mode, blending two worlds (like a gamified habit garden or a playful visual tool) gives your project an unmistakable, original soul.'
+    }[t],
+    targetPlatform: t === 'game'
+      ? 'Games played on phones need big thumb-friendly touch zones and zero accidental page scrolling, whereas desktop games can use precision mouse aiming and WASD.'
+      : t === 'tool'
+      ? 'Precision tools often shine with side-by-side panels on computers, while mobile-friendly tools stack cleanly so sliders and outputs remain readable anywhere.'
+      : 'Knowing where people will open this shapes button sizes, panel arrangement, and whether controls sit near the bottom thumb zone.',
+    complexityAndNav: `Since you are building a ${STUDIO_CATALOG.projectTypes[t].label} for "${findCatalogItem(STUDIO_CATALOG.platformOptions, p).name}", balancing feature depth with clean navigation keeps users from feeling overwhelmed.`,
+    starterExp: 'The first 5 seconds decide whether someone understands your creation or closes the tab. Realistic starter examples or presets let users experience the magic immediately.',
+    dataPersistence: t === 'game'
+      ? 'Saving high scores, unlocked levels, and settings in the browser makes players come back—while an ephemeral mode is great for quick arcade resets.'
+      : 'Deciding whether user work auto-saves locally (with easy JSON/CSV backups) or starts fresh every visit protects users from ever losing progress.',
+    sensoryAndMotion: t === 'game'
+      ? 'Built-in Web Audio sound effects and 120fps smooth motion make hits, combos, and movement feel alive—without needing any external MP3 files.'
+      : 'Subtle audio clicks and smooth, motion-safe transitions make everyday apps feel responsive and tactile while respecting users who prefer calm screens.',
+    visualLayoutAndStyle: `Your Layout and Look & Feel define the personality of your ${STUDIO_CATALOG.projectTypes[t].label}. Notice how the Live Style Specimen on the right updates instantly as you click!`,
+    visualColorLightFinish: 'Color mood, typography, button shapes, and lighting work together to create contrast, hierarchy, and atmosphere—so important actions pop naturally.',
+    capabilitiesAndAddons: 'Choose the exact features for your mode plus optional power-up libraries (like 3D, Charts, or Physics). Leaving libraries unchecked keeps your app 100% pure, lightweight, and instant.',
+    visionReview: 'Review your complete blueprint, optionally add who this is for or things to avoid, and weave your choices straight into your prompt and all 50 build steps!'
+  };
+  return map[stepId] || '';
+}
+
+function getSmartFitReason(stepId, optionId) {
+  const cfg = state.studioConfig;
+  const t = cfg.projectType;
+  const p = cfg.targetPlatform;
+
+  if (stepId === 'targetPlatform') {
+    if (t === 'game' && optionId === 'fullscreen-arcade') return 'Best fit for Games';
+    if (t === 'tool' && optionId === 'desktop-pro') return 'Great for Tools';
+    if (t === 'app' && optionId === 'responsive-parity') return 'Best all-rounder';
+  }
+  if (stepId === 'visualLayoutAndStyle') {
+    if (t === 'game' && optionId === 'fullscreen-stage') return 'Ideal for Games';
+    if (t === 'tool' && optionId === 'split-workbench') return 'Ideal for Tools';
+    if (t === 'app' && optionId === 'bento-grid') return 'Ideal for Apps';
+    if (t === 'experimental' && optionId === 'floating-hud') return 'Ideal for Sandboxes';
+    if (p === 'mobile-first-thumb' && (optionId === 'focus-card' || optionId === 'tabbed-studio')) return 'Thumb-friendly on Phone';
+    if (t === 'game' && optionId === 'cyberpunk-hud') return 'Matches Game Energy';
+    if (t === 'tool' && (optionId === 'swiss-minimal' || optionId === 'obsidian-saas')) return 'High-Clarity Workbench';
+  }
+  if (stepId === 'visualColorLightFinish') {
+    if (cfg.designStyle === 'cyberpunk-hud' && (optionId === 'neon-bloom' || optionId === 'violet-neon')) return 'Matches Sci-Fi HUD';
+    if ((cfg.designStyle === 'swiss-minimal' || cfg.designStyle === 'warm-paper') && (optionId === 'daylight-flat' || optionId === 'crisp-daylight')) return 'Matches Daylight Style';
+  }
+  return '';
+}
+
+function openPromptGuider(startStepIdx = 0) {
+  state.guiderStepIndex = Math.max(0, startStepIdx);
+  el.promptGuiderModal.classList.remove('hidden');
+  renderPromptGuider();
+  refreshIcons();
+}
+
+function renderGuiderVisionSummary() {
+  const cfg = state.studioConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+  const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
+  const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
+  const mood = findCatalogItem(STUDIO_CATALOG.colorMoods, cfg.colorMood);
+  const light = findCatalogItem(STUDIO_CATALOG.lightingStyles, cfg.lightingStyle);
+  const plat = findCatalogItem(STUDIO_CATALOG.platformOptions, cfg.targetPlatform);
+
+  const items = [
+    { stepIdx: 0, label: 'Type', val: mode.label },
+    { stepIdx: 2, label: 'Device', val: plat.name },
+    { stepIdx: 5, label: 'Saving', val: cfg.dataPersistence === 'ephemeral' ? 'Fresh Start' : 'Auto-Save + Backup' },
+    { stepIdx: 7, label: 'Layout', val: iface.name },
+    { stepIdx: 7, label: 'Look', val: style.name },
+    { stepIdx: 8, label: 'Colors', val: mood.name },
+    { stepIdx: 8, label: 'Lighting', val: light.name },
+    { stepIdx: 9, label: 'Features', val: `${cfg.essentials.length} active • ${cfg.jsLibs.length || 'Pure'} libs` }
+  ];
+
+  el.guiderVisionCount.textContent = `${items.length} configured`;
+  el.guiderVisionSummary.innerHTML = items.map((it) => `
+    <button type="button" data-jump-step="${it.stepIdx}" class="w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-[#0d131f] hover:bg-slate-800/80 border border-slate-800/80 text-left transition">
+      <span class="text-slate-400">${escapeHtml(it.label)}</span>
+      <span class="text-slate-100 font-medium truncate">${escapeHtml(it.val)}</span>
+    </button>
+  `).join('');
+
+  el.guiderVisionSummary.querySelectorAll('[data-jump-step]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.guiderStepIndex = Number(btn.dataset.jumpStep);
+      renderPromptGuider();
+    });
+  });
+}
+
+function renderPromptGuider() {
+  const steps = getGuiderJourneySteps();
+  if (state.guiderStepIndex >= steps.length) state.guiderStepIndex = steps.length - 1;
+  if (state.guiderStepIndex < 0) state.guiderStepIndex = 0;
+
+  const currentStep = steps[state.guiderStepIndex];
+  const cfg = state.studioConfig;
+  const sub = cfg.subConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+
+  // Header & Progress
+  el.guiderStepCounterBadge.textContent = `Step ${state.guiderStepIndex + 1} of ${steps.length}`;
+  el.guiderModeBadge.textContent = mode.label.toUpperCase();
+  el.guiderProgressBar.style.width = `${Math.round(((state.guiderStepIndex + 1) / steps.length) * 100)}%`;
+
+  el.guiderBranchBadge.classList.toggle('hidden', !currentStep.isBranch);
+  if (currentStep.isBranch) {
+    el.guiderBranchBadgeText.textContent = `Adaptive Sub-Menu Unlocked for ${mode.label}`;
+  }
+
+  // Breadcrumb Pills
+  el.guiderStepPills.innerHTML = steps.map((s, idx) => {
+    const cls = idx === state.guiderStepIndex ? 'is-current' : idx < state.guiderStepIndex ? 'is-done' : '';
+    const branchCls = s.isBranch ? 'is-branch' : '';
+    return `<button type="button" data-pill-idx="${idx}" class="guider-step-pill ${cls} ${branchCls}">${escapeHtml(s.short)}</button>`;
+  }).join('');
+
+  el.guiderStepPills.querySelectorAll('[data-pill-idx]').forEach((b) => {
+    b.addEventListener('click', () => {
+      state.guiderStepIndex = Number(b.dataset.pillIdx);
+      renderPromptGuider();
+    });
+  });
+
+  // Footer Nav
+  el.guiderBackBtn.disabled = state.guiderStepIndex === 0;
+  el.guiderNextBtnLabel.textContent = state.guiderStepIndex === steps.length - 1 ? 'Finish & Apply' : 'Next Step';
+  el.guiderWhyText.textContent = getAdaptiveWhyText(currentStep.id);
+
+  // Clear stage containers
+  el.guiderOptionsArea.innerHTML = '';
+  el.guiderInlineSubMenu.innerHTML = '';
+  el.guiderInlineSubMenu.classList.add('hidden');
+
+  // Render Live Specimen & Summary
+  renderLiveVisualSpecimen(el.guiderLiveSpecimen);
+  renderGuiderVisionSummary();
+
+  // Render Step Content
+  const sid = currentStep.id;
+
+  if (sid === 'projectType') {
+    el.guiderQuestionTitle.textContent = 'First, what kind of creation are we building?';
+    el.guiderQuestionSubtitle.textContent = 'Pick the category that fits your vision best. Every question after this will adapt its examples and options to match your choice.';
+
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3';
+    Object.values(STUDIO_CATALOG.projectTypes).forEach((pt) => {
+      const isSel = cfg.projectType === pt.id;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="visual-ref-preview">${pt.svg}</div>
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold text-slate-100">${escapeHtml(pt.label)}</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-200 border border-indigo-500/30">${escapeHtml(pt.shortTag)}</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">${escapeHtml(pt.roleLens)}</p>
+      `;
+      card.addEventListener('click', () => {
+        setProjectType(pt.id, true);
+        renderPromptGuider();
+      });
+      grid.appendChild(card);
+    });
+    el.guiderOptionsArea.appendChild(grid);
+  } else if (sid === 'modeDeepDive') {
+    const spec = STUDIO_CATALOG.subMenus.modeDeepDive[cfg.projectType] || STUDIO_CATALOG.subMenus.modeDeepDive.app;
+    el.guiderQuestionTitle.textContent = spec.title;
+    el.guiderQuestionSubtitle.textContent = `${spec.subtitle} These options opened up specifically because you chose ${mode.label}.`;
+
+    spec.fields.forEach((f) => {
+      const block = document.createElement('div');
+      block.className = 'space-y-2';
+      block.innerHTML = `<div class="text-xs font-semibold text-slate-200">${escapeHtml(f.label)}</div>`;
+      const row = document.createElement('div');
+      row.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+      f.options.forEach((opt) => {
+        const isSel = sub[f.key] === opt.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+        btn.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-semibold text-slate-100">${escapeHtml(opt.label)}</span>
+            ${isSel ? '<span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0"></span>' : ''}
+          </div>
+        `;
+        btn.addEventListener('click', () => {
+          sub[f.key] = opt.id;
+          saveStudioConfig();
+          renderPromptGuider();
+        });
+        row.appendChild(btn);
+      });
+      block.appendChild(row);
+      el.guiderOptionsArea.appendChild(block);
+    });
+  } else if (sid === 'targetPlatform') {
+    el.guiderQuestionTitle.textContent = `Where will people use your ${mode.label}?`;
+    el.guiderQuestionSubtitle.textContent = 'This sets screen proportions, touch-target sizes, and whether panels sit side-by-side or stack cleanly.';
+
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+    STUDIO_CATALOG.platformOptions.forEach((opt) => {
+      const isSel = cfg.targetPlatform === opt.id;
+      const smartFit = getSmartFitReason('targetPlatform', opt.id);
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="visual-ref-preview">${opt.svg}</div>
+        <div class="flex items-center justify-between gap-1.5 flex-wrap">
+          <span class="text-xs font-bold text-slate-100">${escapeHtml(opt.name)}</span>
+          ${smartFit ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/35">${escapeHtml(smartFit)}</span>` : ''}
+        </div>
+        <p class="text-[11px] text-slate-300 mt-1 leading-snug">${escapeHtml(opt.desc)}</p>
+        <div class="mt-2 pt-2 border-t border-slate-800/80 text-[10px] text-slate-400 space-y-0.5">
+          <div><strong class="text-cyan-300">Best for:</strong> ${escapeHtml(opt.bestFor)}</div>
+          <div><strong class="text-amber-300">Trade-off:</strong> ${escapeHtml(opt.tradeoff)}</div>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        cfg.targetPlatform = opt.id;
+        saveStudioConfig();
+        renderBlueprintSummaryStrip();
+        renderPromptGuider();
+      });
+      grid.appendChild(card);
+    });
+    el.guiderOptionsArea.appendChild(grid);
+  } else if (sid === 'complexityAndNav') {
+    el.guiderQuestionTitle.textContent = 'How deep should it feel, and how do users move around?';
+    el.guiderQuestionSubtitle.textContent = 'Pick the right balance of simplicity vs. power features, plus how screens are organized.';
+
+    const sec1 = document.createElement('div');
+    sec1.className = 'space-y-2';
+    sec1.innerHTML = '<div class="text-xs font-semibold text-slate-200">1. Feature Depth</div>';
+    const g1 = document.createElement('div');
+    g1.className = 'grid grid-cols-1 sm:grid-cols-3 gap-2.5';
+    STUDIO_CATALOG.complexityOptions.forEach((opt) => {
+      const isSel = cfg.complexity === opt.id;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="visual-ref-preview">${opt.svg}</div>
+        <div class="text-xs font-bold text-slate-100">${escapeHtml(opt.name)}</div>
+        <p class="text-[10px] text-slate-400 mt-1">${escapeHtml(opt.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.complexity = opt.id;
+        saveStudioConfig();
+        renderPromptGuider();
+      });
+      g1.appendChild(card);
+    });
+    sec1.appendChild(g1);
+
+    const sec2 = document.createElement('div');
+    sec2.className = 'space-y-2 pt-2';
+    sec2.innerHTML = '<div class="text-xs font-semibold text-slate-200">2. Navigation Style</div>';
+    const g2 = document.createElement('div');
+    g2.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5';
+    STUDIO_CATALOG.navStyleOptions.forEach((opt) => {
+      const isSel = cfg.navStyle === opt.id;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="visual-ref-preview">${opt.svg}</div>
+        <div class="text-xs font-bold text-slate-100">${escapeHtml(opt.name)}</div>
+        <p class="text-[10px] text-slate-400 mt-1">${escapeHtml(opt.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.navStyle = opt.id;
+        saveStudioConfig();
+        renderPromptGuider();
+      });
+      g2.appendChild(card);
+    });
+    sec2.appendChild(g2);
+
+    el.guiderOptionsArea.appendChild(sec1);
+    el.guiderOptionsArea.appendChild(sec2);
+  } else if (sid === 'starterExp') {
+    el.guiderQuestionTitle.textContent = `What happens in the first 5 seconds when someone opens your ${mode.label}?`;
+    el.guiderQuestionSubtitle.textContent = 'Great apps never leave users wondering "What do I click first?" Choose how yours welcomes them.';
+
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+    STUDIO_CATALOG.starterExpOptions.forEach((opt) => {
+      const isSel = cfg.starterExp === opt.id;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="visual-ref-preview">${opt.svg}</div>
+        <div class="text-xs font-bold text-slate-100">${escapeHtml(opt.name)}</div>
+        <p class="text-[11px] text-slate-400 mt-1">${escapeHtml(opt.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.starterExp = opt.id;
+        saveStudioConfig();
+        renderPromptGuider();
+      });
+      grid.appendChild(card);
+    });
+    el.guiderOptionsArea.appendChild(grid);
+  } else if (sid === 'dataPersistence') {
+    el.guiderQuestionTitle.textContent = 'How should user work, progress, or scores be saved?';
+    el.guiderQuestionSubtitle.textContent = 'Picking any save option unlocks a Save & Backup sub-menu right below so you can choose export formats.';
+
+    const persistChoices = [
+      { id: 'localstorage-json', name: 'Auto-Save in Browser + JSON Backup', desc: 'Instant browser memory with a 1-click Download/Restore JSON file. Ideal for most apps & games.' },
+      { id: 'indexeddb-heavy', name: 'Large Browser Database (IndexedDB)', desc: 'Handles thousands of items, large drawings, or rich history without slowing down.' },
+      { id: 'localstorage-csv', name: 'Auto-Save + Spreadsheet (CSV) Export', desc: 'Saves automatically and lets users export clean tables to Excel or Google Sheets.' },
+      { id: 'ephemeral', name: 'Fresh Start Every Visit (No Saving)', desc: 'Clean slate every time the page opens—great for quick calculators or arcade blitzes.' }
+    ];
+
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+    persistChoices.forEach((opt) => {
+      const isSel = cfg.dataPersistence === opt.id;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold text-slate-100">${escapeHtml(opt.name)}</span>
+          ${isSel ? '<span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0"></span>' : ''}
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">${escapeHtml(opt.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.dataPersistence = opt.id;
+        saveStudioConfig();
+        renderPromptGuider();
+      });
+      grid.appendChild(card);
+    });
+    el.guiderOptionsArea.appendChild(grid);
+
+    if (cfg.dataPersistence !== 'ephemeral') {
+      el.guiderInlineSubMenu.classList.remove('hidden');
+      renderConditionalPersistenceSubMenu(el.guiderInlineSubMenu);
+    }
+  } else if (sid === 'sensoryAndMotion') {
+    el.guiderQuestionTitle.textContent = 'How should it sound and move?';
+    el.guiderQuestionSubtitle.textContent = 'Built-in sound requires zero audio files and includes a Mute button. Picking sound unlocks the Sound Engine Tuner below.';
+
+    const audioChoices = [
+      { id: 'web-audio-subtle', name: 'Gentle Clicks & Chimes', desc: 'Soft, pleasant UI feedback on key actions with an easy Mute toggle.' },
+      { id: 'web-audio-arcade', name: 'Rich Arcade SFX & Synth', desc: 'Expressive synthesized sound effects, combo swells & celebrations.' },
+      { id: 'haptic-visual', name: 'Vibration & Visual Flash Only', desc: 'Silent audio, using phone vibration and crisp visual pulses instead.' },
+      { id: 'silent-clean', name: 'Completely Silent', desc: 'Purely visual feedback—zero sound generation.' }
+    ];
+
+    const sec1 = document.createElement('div');
+    sec1.className = 'space-y-2';
+    sec1.innerHTML = '<div class="text-xs font-semibold text-slate-200">1. Sound & Touch Feedback</div>';
+    const g1 = document.createElement('div');
+    g1.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2.5';
+    audioChoices.forEach((opt) => {
+      const isSel = cfg.sensoryAudio === opt.id;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="text-xs font-bold text-slate-100">${escapeHtml(opt.name)}</div>
+        <p class="text-[11px] text-slate-400 mt-0.5">${escapeHtml(opt.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.sensoryAudio = opt.id;
+        saveStudioConfig();
+        if (opt.id === 'web-audio-subtle' || opt.id === 'web-audio-arcade') {
+          playPreviewTone(sub.audioCharacter);
+        }
+        renderPromptGuider();
+      });
+      g1.appendChild(card);
+    });
+    sec1.appendChild(g1);
+
+    const motionChoices = [
+      { id: 'wcag-aa-fluid', name: 'Smooth & Accessible', cls: 'is-fluid', desc: 'Fluid animations that automatically calm down if user prefers reduced motion.' },
+      { id: 'high-refresh-120', name: 'Ultra-Smooth 120fps', cls: 'is-120', desc: 'Snappy high-refresh motion ideal for games and reactive canvases.' },
+      { id: 'battery-eco', name: 'Battery Saver Crisp', cls: 'is-eco', desc: 'Instant transitions with minimal GPU work to save device battery.' },
+      { id: 'wcag-aaa-high', name: 'Extra High Contrast', cls: 'is-calm', desc: 'Maximum readability, strong focus rings & screen-reader priority.' }
+    ];
+
+    const sec2 = document.createElement('div');
+    sec2.className = 'space-y-2 pt-2';
+    sec2.innerHTML = '<div class="text-xs font-semibold text-slate-200">2. Animation Speed & Readability (Live Preview)</div>';
+    const g2 = document.createElement('div');
+    g2.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2.5';
+    motionChoices.forEach((opt) => {
+      const isSel = cfg.a11yMotion === opt.id;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `guider-option-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span class="text-xs font-bold text-slate-100">${escapeHtml(opt.name)}</span>
+          <div class="w-20 h-3 rounded-full bg-slate-900 border border-slate-700 p-0.5 flex items-center overflow-hidden">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 motion-demo-ball ${opt.cls}"></span>
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-400">${escapeHtml(opt.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.a11yMotion = opt.id;
+        saveStudioConfig();
+        renderPromptGuider();
+      });
+      g2.appendChild(card);
+    });
+    sec2.appendChild(g2);
+
+    el.guiderOptionsArea.appendChild(sec1);
+    el.guiderOptionsArea.appendChild(sec2);
+
+    if (cfg.sensoryAudio === 'web-audio-subtle' || cfg.sensoryAudio === 'web-audio-arcade') {
+      el.guiderInlineSubMenu.classList.remove('hidden');
+      renderConditionalAudioSubMenu(el.guiderInlineSubMenu);
+    }
+  } else if (sid === 'visualLayoutAndStyle') {
+    el.guiderQuestionTitle.textContent = 'Choose your Screen Layout and Visual Personality';
+    el.guiderQuestionSubtitle.textContent = 'Watch the Live Style Specimen on the right transform as you click!';
+
+    const sec1 = document.createElement('div');
+    sec1.className = 'space-y-2';
+    sec1.innerHTML = '<div class="text-xs font-semibold text-slate-200">1. Screen Layout</div>';
+    const g1 = document.createElement('div');
+    g1.className = 'grid grid-cols-2 sm:grid-cols-3 gap-2.5';
+    STUDIO_CATALOG.interfaceDesigns.forEach((item) => {
+      const isSel = cfg.interfaceDesign === item.id;
+      const smartFit = getSmartFitReason('visualLayoutAndStyle', item.id);
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `visual-ref-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="visual-ref-preview">${item.svg}</div>
+        <div class="flex items-center justify-between gap-1 flex-wrap">
+          <span class="text-[11px] font-semibold text-slate-100">${escapeHtml(item.name)}</span>
+          ${smartFit ? `<span class="px-1 py-0.2 rounded text-[9px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">${escapeHtml(smartFit)}</span>` : ''}
+        </div>
+        <p class="text-[10px] text-slate-400 mt-0.5 leading-snug">${escapeHtml(item.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.interfaceDesign = item.id;
+        saveStudioConfig();
+        renderBlueprintSummaryStrip();
+        renderPromptGuider();
+      });
+      g1.appendChild(card);
+    });
+    sec1.appendChild(g1);
+
+    const sec2 = document.createElement('div');
+    sec2.className = 'space-y-2 pt-2';
+    sec2.innerHTML = '<div class="text-xs font-semibold text-slate-200">2. Overall Look & Feel</div>';
+    const g2 = document.createElement('div');
+    g2.className = 'grid grid-cols-2 sm:grid-cols-4 gap-2.5';
+    STUDIO_CATALOG.designStyles.forEach((item) => {
+      const isSel = cfg.designStyle === item.id;
+      const smartFit = getSmartFitReason('visualLayoutAndStyle', item.id);
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `visual-ref-card${isSel ? ' is-selected' : ''}`;
+      card.innerHTML = `
+        <div class="visual-ref-preview">${item.svg}</div>
+        <div class="flex items-center justify-between gap-1 flex-wrap">
+          <span class="text-[11px] font-semibold text-slate-100">${escapeHtml(item.name)}</span>
+          ${smartFit ? `<span class="px-1 py-0.2 rounded text-[9px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">${escapeHtml(smartFit)}</span>` : ''}
+        </div>
+        <p class="text-[10px] text-slate-400 mt-0.5 leading-snug">${escapeHtml(item.desc)}</p>
+      `;
+      card.addEventListener('click', () => {
+        cfg.designStyle = item.id;
+        saveStudioConfig();
+        renderBlueprintSummaryStrip();
+        renderPromptGuider();
+      });
+      g2.appendChild(card);
+    });
+    sec2.appendChild(g2);
+
+    el.guiderOptionsArea.appendChild(sec1);
+    el.guiderOptionsArea.appendChild(sec2);
+  } else if (sid === 'visualColorLightFinish') {
+    el.guiderQuestionTitle.textContent = 'Dial in Colors, Fonts, Buttons, Lighting & Atmosphere';
+    el.guiderQuestionSubtitle.textContent = 'Tap any palette or lighting mood and test the interactive button in your Live Style Specimen.';
+
+    const buildMiniVisualRow = (title, list, currentVal, keyName, cols = 'grid-cols-2 sm:grid-cols-3') => {
+      const sec = document.createElement('div');
+      sec.className = 'space-y-2';
+      sec.innerHTML = `<div class="text-xs font-semibold text-slate-200">${escapeHtml(title)}</div>`;
+      const g = document.createElement('div');
+      g.className = `grid ${cols} gap-2`;
+      list.forEach((item) => {
+        const isSel = currentVal === item.id;
+        const smartFit = getSmartFitReason('visualColorLightFinish', item.id);
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = `visual-ref-card${isSel ? ' is-selected' : ''}`;
+        card.innerHTML = `
+          ${item.svg ? `<div class="visual-ref-preview">${item.svg}</div>` : ''}
+          ${item.colors ? `<div class="flex items-center gap-1 mb-1.5">${item.colors.map((c) => `<span class="h-3 flex-1 rounded-sm border border-white/10" style="background:${c}"></span>`).join('')}</div>` : ''}
+          <div class="flex items-center justify-between gap-1 flex-wrap">
+            <span class="text-[11px] font-semibold text-slate-100">${escapeHtml(item.name)}</span>
+            ${smartFit ? `<span class="px-1 py-0.2 rounded text-[9px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">${escapeHtml(smartFit)}</span>` : ''}
+          </div>
+          <p class="text-[10px] text-slate-400 mt-0.5 leading-snug">${escapeHtml(item.desc)}</p>
+        `;
+        card.addEventListener('click', () => {
+          cfg[keyName] = item.id;
+          saveStudioConfig();
+          renderBlueprintSummaryStrip();
+          renderPromptGuider();
+        });
+        g.appendChild(card);
+      });
+      sec.appendChild(g);
+      return sec;
+    };
+
+    el.guiderOptionsArea.appendChild(buildMiniVisualRow('1. Color Palette & Mood', STUDIO_CATALOG.colorMoods, cfg.colorMood, 'colorMood'));
+    el.guiderOptionsArea.appendChild(buildMiniVisualRow('2. Typography Voice', STUDIO_CATALOG.typographyStyles, cfg.typographyStyle, 'typographyStyle', 'grid-cols-2'));
+    el.guiderOptionsArea.appendChild(buildMiniVisualRow('3. Buttons & Cards Style', STUDIO_CATALOG.elementStyles, cfg.elementStyle, 'elementStyle'));
+    el.guiderOptionsArea.appendChild(buildMiniVisualRow('4. Lighting & Glow', STUDIO_CATALOG.lightingStyles, cfg.lightingStyle, 'lightingStyle'));
+
+    el.guiderInlineSubMenu.classList.remove('hidden');
+    renderVisualFinishSubMenu(el.guiderInlineSubMenu);
+  } else if (sid === 'capabilitiesAndAddons') {
+    el.guiderQuestionTitle.textContent = `Pick your ${mode.label} Features & Optional Power-Ups`;
+    el.guiderQuestionSubtitle.textContent = 'Toggle the features you want built in. Selecting 3D, Charts, or Physics unlocks extra setup controls below!';
+
+    const sec1 = document.createElement('div');
+    sec1.className = 'space-y-2';
+    sec1.innerHTML = `<div class="text-xs font-semibold text-indigo-200">1. Essential Features for ${escapeHtml(mode.label)}</div>`;
+    const g1 = document.createElement('div');
+    g1.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+    sec1.appendChild(g1);
+    renderMultiToggleGrid(g1, mode.categoryEssentials, cfg.essentials, null, (id) => {
+      toggleArrayItem(cfg.essentials, id);
+      renderGuiderVisionSummary();
+    });
+
+    const sec2 = document.createElement('div');
+    sec2.className = 'space-y-2 pt-3 border-t border-slate-800';
+    sec2.innerHTML = '<div class="text-xs font-semibold text-emerald-200">2. Optional Add-On Libraries (Leave empty for 100% Pure Vanilla)</div>';
+    const g2 = document.createElement('div');
+    g2.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2';
+    sec2.appendChild(g2);
+    renderMultiToggleGrid(g2, STUDIO_CATALOG.jsLibsOptions, cfg.jsLibs, null, (id) => {
+      toggleArrayItem(cfg.jsLibs, id);
+      renderPromptGuider();
+    }, cfg.projectType);
+
+    el.guiderOptionsArea.appendChild(sec1);
+    el.guiderOptionsArea.appendChild(sec2);
+
+    const hasLibSub = cfg.jsLibs.some((l) => ['threejs', 'chartjs', 'd3', 'matterjs'].includes(l));
+    if (hasLibSub) {
+      el.guiderInlineSubMenu.classList.remove('hidden');
+      renderConditionalLibsSubMenus(el.guiderInlineSubMenu);
+    }
+  } else if (sid === 'visionReview') {
+    el.guiderQuestionTitle.textContent = 'Final Touches & Your Complete Vision';
+    el.guiderQuestionSubtitle.textContent = 'Add any personal notes (who it is for, must-haves, or things to avoid), then click "Finish & Apply" or "Weave Into Prompt".';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'space-y-3';
+    wrap.innerHTML = `
+      <div class="rounded-xl border border-slate-800 bg-[#090d14] p-3.5 space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-200 mb-1">Who is this made for? (Optional)</label>
+          <input id="gTargetAudience" type="text" value="${escapeHtml(cfg.targetAudience || '')}" placeholder="e.g., Busy parents, indie musicians, students, casual puzzle fans..." class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-200 mb-1">Must-Have Details (Optional)</label>
+          <input id="gExtraConstraints" type="text" value="${escapeHtml(cfg.extraConstraints || '')}" placeholder="e.g., Must work offline, print-friendly summary, keyboard shortcuts..." class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-200 mb-1">Things to Avoid (Optional)</label>
+          <input id="gAntiGoals" type="text" value="${escapeHtml(cfg.antiGoals || '')}" placeholder="e.g., No cluttered menus, no harsh neon, no tiny text..." class="w-full bg-[#0d131f] border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500" />
+        </div>
+      </div>
+      <div class="rounded-xl border border-emerald-500/35 bg-emerald-950/15 p-3.5 space-y-1.5">
+        <div class="text-xs font-semibold text-emerald-200">Ready to Build!</div>
+        <p class="text-[11px] text-slate-300 leading-relaxed">
+          All your choices are automatically saved and will guide every single one of the 50 engineering steps. You can also click <strong>Weave Into Prompt</strong> below to draft or enrich your main prompt box with a summary of your vision.
+        </p>
+      </div>
+    `;
+    el.guiderOptionsArea.appendChild(wrap);
+
+    wrap.querySelector('#gTargetAudience').addEventListener('input', (e) => {
+      cfg.targetAudience = e.target.value;
+      saveStudioConfig();
+    });
+    wrap.querySelector('#gExtraConstraints').addEventListener('input', (e) => {
+      cfg.extraConstraints = e.target.value;
+      saveStudioConfig();
+    });
+    wrap.querySelector('#gAntiGoals').addEventListener('input', (e) => {
+      cfg.antiGoals = e.target.value;
+      saveStudioConfig();
+    });
+  }
+
+  refreshIcons();
+}
+
+function weaveChoicesIntoPromptBox() {
+  const cfg = state.studioConfig;
+  const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
+  const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
+  const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
+  const mood = findCatalogItem(STUDIO_CATALOG.colorMoods, cfg.colorMood);
+  const light = findCatalogItem(STUDIO_CATALOG.lightingStyles, cfg.lightingStyle);
+  const essNames = mode.categoryEssentials.filter((e) => cfg.essentials.includes(e.id)).map((e) => e.label);
+
+  const existing = el.promptInput.value.trim();
+  const visionTag = `[Vision: ${mode.label} • ${iface.name} • ${style.name} (${mood.name}, ${light.name}) • Features: ${essNames.slice(0, 4).join(', ')}]`;
+
+  if (!existing) {
+    el.promptInput.value = `Build a ${mode.label} using a ${iface.name} layout with a ${style.name} look, ${mood.name} colors, and ${light.name} lighting. Include: ${essNames.join(', ')}.${cfg.targetAudience ? ` Designed for ${cfg.targetAudience}.` : ''}`;
+  } else if (!existing.includes('[Vision:')) {
+    el.promptInput.value = `${existing}\n${visionTag}`;
+  } else {
+    el.promptInput.value = existing.replace(/\[Vision:[^\]]+\]/, visionTag);
+  }
+  state.userPrompt = el.promptInput.value;
+  saveWorkspaceSnapshot();
+  showToast('Wove your guided choices into the prompt!', 'success');
 }
 
 function compileFullBlueprintSummaryText() {
   const cfg = state.studioConfig;
+  const sub = cfg.subConfig || {};
   const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
   const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
   const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
@@ -1710,20 +3227,30 @@ function compileFullBlueprintSummaryText() {
   const jsArchLabels = STUDIO_CATALOG.jsArchOptions.filter((j) => cfg.jsArch.includes(j.id)).map((j) => `${j.label} [${j.tech}]`);
   const jsLibsSelected = STUDIO_CATALOG.jsLibsOptions.filter((l) => cfg.jsLibs.includes(l.id));
 
+  const modeSpec = STUDIO_CATALOG.subMenus.modeDeepDive[cfg.projectType];
+  const modeSubStr = modeSpec
+    ? modeSpec.fields.map((f) => `${f.label}=${(f.options.find((o) => o.id === sub[f.key]) || f.options[0]).label}`).join(' | ')
+    : '';
+
   const lines = [
     `PROJECT TYPE: ${mode.label} — ${mode.roleLens}`,
+    modeSubStr ? `MODE DEEP-DIVE: ${modeSubStr}` : '',
     `EXPERIENCE PROFILE: Platform=${cfg.targetPlatform} | Complexity=${cfg.complexity} | Navigation=${cfg.navStyle} | First-5-Sec=${cfg.starterExp}`,
-    `PERSISTENCE & SENSORY: Storage=${cfg.dataPersistence} | Audio=${cfg.sensoryAudio} | Motion/A11y=${cfg.a11yMotion}`,
+    `PERSISTENCE & SENSORY: Storage=${cfg.dataPersistence} (Indicator=${sub.saveIndicator}, Backup=${sub.backupFormat}) | Audio=${cfg.sensoryAudio} (Character=${sub.audioCharacter}, Triggers=${sub.audioTriggers}) | Motion/A11y=${cfg.a11yMotion}`,
     `SELECTED MODE FEATURES: ${essLabels.length ? essLabels.join('; ') : 'Standard'}`,
     `INTERFACE LAYOUT: ${iface.name} (${iface.desc})`,
     `DESIGN STYLE: ${style.name} (${style.desc})`,
     `COLOR & TYPOGRAPHY: ${mood.name} (${mood.colors.join(', ')}) | ${typo.name} (${typo.desc})`,
-    `ELEMENT & LIGHTING: ${elem.name} (${elem.desc}) | ${light.name} (${light.desc})`,
+    `ELEMENT, LIGHTING & FINISH: ${elem.name} (${elem.desc}) | ${light.name} (${light.desc}) | Corners=${sub.cornerRadius} | Density=${sub.visualDensity} | Texture=${sub.bgTexture}`,
     `HTML5 CAPABILITIES: ${htmlLabels.length ? htmlLabels.join(', ') : 'Standard Semantic HTML5'}`,
     `CSS3 CAPABILITIES: ${cssLabels.length ? cssLabels.join(', ') : 'Modern Responsive CSS3'}`,
     `JS ARCHITECTURE: ${jsArchLabels.length ? jsArchLabels.join(', ') : 'Clean Modular ES6+'}`,
     `ADD-ON LIBRARIES: ${jsLibsSelected.length ? jsLibsSelected.map((l) => `${l.label} (${l.cdn})`).join(' | ') : 'None (100% pure zero-dependency Vanilla HTML/CSS/JS)'}`
-  ];
+  ].filter(Boolean);
+
+  if (cfg.jsLibs.includes('threejs')) lines.push(`3D SCENE TUNING: Camera=${sub.threeCamera} | Lighting=${sub.threeLighting}`);
+  if (cfg.jsLibs.includes('chartjs') || cfg.jsLibs.includes('d3')) lines.push(`CHART TUNING: Type=${sub.chartType} | Interactivity=${sub.chartInteractivity}`);
+  if (cfg.jsLibs.includes('matterjs')) lines.push(`PHYSICS TUNING: Gravity=${sub.matterGravity} | Bounds=${sub.matterBounds}`);
 
   if (cfg.targetAudience?.trim()) lines.push(`TARGET AUDIENCE: ${cfg.targetAudience.trim()}`);
   if (cfg.extraConstraints?.trim()) lines.push(`MUST-HAVE DETAILS: ${cfg.extraConstraints.trim()}`);
@@ -1734,6 +3261,7 @@ function compileFullBlueprintSummaryText() {
 
 function compileDynamicStepBlueprint(stepObj) {
   const cfg = state.studioConfig;
+  const sub = cfg.subConfig || {};
   const mode = STUDIO_CATALOG.projectTypes[cfg.projectType] || STUDIO_CATALOG.projectTypes.app;
   const iface = findCatalogItem(STUDIO_CATALOG.interfaceDesigns, cfg.interfaceDesign);
   const style = findCatalogItem(STUDIO_CATALOG.designStyles, cfg.designStyle);
@@ -1753,20 +3281,28 @@ function compileDynamicStepBlueprint(stepObj) {
     app: 'Everyday Web App Lens: prioritize instant clarity, reversible actions (Undo/Redo), zero-clutter multi-view state continuity, realistic starter data, and effortless export/backup.',
     tool: 'Utility / Workbench Lens: prioritize zero-latency live calculation as inputs change, keyboard-first precision controls, crystal-clear error diagnostics, preset banks, and 1-click copy/export.',
     game: 'Browser Game Lens: prioritize <5-second playable entry, tight Action->Juice->Reward core loop, deterministic FSM (Title/Play/Pause/Over), 60-120fps delta-time physics/timing, and dual Keyboard + Touch parity.',
-    experimental: 'Creative Sandbox Lens: prioritize immediate visual/audio wonder, tactile direct-on-canvas manipulation, collapsible live parameter HUD, randomize/seed exploration, and 1-tap Zen/Snapshot export.'
+    experimental: 'Creative Sandbox Lens: prioritize immediate visual/audio wonder, tactile direct-on-canvas manipulation, collapsible live parameter HUD, randomize/seed exploration, and 1-tap Zen/Snapshot export.',
+    free: 'Free Create Hybrid Lens: embrace original spatial metaphors and seamless blending of play, utility, and storytelling without falling back on generic SaaS templates.'
   };
 
   const platformLenses = {
     'responsive-parity': 'Mobile + Desktop Parity: fluid reflow from 320px phones (thumb-zone CTAs, >=44px tap targets, safe-area insets) to 1440px+ widescreen without horizontal overflow.',
+    'mobile-first-thumb': 'Phone-First Thumb Ergonomics: place primary CTAs and navigation within the lower thumb arc, >=48px tap targets, and clean vertical flow.',
     'desktop-pro': 'Desktop Power Workbench: dense scannable multi-pane ergonomics, rich keyboard shortcuts, precision hover states, while staying cleanly usable on smaller screens.',
     'fullscreen-arcade': 'Full-Screen Stage / Arcade: edge-to-edge 100dvh viewport lock, touch-action: none on playfield, compact non-obstructive corner HUD, zero accidental page bounce/scroll.'
   };
 
+  const modeSpec = STUDIO_CATALOG.subMenus.modeDeepDive[cfg.projectType];
+  const modeSubStr = modeSpec
+    ? modeSpec.fields.map((f) => `${f.label}: ${(f.options.find((o) => o.id === sub[f.key]) || f.options[0]).label}`).join(' | ')
+    : '';
+
   const lines = [
     `- Project Mode: ${mode.label} — ${mode.roleLens}`,
+    modeSubStr ? `- Mode Sub-Menu Choices: ${modeSubStr}` : '',
     `- Scope & Flow: Complexity=${cfg.complexity} | Navigation=${cfg.navStyle} | First-5-Seconds=${cfg.starterExp}`,
     `- Active Mode Features to Intertwine: ${essItems.map((e) => `${e.label} (${e.desc})`).join(' | ') || 'Standard'}`
-  ];
+  ].filter(Boolean);
 
   if (signals.has('mode-lens')) {
     lines.push(`- Mode Critical Engineering Lens: ${modeCriticalLenses[mode.id] || modeCriticalLenses.app}`);
@@ -1777,15 +3313,15 @@ function compileDynamicStepBlueprint(stepObj) {
   }
 
   if (signals.has('persistence-io')) {
-    lines.push(`- Data Ownership & Persistence Mandate: Storage=${cfg.dataPersistence} (must include try/catch fallback, versioned schema, and clean user export/reset).`);
+    lines.push(`- Data Ownership & Persistence Mandate: Storage=${cfg.dataPersistence} | Save Indicator=${sub.saveIndicator} | Backup Format=${sub.backupFormat} (include try/catch fallback, versioned schema, and clean user export/reset).`);
   }
 
   if (signals.has('sensory-motion')) {
-    lines.push(`- Sensory, Audio & Motion Mandate: Audio=${cfg.sensoryAudio} | Motion/A11y=${cfg.a11yMotion} (respect prefers-reduced-motion and include user mute if audio is active).`);
+    lines.push(`- Sensory, Audio & Motion Mandate: Audio=${cfg.sensoryAudio} (Synth=${sub.audioCharacter}, Triggers=${sub.audioTriggers}) | Motion/A11y=${cfg.a11yMotion} (respect prefers-reduced-motion and include user mute if audio is active).`);
   }
 
   if (signals.has('visual-system') || stepObj.stage >= 3 || stepObj.num === 5 || stepObj.num === 16) {
-    lines.push(`- Visual Direction & Materiality: Layout="${iface.name}" (${iface.desc}) | Style="${style.name}" (${style.desc}) | Palette="${mood.name}" (${mood.colors.join(', ')}) | Typography="${typo.name}" (${typo.desc}) | Elements="${elem.name}" (${elem.desc}) | Lighting="${light.name}" (${light.desc})`);
+    lines.push(`- Visual Direction & Materiality: Layout="${iface.name}" (${iface.desc}) | Style="${style.name}" (${style.desc}) | Palette="${mood.name}" (${mood.colors.join(', ')}) | Typography="${typo.name}" (${typo.desc}) | Elements="${elem.name}" (${elem.desc}) | Lighting="${light.name}" (${light.desc}) | Finish: Corners=${sub.cornerRadius}, Density=${sub.visualDensity}, Texture=${sub.bgTexture}`);
   }
 
   if (signals.has('tech-stack') || stepObj.stage === 2 || stepObj.stage === 3 || stepObj.stage === 5) {
@@ -1794,6 +3330,9 @@ function compileDynamicStepBlueprint(stepObj) {
     lines.push(`- JS Architecture: ${jsArchItems.map((j) => `${j.label} [${j.tech}]`).join(', ') || 'Modular Vanilla ES6+'}`);
     if (jsLibsSelected.length > 0) {
       lines.push(`- Selected CDN Libraries (must integrate cleanly): ${jsLibsSelected.map((l) => `${l.label} => ${l.cdn}`).join(' | ')}`);
+      if (cfg.jsLibs.includes('threejs')) lines.push(`  * 3D Sub-Config: Camera=${sub.threeCamera}, Lighting=${sub.threeLighting}`);
+      if (cfg.jsLibs.includes('chartjs') || cfg.jsLibs.includes('d3')) lines.push(`  * Chart Sub-Config: Type=${sub.chartType}, Interactivity=${sub.chartInteractivity}`);
+      if (cfg.jsLibs.includes('matterjs')) lines.push(`  * Physics Sub-Config: Gravity=${sub.matterGravity}, Bounds=${sub.matterBounds}`);
     } else {
       lines.push(`- External Libraries: NONE (100% standalone Vanilla HTML5/CSS3/ES6+)`);
     }
@@ -3330,7 +4869,7 @@ function buildCombinedPreviewHtml({ includePreviewBridge = true } = {}) {
   const rawJs = stripMarkdownCodeFences(state.jsCode || '');
 
   if (!rawHtml && !rawCss && !rawJs) {
-    return '<!DOCTYPE html><html><body style="font-family:sans-serif;background:#0f172a;color:#94a3b8;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:24px;"><div><h2 style="color:#e2e8f0;margin-bottom:8px;">Live Preview Ready</h2><p style="font-size:14px;">Customize your options & run the 50-point pipeline (or paste code into the tabs) to launch the app here.</p></div></body></html>';
+    return '<!DOCTYPE html><html><body style="font-family:sans-serif;background:#0f172a;color:#94a3b8;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:24px;"><div><h2 style="color:#e2e8f0;margin-bottom:8px;">Live Preview Ready</h2><p style="font-size:14px;">Use the Paperclip Prompt Guider or Customize Options &amp; run the 50-point pipeline (or paste code into the tabs) to launch the app here.</p></div></body></html>';
   }
 
   const useModule = isEsModuleScript(rawJs, rawHtml);
@@ -3799,7 +5338,7 @@ function buildStepPrompts(stepObj) {
       `1. Main Task: ${stepObj.mainTask}.\n` +
       `2. Supporting Task: ${stepObj.supportTask}.\n` +
       `3. Creative & Polish Standard: ${stepObj.creativeStretch}\n` +
-      `4. Intertwine EVERY active Pre-Prompt Studio option (Layout, Design Style, Color Mood, Typography, Elements, Lighting, HTML5/CSS3/JS capabilities, and Mode Features) seamlessly into your implementation.\n` +
+      `4. Intertwine EVERY active Pre-Prompt Studio option (Layout, Design Style, Color Mood, Typography, Elements, Lighting, HTML5/CSS3/JS capabilities, Mode Features, and Sub-Menu settings) seamlessly into your implementation.\n` +
       `5. Output ONLY raw, complete, production-ready ${targetFilename} code—zero markdown fences, zero commentary, zero TODOs, zero "// ... rest of code" shortcuts.\n` +
       `6. ${hasLibs ? 'Cleanly integrate ONLY the selected CDN libraries specified in the Blueprint with defensive checks.' : 'Guarantee 100% standalone zero-dependency Vanilla browser execution.'}`;
 
@@ -4261,6 +5800,54 @@ document.querySelectorAll('#projectTypeSelector .proj-type-btn').forEach((btn) =
   });
 });
 
+// Prompt Guider Modal Listeners
+el.openPromptGuiderBtn.addEventListener('click', () => {
+  if (state.isRunning) {
+    showToast('Pause the pipeline before modifying options.', 'warn');
+    return;
+  }
+  openPromptGuider(0);
+});
+
+el.closePromptGuiderBtn.addEventListener('click', () => {
+  el.promptGuiderModal.classList.add('hidden');
+});
+
+el.guiderOpenFullMenuBtn.addEventListener('click', () => {
+  el.promptGuiderModal.classList.add('hidden');
+  renderBlueprintModalContents();
+  switchBlueprintTab(state.activeBpTab);
+  el.blueprintModal.classList.remove('hidden');
+  refreshIcons();
+});
+
+el.switchFromMenuToGuiderBtn.addEventListener('click', () => {
+  el.blueprintModal.classList.add('hidden');
+  openPromptGuider(0);
+});
+
+el.guiderBackBtn.addEventListener('click', () => {
+  if (state.guiderStepIndex > 0) {
+    state.guiderStepIndex -= 1;
+    renderPromptGuider();
+  }
+});
+
+el.guiderNextBtn.addEventListener('click', () => {
+  const steps = getGuiderJourneySteps();
+  if (state.guiderStepIndex < steps.length - 1) {
+    state.guiderStepIndex += 1;
+    renderPromptGuider();
+  } else {
+    el.promptGuiderModal.classList.add('hidden');
+    renderBlueprintSummaryStrip();
+    showToast('Guided vision applied to your 50-Point Studio!', 'success');
+  }
+});
+
+el.guiderDraftPromptBtn.addEventListener('click', weaveChoicesIntoPromptBox);
+
+// Full Menu Modal Listeners
 el.openBlueprintModalBtn.addEventListener('click', () => {
   renderBlueprintModalContents();
   switchBlueprintTab(state.activeBpTab);
@@ -4294,6 +5881,8 @@ document.querySelectorAll('#blueprintTabs .bp-tab-btn').forEach((btn) => {
     state.studioConfig[key] = e.target.value;
     saveStudioConfig();
     renderBlueprintSummaryStrip();
+    if (key === 'sensoryAudio') renderConditionalAudioSubMenu(el.bpAudioSubSection);
+    if (key === 'dataPersistence') renderConditionalPersistenceSubMenu(el.bpPersistenceSubSection);
   });
 });
 
@@ -4754,9 +6343,11 @@ document.querySelectorAll('#workspaceTabs .ws-tab').forEach((btn) => {
   try {
     const savedCfg = JSON.parse(safeGet('wbs_studio_config', 'null'));
     if (savedCfg && savedCfg.projectType && STUDIO_CATALOG.projectTypes[savedCfg.projectType]) {
+      const base = createDefaultStudioConfig(savedCfg.projectType);
       state.studioConfig = {
-        ...createDefaultStudioConfig(savedCfg.projectType),
-        ...savedCfg
+        ...base,
+        ...savedCfg,
+        subConfig: { ...base.subConfig, ...(savedCfg.subConfig || {}) }
       };
     }
   } catch (_) {}
